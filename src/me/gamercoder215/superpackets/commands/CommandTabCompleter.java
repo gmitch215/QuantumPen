@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -13,12 +14,12 @@ import org.bukkit.entity.Player;
 
 public class CommandTabCompleter implements TabCompleter {
 	
-	public static List<String> getPacketList() {
+	public static List<String> getClientPacketList() {
 		List<String> packetList = new ArrayList<>();
 		
 		packetList.add("spawn_entity");
 		packetList.add("spawn_experience_orb");
-		packetList.add("spawn_painting");
+		// packetList.add("spawn_painting");
 		packetList.add("block_break_animation");
 		
 		List<String> actualPacketList = new ArrayList<>();
@@ -33,6 +34,24 @@ public class CommandTabCompleter implements TabCompleter {
 		return (Arrays.asList(newPacketList));
  	}
 	
+	public static List<String> getServerPacketList() {
+		List<String> packetList = new ArrayList<>();
+		
+		packetList.add("set_difficulty");
+		packetList.add("player_mining_block");
+		
+		List<String> actualPacketList = new ArrayList<>();
+		
+		for (String s : packetList) {
+			actualPacketList.add("minecraft:" + s);
+		}
+		
+		String[] newPacketList = (String[]) actualPacketList.toArray();
+		Arrays.sort(newPacketList);
+		
+		return (Arrays.asList(newPacketList));
+	}
+ 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		if (cmd.getName().equalsIgnoreCase("clientpacket")) {
@@ -45,7 +64,7 @@ public class CommandTabCompleter implements TabCompleter {
 				
 				return playersOnline;
 			} else if (args.length == 1) {
-				return getPacketList();
+				return getClientPacketList();
 			} else if (args.length >= 2) {
 				String packet = args[1];
 				
@@ -59,6 +78,38 @@ public class CommandTabCompleter implements TabCompleter {
 							}
 						}
 						
+						break;
+					case "spawn_experience_orb":
+						if (args.length == 2) {
+							List<String> worlds = new ArrayList<>();
+							
+							for (World w : Bukkit.getServer().getWorlds()) {
+								worlds.add("minecraft:" + w.getName());
+							}
+							
+							return worlds;
+						}
+						break;
+				}
+			}
+		} else if (cmd.getName().equalsIgnoreCase("serverpacket")) {
+			if (args.length < 1) {
+				
+			} else if (args.length >= 1) {
+				String packet = args[0];
+				
+				switch(packet.replaceAll("minecraft:", "")) {
+					case "set_difficulty":
+						if (args.length == 1) {
+							List<String> difficulties = new ArrayList<>();
+							
+							difficulties.add("easy");
+							difficulties.add("normal");
+							difficulties.add("peaceful");
+							difficulties.add("hard");
+							
+							return difficulties;
+						}
 						break;
 				}
 			}

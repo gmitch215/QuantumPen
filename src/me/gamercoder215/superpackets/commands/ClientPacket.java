@@ -8,13 +8,22 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import me.gamercoder215.superpackets.Main;
+import net.minecraft.core.BlockPosition;
+import net.minecraft.core.EnumDirection;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
+import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityExperienceOrb;
+import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityPainting;
 import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.world.entity.EntityExperienceOrb;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.decoration.EntityPainting;
+import net.minecraft.world.entity.decoration.Paintings;
+import net.minecraft.world.level.World;
 
 public class ClientPacket implements CommandExecutor {
 	
@@ -135,6 +144,37 @@ public class ClientPacket implements CommandExecutor {
 		else return null;
 	}
 	
+	public static Paintings matchPaintingID(String name) {
+		String newName = name.replaceAll("minecraft:", "");
+		if (newName.equalsIgnoreCase("kebab")) return Paintings.a;
+		else if (newName.equalsIgnoreCase("aztec")) return Paintings.b;
+		else if (newName.equalsIgnoreCase("alban")) return Paintings.c;
+		else if (newName.equalsIgnoreCase("aztec2")) return Paintings.d;
+		else if (newName.equalsIgnoreCase("bomb")) return Paintings.e;
+		else if (newName.equalsIgnoreCase("plant")) return Paintings.f;
+		else if (newName.equalsIgnoreCase("wasteland")) return Paintings.g;
+		else if (newName.equalsIgnoreCase("pool")) return Paintings.h;
+		else if (newName.equalsIgnoreCase("courbet")) return Paintings.i;
+		else if (newName.equalsIgnoreCase("sea")) return Paintings.j;
+		else if (newName.equalsIgnoreCase("sunset")) return Paintings.k;
+		else if (newName.equalsIgnoreCase("crebet")) return Paintings.l;
+		else if (newName.equalsIgnoreCase("wanderer")) return Paintings.m;
+		else if (newName.equalsIgnoreCase("graham")) return Paintings.n;
+		else if (newName.equalsIgnoreCase("match")) return Paintings.o;
+		else if (newName.equalsIgnoreCase("bust")) return Paintings.p;
+		else if (newName.equalsIgnoreCase("stage")) return Paintings.q;
+		else if (newName.equalsIgnoreCase("void")) return Paintings.r;
+		else if (name.equalsIgnoreCase("skull_and_roses")) return Paintings.s;
+		else if (newName.equalsIgnoreCase("wither")) return Paintings.t;
+		else if (newName.equalsIgnoreCase("fighters")) return Paintings.u;
+		else if (newName.equalsIgnoreCase("pointer")) return Paintings.v;
+		else if (newName.equalsIgnoreCase("pigscene")) return Paintings.w;
+		else if (newName.equalsIgnoreCase("burning_skull")) return Paintings.x;
+		else if (newName.equalsIgnoreCase("skeleton")) return Paintings.y;
+		else if (newName.equalsIgnoreCase("donkey_kong")) return Paintings.z;
+		else return Paintings.a;
+	}
+	
 	static Random r = new Random();
 	
 	
@@ -194,11 +234,79 @@ public class ClientPacket implements CommandExecutor {
 				}
 				
 				try {
-					PacketPlayOutSpawnEntity s = new PacketPlayOutSpawnEntity(r.nextInt(), UUID.randomUUID(), Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]), 0, 0, matchEntityType(args[2]), 0, null);
+					PacketPlayOutSpawnEntity s = new PacketPlayOutSpawnEntity(r.nextInt(), UUID.randomUUID(), Integer.parseInt(args[3].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), 0, 0, matchEntityType(args[2]), 0, null);
 					cp.b.sendPacket(s);
 					
 				} catch (NumberFormatException e) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please fix your coordinates.");
+					return false;
+				}
+				break;
+			case "spawn_experience_orb":
+				if (args.length < 3) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the world to spawn it into.");
+					return false;
+				}
+				
+				if (args.length < 4) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
+					return false;	
+				}
+				
+				if (args.length < 5) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
+					return false;	
+				}
+				
+				if (args.length < 6) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
+					return false;	
+				}
+				
+				if (args.length < 7) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the experience amount.");
+					return false;
+				}
+				
+				try {
+					World w = ((CraftWorld) Bukkit.getWorld(args[2])).getHandle();
+					PacketPlayOutSpawnEntityExperienceOrb s = new PacketPlayOutSpawnEntityExperienceOrb(new EntityExperienceOrb(w, Integer.parseInt(args[2].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[3].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), Short.parseShort(args[5])));
+					cp.b.sendPacket(s);
+				} catch (NumberFormatException e) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please fix your coordinates and experience amount. The maximum amount of experience allowed is 32,767.");
+					return false;
+				}
+				
+				break;
+			case "spawn_painting":
+				if (args.length < 3) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a painting ID.");
+					return false;
+				}
+				
+				if (args.length < 4) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
+					return false;
+				}
+				
+				if (args.length < 5) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
+					return false;	
+				}
+				
+				if (args.length < 6) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
+					return false;	
+				}
+				
+				try {
+					World w = ((CraftWorld) Bukkit.getWorld(args[2])).getHandle();
+					PacketPlayOutSpawnEntityPainting s = new PacketPlayOutSpawnEntityPainting(new EntityPainting(w, new BlockPosition(Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])), EnumDirection.a, Paintings.a));
+					cp.b.sendPacket(s);
+				}
+				catch (NumberFormatException e) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please fix your coordinates.");
+					return false;
 				}
 				break;
 			default:
