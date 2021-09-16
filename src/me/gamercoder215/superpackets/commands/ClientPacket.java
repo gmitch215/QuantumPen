@@ -1,24 +1,34 @@
 package me.gamercoder215.superpackets.commands;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
 import me.gamercoder215.superpackets.Main;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
+import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.network.protocol.game.PacketPlayOutBlockBreakAnimation;
+import net.minecraft.network.protocol.game.PacketPlayOutCloseWindow;
+import net.minecraft.network.protocol.game.PacketPlayOutServerDifficulty;
+import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityExperienceOrb;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityPainting;
+import net.minecraft.network.protocol.login.PacketLoginOutDisconnect;
 import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.entity.EntityExperienceOrb;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.decoration.EntityPainting;
@@ -228,7 +238,7 @@ public class ClientPacket implements CommandExecutor {
 		else if (newName.equalsIgnoreCase("donkey_kong")) return Paintings.z;
 		else return Paintings.a;
 	}
-
+	
 	public static EnumDifficulty matchDifficulty(String name) {
 		if (name.equalsIgnoreCase("easy")) return EnumDifficulty.b;
 		else if (name.equalsIgnoreCase("normal")) return EnumDifficulty.c;
@@ -387,7 +397,7 @@ public class ClientPacket implements CommandExecutor {
 					cp.b.sendPacket(s);
 				} else {
 					boolean lockDifficulty = Boolean.parseBoolean(args[4]);
-					PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), false);
+					PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), lockDifficulty);
 
 					cp.b.sendPacket(s);
 				}
@@ -408,10 +418,14 @@ public class ClientPacket implements CommandExecutor {
 				for (int i = 3; i < args.length; i++) {
 					reasonArgs.add(args[i]);
 				}
-				String reason = ChatColor.translateCoString.join(" ", reasonArgs);
-
-				PacketLoginOutDisconnect s = new PacketLoginOutDisconnect(new ChatComponentText(reason));
-				cp.b.sendPacket(s);
+				String reason = ChatColor.translateAlternateColorCodes('&', String.join(" ", reasonArgs));
+				
+				try {
+					PacketLoginOutDisconnect s2 = new PacketLoginOutDisconnect(new ChatComponentText(reason));
+					cp.b.sendPacket(s2);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				break;
 			case "camera_block_break_animation":
 				if (args.length < 4) {
@@ -444,10 +458,10 @@ public class ClientPacket implements CommandExecutor {
 				try {
 					int parsedStage = Integer.parseInt(removedStage);
 
-					PacketPlayOutBlockBreakAnimation s = new PacketPlayOutBlockBreakAnimation(p.getEntityId(), new BlockPos(Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])), parsedStage);
+					PacketPlayOutBlockBreakAnimation s2 = new PacketPlayOutBlockBreakAnimation(p.getEntityId(), new BlockPosition(Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])), parsedStage);
 
-					cp.b.sendPacket(s);
-				} catch (NumberSyntaxException e) {
+					cp.b.sendPacket(s2);
+				} catch (NumberFormatException e) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage and coordinates.");
 					return false;
 				}
@@ -469,8 +483,11 @@ public class ClientPacket implements CommandExecutor {
 				if (m == null) m = Material.AIR;
 
 				if (args.length < 6) {
-
-					net.minecraft.world.item.ItemStack item = new org.bukkit.inventory.ItemStack(m);
+					org.bukkit.inventory.ItemStack bukkititem = new org.bukkit.inventory.ItemStack(m);
+					net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(bukkititem);
+					
+					PacketPlayOutSetSlot s3 = new PacketPlayOutSetSlot(cp.bV.j, 0, matchInventorySlot(args[3]), item);
+					cp.b.sendPacket(s3);
 				} else {
 					try {
 						org.bukkit.inventory.ItemStack bukkititem = new org.bukkit.inventory.ItemStack(m);
@@ -483,9 +500,10 @@ public class ClientPacket implements CommandExecutor {
 
 						bukkititem.setAmount(amount);
 
-						net.minecraft.world.item.ItemStack item = ((CraftItemStack) bukkititem).asNMSCopy();
-						
-					} catch (NumberSyntaxException e) {
+						net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(bukkititem);
+						PacketPlayOutSetSlot s3 = new PacketPlayOutSetSlot(cp.bV.j, 0, matchInventorySlot(args[3]), item);
+						cp.b.sendPacket(s3);
+					} catch (NumberFormatException e) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid amount.");
 						return false;
 					}

@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.bukkit.Art;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -171,7 +173,7 @@ public class CommandTabCompleter implements TabCompleter {
 							List<String> art = new ArrayList<>();
 
 							for (Art a : Art.values()) {
-								art.add("minecraft:" + artname().toLowerCase());
+								art.add("minecraft:" + a.name().toLowerCase());
 							}
 
 							return art;
@@ -194,6 +196,71 @@ public class CommandTabCompleter implements TabCompleter {
 							forceDifficulty.add("false");
 
 							return forceDifficulty;
+						}
+						break;
+					case "camera_block_break_animation":
+						break;
+					case "playergui_set_item_inventory":
+						if (args.length == 3) {
+							List<String> inventoryList = new ArrayList<>();
+	
+							inventoryList.add("armor.head");
+							inventoryList.add("armor.chest");
+							inventoryList.add("armor.legs");
+							inventoryList.add("armor.feet");
+							inventoryList.add("weapon.offhand");
+							inventoryList.add("crafting.topleft");
+							inventoryList.add("crafting.topright");
+							inventoryList.add("crafting.bottomleft");
+							inventoryList.add("crafting.bottomright");
+							inventoryList.add("crafting.result");
+							inventoryList.add("inventory.row1.1");
+							inventoryList.add("inventory.row1.2");
+							inventoryList.add("inventory.row1.3");
+							inventoryList.add("inventory.row1.4");
+							inventoryList.add("inventory.row1.5");
+							inventoryList.add("inventory.row1.6");
+							inventoryList.add("inventory.row1.7");
+							inventoryList.add("inventory.row1.8");
+							inventoryList.add("inventory.row1.9");
+							inventoryList.add("inventory.row2.1");
+							inventoryList.add("inventory.row2.2");
+							inventoryList.add("inventory.row2.3");
+							inventoryList.add("inventory.row2.4");
+							inventoryList.add("inventory.row2.5");
+							inventoryList.add("inventory.row2.6");
+							inventoryList.add("inventory.row2.7");
+							inventoryList.add("inventory.row2.8");
+							inventoryList.add("inventory.row2.9");
+							inventoryList.add("inventory.row3.1");
+							inventoryList.add("inventory.row3.2");
+							inventoryList.add("inventory.row3.3");
+							inventoryList.add("inventory.row3.4");
+							inventoryList.add("inventory.row3.5");
+							inventoryList.add("inventory.row3.6");
+							inventoryList.add("inventory.row3.7");
+							inventoryList.add("inventory.row3.8");
+							inventoryList.add("inventory.row3.9");
+							inventoryList.add("hotbar.1");
+							inventoryList.add("hotbar.2");
+							inventoryList.add("hotbar.3");
+							inventoryList.add("hotbar.4");
+							inventoryList.add("hotbar.5");
+							inventoryList.add("hotbar.6");
+							inventoryList.add("hotbar.7");
+							inventoryList.add("hotbar.8");
+							inventoryList.add("hotbar.9");
+							inventoryList.add("cursor");
+							
+							return inventoryList;
+						} else if (args.length == 4) {
+							List<String> materials = new ArrayList<>();
+							
+							for (Material m : Material.values()) {
+								materials.add("minecraft:" + m.name().toLowerCase());
+							}
+							
+							return materials;
 						}
 						break;
 					default:
