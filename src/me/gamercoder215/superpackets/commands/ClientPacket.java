@@ -34,6 +34,60 @@ public class ClientPacket implements CommandExecutor {
 		plugin.getCommand("clientpacket").setExecutor(this);
 		plugin.getCommand("clientpacket").setTabCompleter(new CommandTabCompleter());
 	}
+
+	public static int matchInventorySlot(String name) {
+		String realName = name.toLowerCase().replaceAll("minecraft:", "");
+
+		if (realName.equalsIgnoreCase("armor.head")) return 5;
+		else if (realName.equalsIgnoreCase("armor.chest")) return 6;
+		else if (realName.equalsIgnoreCase("armor.legs")) return 7;
+		else if (realName.equalsIgnoreCase("armor.feet")) return 8;
+		else if (realName.equalsIgnoreCase("weapon.offhand")) return 45;
+		else if (realName.equalsIgnoreCase("crafting.topleft")) return 1;
+		else if (realName.equalsIgnoreCase("crafting.topright")) return 2;
+		else if (realName.equalsIgnoreCase("crafting.bottomleft")) return 3;
+		else if (realName.equalsIgnoreCase("crafting.bottomright")) return 4;
+		else if (realName.equalsIgnoreCase("crafting.result")) return 0;
+		else if (realName.equalsIgnoreCase("inventory.row1.1")) return 9;
+		else if (realName.equalsIgnoreCase("inventory.row1.2")) return 10;
+		else if (realName.equalsIgnoreCase("inventory.row1.3")) return 11;
+		else if (realName.equalsIgnoreCase("inventory.row1.4")) return 12;
+		else if (realName.equalsIgnoreCase("inventory.row1.5")) return 13;
+		else if (realName.equalsIgnoreCase("inventory.row1.6")) return 14;
+		else if (realName.equalsIgnoreCase("inventory.row1.7")) return 15;
+		else if (realName.equalsIgnoreCase("inventory.row1.8")) return 16;
+		else if (realName.equalsIgnoreCase("inventory.row1.9")) return 17;
+		else if (realName.equalsIgnoreCase("inventory.row2.1")) return 18;
+		else if (realName.equalsIgnoreCase("inventory.row2.2")) return 19;
+		else if (realName.equalsIgnoreCase("inventory.row2.3")) return 20;
+		else if (realName.equalsIgnoreCase("inventory.row2.4")) return 21;
+		else if (realName.equalsIgnoreCase("inventory.row2.5")) return 22;
+		else if (realName.equalsIgnoreCase("inventory.row2.6")) return 23;
+		else if (realName.equalsIgnoreCase("inventory.row2.7")) return 24;
+		else if (realName.equalsIgnoreCase("inventory.row2.8")) return 25;
+		else if (realName.equalsIgnoreCase("inventory.row2.9")) return 26;
+		else if (realName.equalsIgnoreCase("inventory.row3.1")) return 27;
+		else if (realName.equalsIgnoreCase("inventory.row3.2")) return 28;
+		else if (realName.equalsIgnoreCase("inventory.row3.3")) return 29;
+		else if (realName.equalsIgnoreCase("inventory.row3.4")) return 30;
+		else if (realName.equalsIgnoreCase("inventory.row3.5")) return 31;
+		else if (realName.equalsIgnoreCase("inventory.row3.6")) return 32;
+		else if (realName.equalsIgnoreCase("inventory.row3.7")) return 33;
+		else if (realName.equalsIgnoreCase("inventory.row3.8")) return 34;
+		else if (realName.equalsIgnoreCase("inventory.row3.9")) return 35;
+		else if (realName.equalsIgnoreCase("hotbar.1")) return 36;
+		else if (realName.equalsIgnoreCase("hotbar.2")) return 37;
+		else if (realName.equalsIgnoreCase("hotbar.3")) return 38;
+		else if (realName.equalsIgnoreCase("hotbar.4")) return 39;
+		else if (realName.equalsIgnoreCase("hotbar.5")) return 40;
+		else if (realName.equalsIgnoreCase("hotbar.6")) return 41;
+		else if (realName.equalsIgnoreCase("hotbar.7")) return 42;
+		else if (realName.equalsIgnoreCase("hotbar.8")) return 43;
+		else if (realName.equalsIgnoreCase("hotbar.9")) return 44;
+		else if (realName.equalsIgnoreCase("cursor")) return -1;
+
+		else return 9;
+	}
 	
 	public static EntityTypes<?> matchEntityType(String name) {
 		if (name.equalsIgnoreCase("minecraft:silverfish")) return EntityTypes.aA;
@@ -174,6 +228,14 @@ public class ClientPacket implements CommandExecutor {
 		else if (newName.equalsIgnoreCase("donkey_kong")) return Paintings.z;
 		else return Paintings.a;
 	}
+
+	public static EnumDifficulty matchDifficulty(String name) {
+		if (name.equalsIgnoreCase("easy")) return EnumDifficulty.b;
+		else if (name.equalsIgnoreCase("normal")) return EnumDifficulty.c;
+		else if (name.equalsIgnoreCase("peaceful")) return EnumDifficulty.a;
+		else if (name.equalsIgnoreCase("hard")) return EnumDifficulty.d;
+		else return EnumDifficulty.c;
+	}
 	
 	static Random r = new Random();
 	
@@ -194,47 +256,51 @@ public class ClientPacket implements CommandExecutor {
 		
 		Player p = Bukkit.getPlayer(args[0]);
 		EntityPlayer cp = ((CraftPlayer) p).getHandle();
-	
-		
+
 		if (args.length < 2) {
+			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a packet type.");
+			return false;
+		}
+		
+		if (args.length < 3) {
 			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a packet to send to the player.");
 			return false;
 		}
 		
-		switch (args[1].replaceAll("minecraft:", "")) {
+		switch (args[2].replaceAll("minecraft:", "")) {
 			case "spawn_entity":
-				if (args.length < 3) {
+				if (args.length < 4) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type. Paintings and Experience Orbs use the spawn_paining and spawn_experience_orb packet, and markers are server-side only.");
 					return false;
 				}
 				
-				if (args[2].equalsIgnoreCase("minecraft:painting") || args[2].equalsIgnoreCase("minecraft:experience_orb")) {
+				if (args[3].equalsIgnoreCase("minecraft:painting") || args[3].equalsIgnoreCase("minecraft:experience_orb")) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Paintings and Experience Orbs use the spawn_paining and spawn_experience_orb packet.");
 					return false;
 				}
 				
-				if (matchEntityType(args[2]) == null) {
+				if (matchEntityType(args[3]) == null) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type. Paintings and Experience Orbs are used in the spawn_painting and spawn_experience_orb packet, and marks are server-side only.");
 					return false;
 				}
 				
-				if (args.length < 4) {
+				if (args.length < 5) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
 					return false;	
 				}
 				
-				if (args.length < 5) {
+				if (args.length < 6) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
 					return false;	
 				}
 				
-				if (args.length < 6) {
+				if (args.length < 7) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
 					return false;	
 				}
 				
 				try {
-					PacketPlayOutSpawnEntity s = new PacketPlayOutSpawnEntity(r.nextInt(), UUID.randomUUID(), Integer.parseInt(args[3].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), 0, 0, matchEntityType(args[2]), 0, null);
+					PacketPlayOutSpawnEntity s = new PacketPlayOutSpawnEntity(r.nextInt(), UUID.randomUUID(), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[6].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), 0, 0, matchEntityType(args[3]), 0, null);
 					cp.b.sendPacket(s);
 					
 				} catch (NumberFormatException e) {
@@ -243,34 +309,34 @@ public class ClientPacket implements CommandExecutor {
 				}
 				break;
 			case "spawn_experience_orb":
-				if (args.length < 3) {
+				if (args.length < 4) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the world to spawn it into.");
 					return false;
 				}
 				
-				if (args.length < 4) {
+				if (args.length < 5) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
 					return false;	
 				}
 				
-				if (args.length < 5) {
+				if (args.length < 6) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
 					return false;	
 				}
 				
-				if (args.length < 6) {
+				if (args.length < 7) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
 					return false;	
 				}
 				
-				if (args.length < 7) {
+				if (args.length < 8) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the experience amount.");
 					return false;
 				}
 				
 				try {
-					World w = ((CraftWorld) Bukkit.getWorld(args[2])).getHandle();
-					PacketPlayOutSpawnEntityExperienceOrb s = new PacketPlayOutSpawnEntityExperienceOrb(new EntityExperienceOrb(w, Integer.parseInt(args[2].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[3].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), Short.parseShort(args[5])));
+					World w = ((CraftWorld) Bukkit.getWorld(args[3])).getHandle();
+					PacketPlayOutSpawnEntityExperienceOrb s = new PacketPlayOutSpawnEntityExperienceOrb(new EntityExperienceOrb(w, Integer.parseInt(args[3].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), Short.parseShort(args[6])));
 					cp.b.sendPacket(s);
 				} catch (NumberFormatException e) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please fix your coordinates and experience amount. The maximum amount of experience allowed is 32,767.");
@@ -279,34 +345,150 @@ public class ClientPacket implements CommandExecutor {
 				
 				break;
 			case "spawn_painting":
-				if (args.length < 3) {
+				if (args.length < 4) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a painting ID.");
 					return false;
 				}
 				
-				if (args.length < 4) {
+				if (args.length < 5) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
 					return false;
 				}
 				
-				if (args.length < 5) {
+				if (args.length < 6) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
 					return false;	
 				}
 				
-				if (args.length < 6) {
+				if (args.length < 7) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
 					return false;	
 				}
 				
 				try {
-					World w = ((CraftWorld) Bukkit.getWorld(args[2])).getHandle();
-					PacketPlayOutSpawnEntityPainting s = new PacketPlayOutSpawnEntityPainting(new EntityPainting(w, new BlockPosition(Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])), EnumDirection.a, Paintings.a));
+					World w = ((CraftWorld) Bukkit.getWorld(args[3])).getHandle();
+					PacketPlayOutSpawnEntityPainting s = new PacketPlayOutSpawnEntityPainting(new EntityPainting(w, new BlockPosition(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6])), EnumDirection.a, matchPaintingID(args[3])));
 					cp.b.sendPacket(s);
 				}
 				catch (NumberFormatException e) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "Please fix your coordinates.");
 					return false;
+				}
+				break;
+			case "settings_changedifficulty":
+				if (args.length < 4) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid difficulty.");
+					return false;
+				}
+				
+				if (args.length < 5) {
+					PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), false);
+
+					cp.b.sendPacket(s);
+				} else {
+					boolean lockDifficulty = Boolean.parseBoolean(args[4]);
+					PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), false);
+
+					cp.b.sendPacket(s);
+				}
+
+				break;
+			case "gui_close":
+				PacketPlayOutCloseWindow s = new PacketPlayOutCloseWindow(cp.bV.j);
+				cp.b.sendPacket(s);
+				cp.o();
+				break;
+			case "kick_player":
+				if (args.length < 4) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a reason to kick the player.");
+					return false;
+				}
+
+				ArrayList<String> reasonArgs = new ArrayList<String>();
+				for (int i = 3; i < args.length; i++) {
+					reasonArgs.add(args[i]);
+				}
+				String reason = ChatColor.translateCoString.join(" ", reasonArgs);
+
+				PacketLoginOutDisconnect s = new PacketLoginOutDisconnect(new ChatComponentText(reason));
+				cp.b.sendPacket(s);
+				break;
+			case "camera_block_break_animation":
+				if (args.length < 4) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+					return false;
+				}
+
+				if (args.length < 5) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+					return false;
+				}
+
+				if (args.length < 6) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+					return false;
+				}
+
+				if (args.length < 7) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage.");
+					return false;
+				}
+
+				if (!(args[6].startsWith("stage_"))) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage.");
+					return false;
+				}
+
+				String removedStage = args[6].replaceAll("stage_", "");
+
+				try {
+					int parsedStage = Integer.parseInt(removedStage);
+
+					PacketPlayOutBlockBreakAnimation s = new PacketPlayOutBlockBreakAnimation(p.getEntityId(), new BlockPos(Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])), parsedStage);
+
+					cp.b.sendPacket(s);
+				} catch (NumberSyntaxException e) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage and coordinates.");
+					return false;
+				}
+
+				break;
+			case "playergui_set_item_inventory":
+				if (args.length < 4) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a slot to replace.");
+					return false;
+				}
+
+				if (args.length < 5) {
+					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
+					return false;
+				}
+
+				Material m = Material.matchMaterial(args[4].replaceAll("minecraft:", "").toUpperCase());
+
+				if (m == null) m = Material.AIR;
+
+				if (args.length < 6) {
+
+					net.minecraft.world.item.ItemStack item = new org.bukkit.inventory.ItemStack(m);
+				} else {
+					try {
+						org.bukkit.inventory.ItemStack bukkititem = new org.bukkit.inventory.ItemStack(m);
+						int maxAmount = bukkititem.getMaxStackSize();
+						int amount = Integer.parseInt(args[5]);
+
+						if (amount < 1 || amount > maxAmount) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a number between 1 and " + Integer.toString(maxAmount));
+						}
+
+						bukkititem.setAmount(amount);
+
+						net.minecraft.world.item.ItemStack item = ((CraftItemStack) bukkititem).asNMSCopy();
+						
+					} catch (NumberSyntaxException e) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid amount.");
+						return false;
+					}
 				}
 				break;
 			default:

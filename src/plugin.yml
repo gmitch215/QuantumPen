@@ -7,23 +7,14 @@ commands:
   clientpacket:
     description: Use a client-bound packet to a player.
     permission: superpackets.clientpacket
-    usage: /clientpacket <player> <packet> <parameters...>
+    usage: /clientpacket <player> <type> <packet> <parameters...>
     aliases: [cpacket, clientp, clpacket, clp, cp]
-  serverpacket:
-    description: Use a server-bound packet.
-    permission: superpackets.serverpacket
-    usage: /serverpacket <packet> <parameters...>
-    aliases: [spacket, serverp, sp, srvp, srvpacket]
 permissions:
   superpackets.*:
     default: op
     description: All SuperPacket permissions
     children:
       superpackets.clientpacket: true
-      superpackets.serverpacket: true
   superpackets.clientpacket:
     default: op
     description: Allows /clientpacket command
-  superpackets.serverpacket:
-    default: op
-    description: Allows /serverpacket command
