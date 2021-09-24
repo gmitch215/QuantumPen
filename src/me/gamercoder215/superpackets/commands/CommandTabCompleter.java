@@ -267,6 +267,15 @@ public class CommandTabCompleter implements TabCompleter {
 						return null;
 				}
 			}
+		} else if (cmd.getName().equalsIgnoreCase("superpackets")) {
+			if (args.length < 1) {
+				List<String> baseCommandList = new ArrayList<>();
+
+				baseCommandList.add("info");
+				baseCommandList.add("help");
+
+				return baseCommandList;
+			} else return null;
 		}
 		
 		return null;

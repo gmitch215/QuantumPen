@@ -9,12 +9,21 @@ commands:
     permission: superpackets.clientpacket
     usage: /clientpacket <player> <type> <packet> <parameters...>
     aliases: [cpacket, clientp, clpacket, clp, cp]
+  superpackets:
+    description: SuperPackets base command
+    usage: /superpackets <parameters>
+    aliases: [superp, spackets, superpacket, spacket, sp] 
+
 permissions:
   superpackets.*:
     default: op
     description: All SuperPacket permissions
     children:
       superpackets.clientpacket: true
+      superpackets.superpackets: true
+  superpackets.superpackets:
+    default: op
+    description: Allows /superpackets command
   superpackets.clientpacket:
     default: op
     description: Allows /clientpacket command
