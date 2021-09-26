@@ -15,8 +15,8 @@ import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
-import me.gamercoder215.novaeditor.utils.ClientPacketCommandTabCompleter;
-import me.gamercoder215.superpackets.Main;
+import me.gamercoder215.novaeditor.commands.utils.ClientPacketCommandTabCompleter;
+import me.gamercoder215.novaeditor.Main;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.network.chat.ChatComponentText;

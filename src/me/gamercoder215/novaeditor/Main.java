@@ -1,4 +1,4 @@
-package me.gamercoder215.superpackets;
+package me.gamercoder215.novaeditor;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

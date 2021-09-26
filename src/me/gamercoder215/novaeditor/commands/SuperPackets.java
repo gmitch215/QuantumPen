@@ -10,8 +10,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import me.gamercoder215.novaeditor.utils.SuperPacketsCommandTabCompleter;
-import me.gamercoder215.superpackets.Main;
+import me.gamercoder215.novaeditor.Main;
+import me.gamercoder215.novaeditor.commands.utils.SuperPacketsCommandTabCompleter;
 
 public class SuperPackets implements CommandExecutor {
 	

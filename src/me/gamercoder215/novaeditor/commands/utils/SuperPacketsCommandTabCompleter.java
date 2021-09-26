@@ -1,4 +1,4 @@
-package me.gamercoder215.novaeditor.utils;
+package me.gamercoder215.novaeditor.commands.utils;
 
 import java.util.ArrayList;
 import java.util.List;
