@@ -4,8 +4,8 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.gamercoder215.novaeditor.commands.ClientPacket;
-import me.gamercoder215.novaeditor.commands.SuperPackets;
+import me.gamercoder215.novaeditor.commands.NovaEditor;
+import me.gamercoder215.novaeditor.packets.ClientPacket;
 
 public class Main extends JavaPlugin {
 	
@@ -19,7 +19,10 @@ public class Main extends JavaPlugin {
 	
 	public void onEnable() {
 		new ClientPacket(this);
-    	new SuperPackets(this);
+		
+    	new NovaEditor(this);
+    	
+    	
 	}
 	
 }
