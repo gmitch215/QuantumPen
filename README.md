@@ -1,2 +1,2 @@
-# SuperPackets
- Send Packets with simple commands
+# NovaEditor
+Base minecraft editor
