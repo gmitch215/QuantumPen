@@ -1,6 +1,7 @@
-name: SuperPackets
-main: me.gamercoder215.superpackets
+name: NovaEditor
+main: me.gamercoder215.novaeditor.Main
 version: 1.0.0
+api-version: 1.17
 description: Send NMS Packets with simple commands!
 author: GamerCoder215
 commands:

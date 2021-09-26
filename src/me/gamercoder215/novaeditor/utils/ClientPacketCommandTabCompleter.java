@@ -1,7 +1,7 @@
-package me.gamercoder215.superpackets.commands;
+package me.gamercoder215.novaeditor.utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Art;
@@ -14,64 +14,66 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
-public class CommandTabCompleter implements TabCompleter {
+public class ClientPacketCommandTabCompleter implements TabCompleter {
 	
 	public static List<String> getClientPacketList(String type) {
 		if (type.equalsIgnoreCase("play")) {
 
-			List<String> packetList = new ArrayList<>();
+			String[] packetList = {
 			
-			packetList.add("spawn_entity");
-			packetList.add("spawn_experience_orb");
-			packetList.add("spawn_painting");
-			packetList.add("gui_close");
-			packetList.add("camera_block_break_animation");
-			packetList.add("playergui_set_item_inventory");
-			packetList.add("playergui_set_item_cooldown");
-			packetList.add("camera_create_explosion");
-			packetList.add("state_weather_rain_start");
-			packetList.add("state_weather_rain_end");
-			packetList.add("state_gamemode_change");
-			packetList.add("state_win_noendscreen");
-			packetList.add("state_win_endscreen");
-			packetList.add("state_arrowhit");
-			packetList.add("state_elderguardianscreen");
-			packetList.add("state_respawnscreen");
-			packetList.add("state_respawnscreen_immediate");
-			packetList.add("gui_open_horse");
-			packetList.add("gui_open_sign");
-			packetList.add("gui_open_book");
-			packetList.add("gui_open_container");
-			packetList.add("gui_open_beacon");
-			packetList.add("gui_open_anvil");
-			packetList.add("gui_open_enchantment");
-			packetList.add("gui_open_crafting");
-			packetList.add("gui_open_smoker");
-			packetList.add("gui_open_blastfurnace");
-			packetList.add("gui_open_furnace");
-			packetList.add("gui_open_grindstone");
-			packetList.add("gui_open_cartography");
-			packetList.add("gui_open_shulker");
-			packetList.add("gui_open_villager");
-			packetList.add("gui_open_stonecutter");
-			packetList.add("camera_unload_chunk");
-			packetList.add("gui_edit_helditem");
-			packetList.add("combat_enter");
-			packetList.add("combat_end");
-			packetList.add("combat_death");
-			packetList.add("playergui_send_actionbar");
-			packetList.add("camera_shader_enderman");
-			packetList.add("camera_shader_creeper");
-			packetList.add("camera_shader_spider");
-			packetList.add("playergui_send_bossbar");
-			packetList.add("animation_play_leavebed");
-			packetList.add("animation_play_swing_mainhand");
-			packetList.add("animation_play_swing_offhand");
-			packetList.add("animation_play_takedmg");
-			packetList.add("animation_play_crit");
-			packetList.add("animation_play_crit_magical");
-			packetList.add("playergui_send_title");
-			packetList.add("playergui_send_subtitle");
+				"spawn_entity",
+				"spawn_experience_orb",
+				"spawn_painting",
+				"gui_close",
+				"camera_block_break_animation",
+				"playergui_set_item_inventory",
+				"playergui_set_item_cooldown",
+				"camera_create_explosion",
+				"state_weather_rain_start",
+				"state_weather_rain_end",
+				"state_gamemode_change",
+				"state_win_noendscreen",
+				"state_win_endscreen",
+				"state_arrowhit",
+				"state_elderguardianscreen",
+				"state_respawnscreen",
+				"state_respawnscreen_immediate",
+				"gui_open_horse",
+				"gui_open_sign",
+				"gui_open_book",
+				"gui_open_container",
+				"gui_open_beacon",
+				"gui_open_anvil",
+				"gui_open_enchantment",
+				"gui_open_crafting",
+				"gui_open_smoker",
+				"gui_open_blastfurnace",
+				"gui_open_furnace",
+				"gui_open_grindstone",
+				"gui_open_cartography",
+				"gui_open_shulker",
+				"gui_open_villager",
+				"gui_open_stonecutter",
+				"camera_unload_chunk",
+				"gui_edit_helditem",
+				"combat_enter",
+				"combat_end",
+				"combat_death",
+				"playergui_send_actionbar",
+				"camera_shader_enderman",
+				"camera_shader_creeper",
+				"camera_shader_spider",
+				"playergui_send_bossbar",
+				"animation_play_leavebed",
+				"animation_play_swing_mainhand",
+				"animation_play_swing_offhand",
+				"animation_play_takedmg",
+				"animation_play_crit",
+				"animation_play_crit_magical",
+				"playergui_send_title",
+				"playergui_send_subtitle"
+			
+			};
 			
 			List<String> actualPacketList = new ArrayList<>();
 			
@@ -80,15 +82,16 @@ public class CommandTabCompleter implements TabCompleter {
 			}
 
 			
-			String[] newPacketList = (String[]) actualPacketList.toArray();
-			Arrays.sort(newPacketList);
+			Collections.sort(actualPacketList);
 			
-			return (Arrays.asList(newPacketList));
+			return (actualPacketList);
 		} else if (type.equalsIgnoreCase("connection")) {
-			List<String> packetList = new ArrayList<>();
+			String[] packetList = {
 
-			packetList.add("connection_kick_player");
-			packetList.add("camera_updateviewdistance");
+			"connection_kick_player",
+			"camera_updateviewdistance"
+			
+			};
 
 			List<String> actualPacketList = new ArrayList<>();
 			
@@ -97,17 +100,16 @@ public class CommandTabCompleter implements TabCompleter {
 			}
 
 			
-			String[] newPacketList = (String[]) actualPacketList.toArray();
-			Arrays.sort(newPacketList);
+			Collections.sort(actualPacketList);
 			
-			return (Arrays.asList(newPacketList));
+			return (actualPacketList);
 		} else if (type.equalsIgnoreCase("settings")) {
-			List<String> packetList = new ArrayList<>();
+			String[] packetList = {
 
-			packetList.add("settings_changedifficulty");
-			packetList.add("playergui_changexp");
-			packetList.add("playergui_updatehealth");
-
+				"settings_changedifficulty",
+				"playergui_changexp",
+				"playergui_updatehealth"
+			};
 			List<String> actualPacketList = new ArrayList<>();
 			
 			for (String s : packetList) {
@@ -115,25 +117,23 @@ public class CommandTabCompleter implements TabCompleter {
 			}
 
 			
-			String[] newPacketList = (String[]) actualPacketList.toArray();
-			Arrays.sort(newPacketList);
+			Collections.sort(actualPacketList);
 			
-			return (Arrays.asList(newPacketList));
+			return (actualPacketList);
 		} else return null;
  	}
  	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-		if (cmd.getName().equalsIgnoreCase("clientpacket")) {
-			if (args.length < 1) {
+		switch (args.length) {
+			case 1:
 				List<String> packetTypes = new ArrayList<>();
 				packetTypes.add("play");
 				packetTypes.add("connection");
 				packetTypes.add("settings");
-
+	
 				return packetTypes;
-			}
-			else if (args.length < 2) {
+			case 2:
 				List<String> playersOnline = new ArrayList<>();
 				
 				for (Player p : Bukkit.getOnlinePlayers()) {
@@ -141,10 +141,11 @@ public class CommandTabCompleter implements TabCompleter {
 				}
 				
 				return playersOnline;
-			} else if (args.length == 2) {
+			case 3:
 				return getClientPacketList(args[0]);
-			} else if (args.length >= 3) {
-				String packet = args[1];
+			case 4:
+				Player target = Bukkit.getPlayer(args[1]);
+				String packet = args[2];
 				
 				switch (packet.replaceAll("minecraft:", "")) {
 					case "spawn_entity":
@@ -154,6 +155,23 @@ public class CommandTabCompleter implements TabCompleter {
 							for (EntityType t : EntityType.values()) {
 								entities.add("minecraft:" + t.name().toLowerCase());
 							}
+							
+							return entities;	
+						} else if (args.length == 4) {
+							List<String> xPos = new ArrayList<>();
+							
+							xPos.add(Integer.toString(target.getLocation().getBlockX()));
+							return xPos;
+						} else if (args.length == 5) {
+							List<String> xPos = new ArrayList<>();
+							
+							xPos.add(Integer.toString(target.getLocation().getBlockY()));
+							return xPos;
+						} else if (args.length == 6) {
+							List<String> xPos = new ArrayList<>();
+							
+							xPos.add(Integer.toString(target.getLocation().getBlockZ()));
+							return xPos;
 						}
 						
 						break;
@@ -171,30 +189,30 @@ public class CommandTabCompleter implements TabCompleter {
 					case "spawn_painting":
 						if (args.length == 3) {
 							List<String> art = new ArrayList<>();
-
+	
 							for (Art a : Art.values()) {
 								art.add("minecraft:" + a.name().toLowerCase());
 							}
-
+	
 							return art;
 						}
 						break;
 					case "settings_changedifficulty":
-						if (args.length == 3) {
+						if (args.length == 4) {
 							List<String> difficulty = new ArrayList<>();
-
+	
 							difficulty.add("peaceful");
 							difficulty.add("easy");
 							difficulty.add("normal");
 							difficulty.add("hard");
-
+	
 							return difficulty;
-						} else if (args.length == 4) {
+						} else if (args.length == 5) {
 							List<String> forceDifficulty = new ArrayList<>();
-
+	
 							forceDifficulty.add("true");
 							forceDifficulty.add("false");
-
+	
 							return forceDifficulty;
 						}
 						break;
@@ -266,18 +284,7 @@ public class CommandTabCompleter implements TabCompleter {
 					default:
 						return null;
 				}
-			}
-		} else if (cmd.getName().equalsIgnoreCase("superpackets")) {
-			if (args.length < 1) {
-				List<String> baseCommandList = new ArrayList<>();
-
-				baseCommandList.add("info");
-				baseCommandList.add("help");
-
-				return baseCommandList;
-			} else return null;
 		}
-		
 		return null;
 	}
 
