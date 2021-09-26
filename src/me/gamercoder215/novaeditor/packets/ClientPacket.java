@@ -1,4 +1,4 @@
-package me.gamercoder215.novaeditor.commands;
+package me.gamercoder215.novaeditor.packets;
 
 import java.util.ArrayList;
 import java.util.Random;
