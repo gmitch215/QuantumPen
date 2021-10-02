@@ -1,2 +1,3 @@
-# NovaEditor
-Base minecraft editor
+# QuantumPen
+
+> Edit you world in ways previously unknown!
