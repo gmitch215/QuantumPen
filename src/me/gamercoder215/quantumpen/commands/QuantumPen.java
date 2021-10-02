@@ -1,4 +1,4 @@
-package me.gamercoder215.novaeditor.commands;
+package me.gamercoder215.quantumpen.commands;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -10,17 +10,17 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import me.gamercoder215.novaeditor.Main;
-import me.gamercoder215.novaeditor.utils.CommandTabCompleter;
+import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 
-public class NovaEditor implements CommandExecutor {
+public class QuantumPen implements CommandExecutor {
 	
 	protected Main plugin;
 	
-	public NovaEditor(Main plugin) {
+	public QuantumPen(Main plugin) {
 		this.plugin = plugin;
-		plugin.getCommand("novaeditor").setExecutor(this);
-		plugin.getCommand("novaeditor").setTabCompleter(new CommandTabCompleter());
+		plugin.getCommand("quantumpen").setExecutor(this);
+		plugin.getCommand("quantumpen").setTabCompleter(new CommandTabCompleter());
 	}
 
 	private static HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();

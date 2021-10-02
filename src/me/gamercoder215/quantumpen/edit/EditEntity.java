@@ -1,4 +1,4 @@
-package me.gamercoder215.novaeditor.edit;
+package me.gamercoder215.quantumpen.edit;
 
 import java.util.UUID;
 
@@ -10,7 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
-import me.gamercoder215.novaeditor.Main;
+import me.gamercoder215.quantumpen.Main;
 
 public class EditEntity implements CommandExecutor {
 	

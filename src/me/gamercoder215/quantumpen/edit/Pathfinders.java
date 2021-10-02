@@ -1,4 +1,4 @@
-package me.gamercoder215.novaeditor.edit;
+package me.gamercoder215.quantumpen.edit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
-import me.gamercoder215.novaeditor.Main;
+import me.gamercoder215.quantumpen.Main;
 import net.minecraft.world.entity.EntityAreaEffectCloud;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalArrowAttack;

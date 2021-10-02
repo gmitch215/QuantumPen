@@ -1,4 +1,4 @@
-package me.gamercoder215.novaeditor.packets;
+package me.gamercoder215.quantumpen.packets;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -15,8 +15,8 @@ import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
-import me.gamercoder215.novaeditor.Main;
-import me.gamercoder215.novaeditor.utils.CommandTabCompleter;
+import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.network.chat.ChatComponentText;

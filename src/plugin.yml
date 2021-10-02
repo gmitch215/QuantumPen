@@ -1,53 +1,66 @@
 name: NovaEditor
-main: me.gamercoder215.novaeditor.Main
+main: me.gamercoder215.quantumpen.Main
 version: 1.0.0
 api-version: 1.17
-description: Send NMS Packets with simple commands!
+description: Edit your world in previous ways unknown!
 author: GamerCoder215
 commands:
   clientpacket:
     description: Use a client-bound packet to a player.
-    permission: novaeditor.packets.clientpacket
+    permission: quantumpen.packets.clientpacket
     usage: /clientpacket <player> <type> <packet> <parameters...>
     aliases: [cpacket, clientp, clpacket, clp, cp]
-  novaeditor:
+  quantumpen:
     description: NovaEditor base command
-    usage: /novaeditor <parameters>
-    aliases: [novae, ne, novaedit, nedit, neditor]
+    usage: /quantumpen <parameters>
+    aliases: [qpen, quantump, quantp, qp, quantpen]
   pathfinders:
     description: Pathfinders base command
     usage: /pathfinders <add|remove|clear|list> <parameters>
     aliases: [pathfinder, pfinder, pf, pfs, pfinders, pathf, pathfs]
 
 permissions:
-  novaeditor.*:
+  quantumpen.*:
     default: op
     description: All NovaEditor permissions
     children:
-      novaeditor.packets: true
-      novaeditor.packets.clientpacket: true
-      novaeditor.pathfinder: true
-      novaeditor.pathfinder.add: true
-      novaeditor.pathfinder.remove: true
-      novaeditor.pathfinder.clear: true
-      novaeditor.pathfinder.list: true
+      quantumpen.packets: true
+      quantumpen.packets.clientpacket: true
+      quantumpen.pathfinder: true
+      quantumpen.pathfinder.add: true
+      quantumpen.pathfinder.remove: true
+      quantumpen.pathfinder.clear: true
+      quantumpen.pathfinder.list: true
   # Packets
-  novaeditor.packets:
+  quantumpen.packets:
     default: op
-    description: Access to NovaEditor packets
+    description: Access to QuantumPen packets
     children:
-      novaeditor.packets.clientpacket: true
-  novaeditor.packets.clientpacket:
+      quantumpen.packets.clientpacket: true
+  quantumpen.packets.clientpacket:
     default: op
     description: Access to /clientpacket command
   # Pathfinders
-  novaeditor.pathfinder:
+  quantumpen.pathfinder:
     default: op
     description: Access to all Pathfinder Options
     children:
-      novaeditor.pathfinder.add: true
-      novaeditor.pathfinder.remove: true
-      novaeditor.pathfinder.clear: true
-      novaeditor.pathfinder.list: true
+      quantumpen.pathfinder.add: true
+      quantumpen.pathfinder.remove: true
+      quantumpen.pathfinder.clear: true
+      quantumpen.pathfinder.list: true
+  quantumpen.pathfinder.add:
+    default: op
+    description: Enable ability to add pathfinders
+  quantumpen.pathfinder.list:
+    default: op
+    description: Enable ability to list pathfinders
+  quantumpen.pathfinder.remove:
+    default: op
+    description: Enable ability to remove pathfinders
+  quantumpen.pathfinder.clear:
+    default: op
+    description: Enable ability to clear pathfinders
+    
       
   
