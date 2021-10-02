@@ -126,7 +126,13 @@ public class CommandTabCompleter implements TabCompleter {
 	public static List<String> getPathfinderList() {
 		String[] oldpathfinders = {
 				"attack_arrow",
+        "villager_tradeplayer",
+        "horse_tameable",
+        "animal_breed",
+        "core_waterbreathe",
+        "creeper_swell",
 				"target_avoid",
+        "core_beg",
 				"attack_range_bow",
 				"attack_breakdoor",
 				"illager_raid",
@@ -136,6 +142,8 @@ public class CommandTabCompleter implements TabCompleter {
 				"movement_fleesun",
 				"movement_follow_entity",
 				"movenent_follow_owner",
+        "core_interact_door",
+        "core_interact_opendoor",
 				"movenent_follow_parent",
 				"core_lookatplayer",
 				"attack_melee",
@@ -146,7 +154,15 @@ public class CommandTabCompleter implements TabCompleter {
 				"random_fly",
 				"random_move_land",
 				"golem_offer_flower",
+        "movement_throughvillage",
+        "movement_towards_target",
+        "movement_towards_restriction",
+        "movement_nearest_village",
+        "dolphin_waterjump",
+        "movement_water",
+        "dragon_perch",
 				"zombie_attack",
+        "ocelot_attack",
 				"attack_nearest_target",
 				"attack_defensive",
 				"attack_target",
@@ -163,6 +179,27 @@ public class CommandTabCompleter implements TabCompleter {
 		Collections.sort(pathfinders);
 		
 		return pathfinders;
+	}
+
+	public static List<String> getEntityActions(String type) {
+		if (type.equalsIgnoreCase("edit")) {
+			List<String> edits = new ArrayList<>();
+				edits.add("set_velocity");
+				edits.add("set_ai");
+				edits.add("set_collidable");
+				edits.add("set_lastdamage");
+				edits.add("set_arrowsinbody");
+				edits.add("set_max_air");
+				edits.add("set_invisible");
+				edits.add("set_health");
+				edits.add("set_max_nodamageticks");
+				edits.add("set_nodamageticks");
+				edits.add("set_arrowcooldown");
+
+			Collections.sort(edits);
+
+			return edits2;
+		}
 	}
  	
 	@Override
@@ -191,7 +228,7 @@ public class CommandTabCompleter implements TabCompleter {
 						Player target = Bukkit.getPlayer(args[1]);
 						String packet = args[2];
 						
-						switch (packet.replaceAll("minecraft:", "")) {
+						switch (packet.replaceAll("pminecraft:", "")) {
 							case "spawn_entity":
 								if (args.length == 3) {
 									List<String> entities = new ArrayList<>();
@@ -331,7 +368,22 @@ public class CommandTabCompleter implements TabCompleter {
 				}
 				break;
 			case "editentity":
-				
+				switch(args.length) {
+					case 1:
+						List<String> uuids = new ArrayList<>();
+
+						for (Player p : Bukkit.getOnlinePlayers()) {
+							uuids.add(p.getUniqueId().toString());
+						}					
+
+						Collections.sort(uuids);
+						return uuids;
+						break;
+					case 2:
+						return getEntityActions(args[1]);
+						break;
+					
+				}
 				break;
 		}
 		return null;
