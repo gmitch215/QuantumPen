@@ -198,8 +198,8 @@ public class CommandTabCompleter implements TabCompleter {
 
 			Collections.sort(edits);
 
-			return edits2;
-		}
+			return edits;
+		} else return null;
 	}
  	
 	@Override
@@ -378,10 +378,8 @@ public class CommandTabCompleter implements TabCompleter {
 
 						Collections.sort(uuids);
 						return uuids;
-						break;
 					case 2:
 						return getEntityActions(args[1]);
-						break;
 					
 				}
 				break;
