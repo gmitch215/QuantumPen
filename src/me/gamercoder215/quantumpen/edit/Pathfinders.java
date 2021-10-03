@@ -17,7 +17,8 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
 import me.gamercoder215.quantumpen.Main;
-import net.minecraft.world.entity.EntityAreaEffectCloud;
+import me.gamercoder215.quantumpen.packets.ClientPacket;
+import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalArrowAttack;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
@@ -52,8 +53,14 @@ import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomSwim;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalRestrictSun;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalSwell;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalTradeWithPlayer;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalWater;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalWaterJump;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalWrapped;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalZombieAttack;
+import net.minecraft.world.entity.ai.goal.target.PathfinderGoalDefendVillage;
+import net.minecraft.world.entity.ai.goal.target.PathfinderGoalHurtByTarget;
+import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTarget;
 import net.minecraft.world.entity.monster.IRangedEntity;
 
 public class Pathfinders implements CommandExecutor {
@@ -71,8 +78,7 @@ public class Pathfinders implements CommandExecutor {
   }
 
   public static Class<?> matchClass(EntityType t) {
-	  if (t == EntityType.AREA_EFFECT_CLOUD) return EntityAreaEffectCloud.class;
-	  else return null;
+	  return ClientPacket.matchEntityType(t.name()).a();
     
   }
   	public static String matchGoal(PathfinderGoalWrapped p) {
@@ -110,7 +116,14 @@ public class Pathfinders implements CommandExecutor {
 	    else if (p.j() instanceof PathfinderGoalRestrictSun) return "movement_restrictsun";
 	    else if (p.j() instanceof PathfinderGoalSwell) return "creeper_swell";
 	    else if (p.j() instanceof PathfinderGoalWaterJump) return "dolphin_waterjump";
-    else return "";
+	    else if (p.j() instanceof PathfinderGoalTradeWithPlayer) return "villager_tradeplayer";
+	    else if (p.j() instanceof PathfinderGoalWater) return "movement_findwater";
+	    else if (p.j() instanceof PathfinderGoalZombieAttack) return "zombie_attack";
+	    else if (p.j() instanceof PathfinderGoalNearestAttackableTarget) return "attack_nearest_target";
+	    else if (p.j() instanceof PathfinderGoalHurtByTarget) return "attack_defensive";
+	    else if (p.j() instanceof PathfinderGoalDefendVillage) return "attack_defendvillage";
+	    
+	    else return "";
   }
 
 	@Override
@@ -137,8 +150,15 @@ public class Pathfinders implements CommandExecutor {
         Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an alive entity's UUID.");
         return false;
       }
+      
+      
 
       LivingEntity bukkittarget = (LivingEntity) Bukkit.getEntity(uid);
+      
+      if (!(((CraftEntity) bukkittarget).getHandle() instanceof EntityInsentient)) {
+    	  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an entity that supports pathfinders.");
+    	  return false;
+      }
 
       EntityInsentient target = ((EntityInsentient) ((CraftEntity) bukkittarget).getHandle());
 
@@ -163,7 +183,7 @@ public class Pathfinders implements CommandExecutor {
           int newP = maxPriority + 1;
           try {
             switch (args[2].toLowerCase()) {
-              case "attack_arrow":
+              case "attack_arrow": {
                 if (args.length < 4) {
                   Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid speed modifier.");
                   return false;
@@ -189,12 +209,38 @@ public class Pathfinders implements CommandExecutor {
                 target.bP.a(newP, p);
 
                 break;
-              case "target_avoid":
+              }
+              case "target_avoid": {
                 if (args.length < 4) {
                   Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the entity type to avoid.");
                   return false;
                 }
+                
+                if (args.length < 5) {
+                	Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a sensitivity distance (how far away the target must be to avoid)");
+                	return false;
+                }
+                
+                if (args.length < 6) {
+                	Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a speed modifier.");
+                	return false;
+                }
+                
+                @SuppressWarnings("unchecked")
+				Class<EntityInsentient> entityClass = ((Class<EntityInsentient>) matchClass(EntityType.valueOf(args[3])));
+                
+                try {
+                	PathfinderGoalAvoidTarget<EntityInsentient> p = new PathfinderGoalAvoidTarget<EntityInsentient>((EntityCreature) target, entityClass, Float.parseFloat(args[4]), Double.parseDouble(args[5]), Double.parseDouble(args[5]) * 1.25);
+                	
+                	target.bP.a(p);
+                } catch (NumberFormatException e) {
+                	Main.sendPluginMessage(sender, ChatColor.RED + "Please fix your numbers.");
+                	return false;
+                }
+                
+                
                 break;
+              }
               default:
                 Main.sendPluginMessage(sender, ChatColor.RED + "This pathfinder does not exist or is not supported yet.");
                 return false;

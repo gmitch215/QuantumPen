@@ -1,9 +1,11 @@
 package me.gamercoder215.quantumpen.commands;
 
+/*
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+*/
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -22,9 +24,11 @@ public class QuantumPen implements CommandExecutor {
 		plugin.getCommand("quantumpen").setExecutor(this);
 		plugin.getCommand("quantumpen").setTabCompleter(new CommandTabCompleter());
 	}
+	/*
 
 	private static HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
 
+	
 	private static String sendGETRequest(String url) {
 		try {
 			HttpRequest request = HttpRequest.newBuilder()
@@ -44,6 +48,7 @@ public class QuantumPen implements CommandExecutor {
 	
 		return null;
 	}
+	*/
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {

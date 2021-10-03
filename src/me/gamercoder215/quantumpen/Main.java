@@ -4,7 +4,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.gamercoder215.quantumpen.commands.NovaEditor;
+import me.gamercoder215.quantumpen.commands.QuantumPen;
+import me.gamercoder215.quantumpen.edit.EditEntity;
+import me.gamercoder215.quantumpen.edit.Pathfinders;
 import me.gamercoder215.quantumpen.packets.ClientPacket;
 
 public class Main extends JavaPlugin {
@@ -24,7 +26,10 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		new ClientPacket(this);
 		
-    	new QuantumPenthis);
+		new Pathfinders(this);
+		new EditEntity(this);
+		
+    	new QuantumPen(this);
     	
     	
 	}
