@@ -16,6 +16,20 @@ import org.bukkit.entity.Player;
 
 public class CommandTabCompleter implements TabCompleter {
 	
+	public enum ArgumentType {
+		BOOLEAN;
+	}
+
+	public static List<String> getTypes(ArgumentType type) {
+		if (type == ArgumentType.BOOLEAN) {
+			List<String> bool = new ArrayList<>();
+			bool.add("true");
+			bool.add("false");
+
+			return bool;
+		}
+	}
+
 	public static List<String> getClientPacketList(String type) {
 		if (type.equalsIgnoreCase("play")) {
 
@@ -127,23 +141,23 @@ public class CommandTabCompleter implements TabCompleter {
 		String[] oldpathfinders = {
 				"attack_arrow",
 				"villager_tradeplayer",
-        		"animal_breed",
-        		"core_waterbreathe",
-        		"creeper_swell",
+				"animal_breed",
+				"core_waterbreathe",
+				"creeper_swell",
 				"target_avoid",
-				"core_beg",
+				"wolf_beg",
 				"attack_range_bow",
 				"attack_breakdoor",
 				"illager_raid",
 				"cat_sit_bed",
 				"attack_range_crossbow",
-				"ambient_eat_tile",
+				"ambient_eattile",
 				"movement_fleesun",
 				"movement_follow_entity",
 				"movenent_follow_owner",
 				"core_interact_opendoor",
 				"movenent_follow_parent",
-				"core_lookatplayer",
+				"core_lookatentity",
 				"attack_melee",
 				"movement_restrictsun",
 				"random_lookaround",
@@ -286,12 +300,7 @@ public class CommandTabCompleter implements TabCompleter {
 			
 									return difficulty;
 								} else if (args.length == 5) {
-									List<String> forceDifficulty = new ArrayList<>();
-			
-									forceDifficulty.add("true");
-									forceDifficulty.add("false");
-			
-									return forceDifficulty;
+									return getTypes(ArgumentType.BOOLEAN);
 								}
 								break;
 							case "camera_block_break_animation":

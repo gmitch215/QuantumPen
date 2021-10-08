@@ -22,6 +22,10 @@ public class Main extends JavaPlugin {
 	public static void sendNoPermission(CommandSender sender) {
 	  	sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.AQUA + "QuantumPen" + ChatColor.GOLD + "] " + ChatColor.RED + "You do not have permission to use this command/command option.");
 	}
+
+	public static void sendValidSpeedModifier(CommandSender sender) {
+		sendPluginMessage(sender, ChatColor.RED + "Please provide a valid speed modifier.");
+	}
 	
 	public void onEnable() {
 		new ClientPacket(this);

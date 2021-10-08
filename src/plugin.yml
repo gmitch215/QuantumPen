@@ -18,6 +18,10 @@ commands:
     description: Pathfinders base command
     usage: /pathfinders <add|remove|clear|list> <parameters>
     aliases: [pathfinder, pfinder, pf, pfs, pfinders, pathf, pathfs]
+  editentity:
+    description: Edit entities (advanced /data command)
+    usage: /editentity <parameters>
+    aliases: [edite, eentity, ee, eden, edentity]
 
 permissions:
   quantumpen.*:
