@@ -16,3 +16,12 @@ QuantumPen now has the ability to edit entity AI. Create cows that can use bows 
 
 ### Advanced Entity Editing
 /editentity is very similar to the /data command, with a few upgrades. Edit player data, force entity actions, and more!
+/playerdata can be used for getting player data.
+
+### World Data
+Modify chunks and worlds using /chunk and /world!
+
+### Server Modification
+Fetch & Modify server data with the /server command!
+
+## Screenshots
