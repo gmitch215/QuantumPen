@@ -1,6 +1,7 @@
 package me.gamercoder215.quantumpen.packets;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -20,9 +21,21 @@ import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 import net.minecraft.core.BlockPosition;
 import net.minecraft.core.EnumDirection;
 import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.network.protocol.game.ClientboundPlayerCombatEndPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerCombatEnterPacket;
+import net.minecraft.network.protocol.game.PacketPlayOutAnimation;
 import net.minecraft.network.protocol.game.PacketPlayOutBlockBreakAnimation;
+import net.minecraft.network.protocol.game.PacketPlayOutCamera;
 import net.minecraft.network.protocol.game.PacketPlayOutCloseWindow;
+import net.minecraft.network.protocol.game.PacketPlayOutExplosion;
+import net.minecraft.network.protocol.game.PacketPlayOutGameStateChange;
+import net.minecraft.network.protocol.game.PacketPlayOutHeldItemSlot;
+import net.minecraft.network.protocol.game.PacketPlayOutOpenBook;
+import net.minecraft.network.protocol.game.PacketPlayOutOpenSignEditor;
+import net.minecraft.network.protocol.game.PacketPlayOutOpenWindow;
+import net.minecraft.network.protocol.game.PacketPlayOutOpenWindowHorse;
 import net.minecraft.network.protocol.game.PacketPlayOutServerDifficulty;
+import net.minecraft.network.protocol.game.PacketPlayOutSetCooldown;
 import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityExperienceOrb;
@@ -30,10 +43,15 @@ import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityPainting;
 import net.minecraft.network.protocol.login.PacketLoginOutDisconnect;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.EnumHand;
 import net.minecraft.world.entity.EntityExperienceOrb;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.decoration.EntityPainting;
 import net.minecraft.world.entity.decoration.Paintings;
+import net.minecraft.world.entity.monster.EntityCreeper;
+import net.minecraft.world.entity.monster.EntityEnderman;
+import net.minecraft.world.entity.monster.EntitySpider;
+import net.minecraft.world.inventory.Containers;
 import net.minecraft.world.level.World;
 
 public class ClientPacket implements CommandExecutor {
@@ -280,219 +298,202 @@ public class ClientPacket implements CommandExecutor {
 			return false;
 		}
 		
-		switch (args[2].replaceAll("minecraft:", "")) {
-			case "spawn_entity":
-				if (args.length < 4) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type. Paintings and Experience Orbs use the spawn_paining and spawn_experience_orb packet, and markers are server-side only.");
-					return false;
-				}
-				
-				if (args[3].equalsIgnoreCase("minecraft:painting") || args[3].equalsIgnoreCase("minecraft:experience_orb")) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Paintings and Experience Orbs use the spawn_paining and spawn_experience_orb packet.");
-					return false;
-				}
-				
-				if (matchEntityType(args[3]) == null) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type. Paintings and Experience Orbs are used in the spawn_painting and spawn_experience_orb packet, and marks are server-side only.");
-					return false;
-				}
-				
-				if (args.length < 5) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
-					return false;	
-				}
-				
-				if (args.length < 6) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
-					return false;	
-				}
-				
-				if (args.length < 7) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
-					return false;	
-				}
-				
-				try {
+		try {
+			switch (args[2].replaceAll("minecraft:", "")) {
+				case "spawn_entity": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type. Paintings and Experience Orbs use the spawn_paining and spawn_experience_orb packet, and markers are server-side only.");
+						return false;
+					}
+					
+					if (args[3].equalsIgnoreCase("minecraft:painting") || args[3].equalsIgnoreCase("minecraft:experience_orb")) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Paintings and Experience Orbs use the spawn_paining and spawn_experience_orb packet.");
+						return false;
+					}
+					
+					if (matchEntityType(args[3]) == null) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type. Paintings and Experience Orbs are used in the spawn_painting and spawn_experience_orb packet, and marks are server-side only.");
+						return false;
+					}
+					
+					if (args.length < 5) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
+						return false;	
+					}
+					
+					if (args.length < 6) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
+						return false;	
+					}
+					
+					if (args.length < 7) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
+						return false;	
+					}
+					
 					PacketPlayOutSpawnEntity s = new PacketPlayOutSpawnEntity(r.nextInt(), UUID.randomUUID(), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[6].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), 0, 0, matchEntityType(args[3]), 0, null);
 					cp.b.sendPacket(s);
+
+					break;
+				}
+				case "spawn_experience_orb": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the world to spawn it into.");
+						return false;
+					}
 					
-				} catch (NumberFormatException e) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please fix your coordinates.");
-					return false;
-				}
-				break;
-			case "spawn_experience_orb":
-				if (args.length < 4) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the world to spawn it into.");
-					return false;
-				}
-				
-				if (args.length < 5) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
-					return false;	
-				}
-				
-				if (args.length < 6) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
-					return false;	
-				}
-				
-				if (args.length < 7) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
-					return false;	
-				}
-				
-				if (args.length < 8) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the experience amount.");
-					return false;
-				}
-				
-				try {
+					if (args.length < 5) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
+						return false;	
+					}
+					
+					if (args.length < 6) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
+						return false;	
+					}
+					
+					if (args.length < 7) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
+						return false;	
+					}
+					
+					if (args.length < 8) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the experience amount.");
+						return false;
+					}
+					
 					World w = ((CraftWorld) Bukkit.getWorld(args[3])).getHandle();
 					PacketPlayOutSpawnEntityExperienceOrb s = new PacketPlayOutSpawnEntityExperienceOrb(new EntityExperienceOrb(w, Integer.parseInt(args[3].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), Short.parseShort(args[6])));
 					cp.b.sendPacket(s);
-				} catch (NumberFormatException e) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please fix your coordinates and experience amount. The maximum amount of experience allowed is 32,767.");
-					return false;
+					
+					break;
 				}
-				
-				break;
-			case "spawn_painting":
-				if (args.length < 4) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a painting ID.");
-					return false;
-				}
-				
-				if (args.length < 5) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
-					return false;
-				}
-				
-				if (args.length < 6) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
-					return false;	
-				}
-				
-				if (args.length < 7) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
-					return false;	
-				}
-				
-				try {
+				case "spawn_painting": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a painting ID.");
+						return false;
+					}
+					
+					if (args.length < 5) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
+						return false;
+					}
+					
+					if (args.length < 6) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
+						return false;	
+					}
+					
+					if (args.length < 7) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
+						return false;	
+					}
+					
+
 					World w = ((CraftWorld) p.getWorld()).getHandle();
 					PacketPlayOutSpawnEntityPainting s = new PacketPlayOutSpawnEntityPainting(new EntityPainting(w, new BlockPosition(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6])), EnumDirection.a, matchPaintingID(args[3])));
 					cp.b.sendPacket(s);
+					break;
 				}
-				catch (NumberFormatException e) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please fix your coordinates.");
-					return false;
+				case "settings_changedifficulty": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid difficulty.");
+						return false;
+					}
+					
+					if (args.length < 5) {
+						PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), false);
+	
+						cp.b.sendPacket(s);
+					} else {
+						boolean lockDifficulty = Boolean.parseBoolean(args[4]);
+						PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), lockDifficulty);
+	
+						cp.b.sendPacket(s);
+					}
+	
+					break;
 				}
-				break;
-			case "settings_changedifficulty":
-				if (args.length < 4) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid difficulty.");
-					return false;
-				}
-				
-				if (args.length < 5) {
-					PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), false);
-
+				case "gui_close": {
+					PacketPlayOutCloseWindow s = new PacketPlayOutCloseWindow(cp.bV.j);
 					cp.b.sendPacket(s);
-				} else {
-					boolean lockDifficulty = Boolean.parseBoolean(args[4]);
-					PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), lockDifficulty);
-
+					cp.o();
+					break;
+				}
+				case "kick_player": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a reason to kick the player.");
+						return false;
+					}
+	
+					ArrayList<String> reasonArgs = new ArrayList<String>();
+					for (int i = 3; i < args.length; i++) {
+						reasonArgs.add(args[i]);
+					}
+					String reason = ChatColor.translateAlternateColorCodes('&', String.join(" ", reasonArgs));
+					
+					PacketLoginOutDisconnect s = new PacketLoginOutDisconnect(new ChatComponentText(reason));
 					cp.b.sendPacket(s);
+					break;
 				}
-
-				break;
-			case "gui_close":
-				PacketPlayOutCloseWindow s = new PacketPlayOutCloseWindow(cp.bV.j);
-				cp.b.sendPacket(s);
-				cp.o();
-				break;
-			case "kick_player":
-				if (args.length < 4) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a reason to kick the player.");
-					return false;
-				}
-
-				ArrayList<String> reasonArgs = new ArrayList<String>();
-				for (int i = 3; i < args.length; i++) {
-					reasonArgs.add(args[i]);
-				}
-				String reason = ChatColor.translateAlternateColorCodes('&', String.join(" ", reasonArgs));
-				
-				try {
-					PacketLoginOutDisconnect s2 = new PacketLoginOutDisconnect(new ChatComponentText(reason));
-					cp.b.sendPacket(s2);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				break;
-			case "camera_block_break_animation":
-				if (args.length < 4) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
-					return false;
-				}
-
-				if (args.length < 5) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
-					return false;
-				}
-
-				if (args.length < 6) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
-					return false;
-				}
-
-				if (args.length < 7) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage.");
-					return false;
-				}
-
-				if (!(args[6].startsWith("stage_"))) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage.");
-					return false;
-				}
-
-				String removedStage = args[6].replaceAll("stage_", "");
-
-				try {
+				case "camera_block_break_animation": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+						return false;
+					}
+	
+					if (args.length < 5) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+						return false;
+					}
+	
+					if (args.length < 6) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+						return false;
+					}
+	
+					if (args.length < 7) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage.");
+						return false;
+					}
+	
+					if (!(args[6].startsWith("stage_"))) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage.");
+						return false;
+					}
+	
+					String removedStage = args[6].replaceAll("stage_", "");
+	
 					int parsedStage = Integer.parseInt(removedStage);
 
-					PacketPlayOutBlockBreakAnimation s2 = new PacketPlayOutBlockBreakAnimation(p.getEntityId(), new BlockPosition(Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])), parsedStage);
+					PacketPlayOutBlockBreakAnimation s = new PacketPlayOutBlockBreakAnimation(p.getEntityId(), new BlockPosition(Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])), parsedStage);
 
-					cp.b.sendPacket(s2);
-				} catch (NumberFormatException e) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage and coordinates.");
-					return false;
+					cp.b.sendPacket(s);
+	
+					break;
 				}
-
-				break;
-			case "playergui_set_item_inventory":
-				if (args.length < 4) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a slot to replace.");
-					return false;
-				}
-
-				if (args.length < 5) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
-					return false;
-				}
-
-				Material m = Material.matchMaterial(args[4].replaceAll("minecraft:", "").toUpperCase());
-
-				if (m == null) m = Material.AIR;
-
-				if (args.length < 6) {
-					org.bukkit.inventory.ItemStack bukkititem = new org.bukkit.inventory.ItemStack(m);
-					net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(bukkititem);
-					
-					PacketPlayOutSetSlot s3 = new PacketPlayOutSetSlot(cp.bV.j, 0, matchInventorySlot(args[3]), item);
-					cp.b.sendPacket(s3);
-				} else {
-					try {
+				case "playergui_set_item_inventory": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a slot to replace.");
+						return false;
+					}
+	
+					if (args.length < 5) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
+						return false;
+					}
+	
+					Material m = Material.matchMaterial(args[4].replaceAll("minecraft:", "").toUpperCase());
+	
+					if (m == null) m = Material.AIR;
+	
+					if (args.length < 6) {
+						org.bukkit.inventory.ItemStack bukkititem = new org.bukkit.inventory.ItemStack(m);
+						net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(bukkititem);
+						
+						PacketPlayOutSetSlot s = new PacketPlayOutSetSlot(cp.bV.j, 0, matchInventorySlot(args[3]), item);
+						cp.b.sendPacket(s);
+					} else {
 						org.bukkit.inventory.ItemStack bukkititem = new org.bukkit.inventory.ItemStack(m);
 						int maxAmount = bukkititem.getMaxStackSize();
 						int amount = Integer.parseInt(args[5]);
@@ -504,17 +505,357 @@ public class ClientPacket implements CommandExecutor {
 						bukkititem.setAmount(amount);
 
 						net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(bukkititem);
-						PacketPlayOutSetSlot s3 = new PacketPlayOutSetSlot(cp.bV.j, 0, matchInventorySlot(args[3]), item);
-						cp.b.sendPacket(s3);
-					} catch (NumberFormatException e) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid amount.");
+						PacketPlayOutSetSlot s = new PacketPlayOutSetSlot(cp.bV.j, 0, matchInventorySlot(args[3]), item);
+						cp.b.sendPacket(s);
+					}
+					break;
+				}
+				case "playergui_set_item_cooldown": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid duration.");
 						return false;
 					}
+					
+					PacketPlayOutSetCooldown s = new PacketPlayOutSetCooldown(null, Integer.parseInt(args[3]));
+					
+					cp.b.sendPacket(s);
+					break;
 				}
-				break;
-			default:
-				Main.sendPluginMessage(sender, ChatColor.RED + "The packet you have provided is invalid.");
-				return false;
+				case "camera_create_explosion": {
+					List<BlockPosition> emptyList = new ArrayList<>();
+					
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+						return false;
+					}
+					
+					if (args.length < 5) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+						return false;
+					}
+					
+					if (args.length < 6) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+						return false;
+					}
+					
+					if (args.length < 7) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid explosion power.");
+						return false;
+					}
+					
+					PacketPlayOutExplosion s = new PacketPlayOutExplosion(Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]), Float.parseFloat(args[6]), emptyList, null);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "state_weather_rain_start": {
+					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.b, 0);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "state_weather_rain_end": {
+					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.c, 0);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "state_gamemode_change": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid gamemode.");
+						return false;
+					}
+					
+					int gamemode = 0;
+					
+					if (args[3].equalsIgnoreCase("survival"))
+						gamemode = 0;
+					else if (args[3].equalsIgnoreCase("creative"))
+						gamemode = 1;
+					else if (args[3].equalsIgnoreCase("adventure"))
+						gamemode = 2;
+					else if (args[3].equalsIgnoreCase("spectator"))
+						gamemode = 3;
+					
+					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.d, gamemode);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "state_win_noendscreen": {
+					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.e, 0);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "state_win_endscreen": {
+					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.e, 1);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "state_arrowhit": {
+					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.g, 0);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "state_elderguardianscreen": {
+					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.k, 0);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "state_respawnscreen": {
+					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.l, 0);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "state_respawnscreen_immediate": {
+					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.l, 1);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_horse": {
+					PacketPlayOutOpenWindowHorse s = new PacketPlayOutOpenWindowHorse(-1, 9, -1);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_book": {
+					PacketPlayOutOpenBook s = new PacketPlayOutOpenBook(EnumHand.a);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_container": {
+					Containers<?> containerType = Containers.c;
+					if (args.length < 4)
+						containerType = Containers.c;
+					else {
+						int size = Integer.parseInt(args[3]);
+						
+						if (size < 9 || size > 54) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a size between 9 and 54.");
+							return false;
+						}
+						
+						if (size % 9 != 0) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid size divisible by 9.");
+							return false;
+						}
+						
+						switch (size) {
+							case 9:
+								containerType = Containers.a;
+								break;
+							case 18:
+								containerType = Containers.b;
+								break;
+							case 27:
+								containerType = Containers.c;
+								break;
+							case 36:
+								containerType = Containers.d;
+								break;
+							case 45:
+								containerType = Containers.e;
+								break;
+							case 54:
+								containerType = Containers.f;
+								break;
+						}
+					}
+					
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, containerType, new ChatComponentText("Chest"));
+				
+					cp.b.sendPacket(s);
+				}
+				case "gui_open_sign": {
+					PacketPlayOutOpenSignEditor s = new PacketPlayOutOpenSignEditor(BlockPosition.b);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_beacon": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.i, new ChatComponentText("Beacon"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_anvil": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.h, new ChatComponentText("Anvil"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_enchantment": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.m, new ChatComponentText("Enchanting Table"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_crafting": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.l, new ChatComponentText("Crafting Table"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_smoker": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.v, new ChatComponentText("Smoker"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_blastfurnace": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.j, new ChatComponentText("Blast Furnace"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_furnace": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.n, new ChatComponentText("Furnace"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_grindstone": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.o, new ChatComponentText("Grindstone"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_cartography": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.w, new ChatComponentText("Cartography Table"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_shulker": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.t, new ChatComponentText("Shulker Box"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_villager": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.s, new ChatComponentText("Merchant"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_open_stonecutter": {
+					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.i, new ChatComponentText("Stonecutter"));
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "gui_edit_slotselected": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid slot number.");
+						return false;
+					}
+					
+					int slot = Integer.parseInt(args[3]);
+					
+					if (slot < 1 || slot > 9) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid slot number between 1 and 9.");
+						return false;
+					}
+					
+					PacketPlayOutHeldItemSlot s = new PacketPlayOutHeldItemSlot(slot - 1);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "combat_enter": {
+					ClientboundPlayerCombatEnterPacket s = new ClientboundPlayerCombatEnterPacket();
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "combat_end": {
+					int combatTime = 0;
+					if (args.length < 4)
+						combatTime = 0;
+					else
+						combatTime = Integer.parseInt(args[3]) * 20;
+					
+					
+					ClientboundPlayerCombatEndPacket s = new ClientboundPlayerCombatEndPacket(combatTime, -1);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "camera_shader_enderman": {
+					EntityEnderman enderman = new EntityEnderman(EntityTypes.w, ((CraftWorld) p.getWorld()).getHandle());
+				
+					PacketPlayOutCamera s = new PacketPlayOutCamera(enderman);
+					
+					cp.b.sendPacket(s);
+				}
+				case "camera_shader_creeper": {
+					EntityCreeper creeper = new EntityCreeper(EntityTypes.o, ((CraftWorld) p.getWorld()).getHandle());
+				
+					PacketPlayOutCamera s = new PacketPlayOutCamera(creeper);
+					
+					cp.b.sendPacket(s);
+				}
+				case "camera_shader_spider": {
+					EntitySpider spider = new EntitySpider(EntityTypes.aI, ((CraftWorld) p.getWorld()).getHandle());
+				
+					PacketPlayOutCamera s = new PacketPlayOutCamera(spider);
+					
+					cp.b.sendPacket(s);
+				}
+				case "animation_play_leavebed": {
+					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 2);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "animation_play_swing_mainhand": {
+					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 0);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "animation_play_swing_offhand": {
+					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 3);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "animation_play_takedmg": {
+					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 1);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "animation_play_crit": {
+					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 4);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "animation_play_crit_magical": {
+					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 5);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				default:
+					Main.sendPluginMessage(sender, ChatColor.RED + "The packet you have provided is invalid.");
+					return false;
+			}
+		} catch (IllegalArgumentException e) {
+			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+			return false;
+		} catch (Exception e) {
+			Main.sendPluginMessage(sender, ChatColor.RED + "Error:\n" + e.getLocalizedMessage());
+			return false;
 		}
 		
 		sender.sendMessage(ChatColor.GREEN + "Packet sent sucessfully!");
