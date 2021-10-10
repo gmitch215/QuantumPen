@@ -68,24 +68,18 @@ public class CommandTabCompleter implements TabCompleter {
 				"gui_open_shulker",
 				"gui_open_villager",
 				"gui_open_stonecutter",
-				"camera_unload_chunk",
-				"gui_edit_helditem",
+				"gui_edit_slotselected",
 				"combat_enter",
 				"combat_end",
-				"combat_death",
-				"playergui_send_actionbar",
 				"camera_shader_enderman",
 				"camera_shader_creeper",
 				"camera_shader_spider",
-				"playergui_send_bossbar",
 				"animation_play_leavebed",
 				"animation_play_swing_mainhand",
 				"animation_play_swing_offhand",
 				"animation_play_takedmg",
 				"animation_play_crit",
 				"animation_play_crit_magical",
-				"playergui_send_title",
-				"playergui_send_subtitle"
 			
 			};
 			
