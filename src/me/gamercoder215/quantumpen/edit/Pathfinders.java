@@ -137,7 +137,7 @@ public class Pathfinders implements CommandExecutor {
 	    else if (p.j() instanceof PathfinderGoalNearestAttackableTarget) return "attack_nearest_target";
 	    else if (p.j() instanceof PathfinderGoalHurtByTarget) return "attack_defensive";
 	    else if (p.j() instanceof PathfinderGoalDefendVillage) return "attack_defendvillage";
-	    else return "";
+	    else return "UNSUPPORTED";
   }
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -204,7 +204,7 @@ public class Pathfinders implements CommandExecutor {
             switch (args[2].toLowerCase()) {
               case "attack_arrow": {
                 if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+                	Main.sendValidSpeedModifier(sender);
                   return false;
                 }
 
