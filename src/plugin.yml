@@ -1,4 +1,4 @@
-name: NovaEditor
+name: QuantumPen
 main: me.gamercoder215.quantumpen.Main
 version: 1.0.0
 api-version: 1.17
@@ -16,12 +16,30 @@ commands:
     aliases: [qpen, quantump, quantp, qp, quantpen]
   pathfinders:
     description: Pathfinders base command
-    usage: /pathfinders <add|remove|clear|list> <parameters>
+    usage: /pathfinders <add|remove|clear|list> <parameters...>
     aliases: [pathfinder, pfinder, pf, pfs, pfinders, pathf, pathfs]
   editentity:
     description: Edit entities (advanced /data command)
-    usage: /editentity <parameters>
+    usage: /editentity <parameters...>
     aliases: [edite, eentity, ee, eden, edentity]
+  chunk:
+    description: Edit chunk data
+    usage: /chunk <world> <x> <z> <load|unload|forceload|setage> <parameters...>
+    aliases: [chnk, chk]
+  world:
+    description: Edit world data
+    usage: /world <name> <parameters...>
+    aliases: [wrld, w]
+  playerdata:
+    description: Fetch & Modify player data
+    permission: quantumpen.server.playerdata
+    usage: /playerdata <player> <fetchdata|modifydata>
+    aliases: [pdata, playerd, pd, pdta]
+  server:
+    description: Edit & Fetch server data
+    permission: quantumpen.server
+    usage: /server <data> <parameters...>
+    aliases: [srvr, s]
 
 permissions:
   quantumpen.*:
@@ -35,6 +53,10 @@ permissions:
       quantumpen.pathfinder.remove: true
       quantumpen.pathfinder.clear: true
       quantumpen.pathfinder.list: true
+      quantumpen.world: true
+      quantumpen.world.chunk: true
+      quantumpen.statistic: true
+      quantumpen.server: true
   # Packets
   quantumpen.packets:
     default: op
@@ -65,6 +87,22 @@ permissions:
   quantumpen.pathfinder.clear:
     default: op
     description: Enable ability to clear pathfinders
+  quantumpen.world:
+    default: op
+    description: Enable ability to edit world data
+    children:
+      quantumpen.world.chunk: true
+  quantumpen.world.chunk:
+    default: op
+    description: Enable ability to edit chunk data
+  quantumpen.server:
+    default: op
+    description: Enable ability to edit & fetch server data
+    children:
+      quantumpen.server.playerdata: true
+  quantumpen.server.playerdata:
+    default: op
+    description: Enable ability to fetch player data
     
       
   
