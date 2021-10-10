@@ -57,7 +57,7 @@ public class QuantumPen implements CommandExecutor {
 		}
 		switch (args[0].toLowerCase()) {
 		case "info":
-			sender.sendMessage(ChatColor.UNDERLINE + "" + ChatColor.DARK_GREEN + "NovaEditor by GamerCoder215\n\n" + ChatColor.GOLD + "Version v" + plugin.getDescription().getVersion());
+			sender.sendMessage(ChatColor.UNDERLINE + "" + ChatColor.DARK_GREEN + "QuantumPen by GamerCoder215\n\n" + ChatColor.GOLD + "Version v" + plugin.getDescription().getVersion());
 			break;
 			
 		}
