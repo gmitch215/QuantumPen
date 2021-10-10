@@ -179,11 +179,19 @@ public class Pathfinders implements CommandExecutor {
 
       switch (args[0].toLowerCase()) {
         case "clear":
+        	if (!(sender.hasPermission("quantumpen.pathfinder.clear"))) {
+        		Main.sendNoPermission(sender);
+        		return false;
+        	}
           for (PathfinderGoalWrapped p : getPathfinders(bukkittarget)) {
             target.bP.a(p.j());
           }
           break;
         case "add":
+        	if (!(sender.hasPermission("quantumpen.pathfinder.add"))) {
+        		Main.sendNoPermission(sender);
+        		return false;
+        	}
           List<Integer> priorities = new ArrayList<>();
           for (PathfinderGoalWrapped p : getPathfinders(bukkittarget)) {
             priorities.add(p.h());
@@ -756,6 +764,10 @@ public class Pathfinders implements CommandExecutor {
           }
 
         case "remove":
+        	if (!(sender.hasPermission("quantumpen.pathfinder.remove"))) {
+        		Main.sendNoPermission(sender);
+        		return false;
+        	}
         	try {
                 for (PathfinderGoalWrapped p : getPathfinders(bukkittarget)) {
                 	if (p.h() == Integer.parseInt(args[2])) {
@@ -772,6 +784,10 @@ public class Pathfinders implements CommandExecutor {
         	
         	break;
         case "list":
+        	if (!(sender.hasPermission("quantumpen.pathfinder.list"))) {
+        		Main.sendNoPermission(sender);
+        		return false;
+        	}
           Map<Integer, String> goals = new HashMap<>();
           
           for (PathfinderGoalWrapped p : getPathfinders(bukkittarget)) {
