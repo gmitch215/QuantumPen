@@ -27,7 +27,7 @@ public class CommandTabCompleter implements TabCompleter {
 			bool.add("false");
 
 			return bool;
-		}
+		} else return null;
 	}
 
 	public static List<String> getClientPacketList(String type) {
@@ -178,7 +178,13 @@ public class CommandTabCompleter implements TabCompleter {
 				"attack_nearest_target",
 				"attack_defensive",
 				"attack_defendvillage",
-				"core_panic"
+				"core_panic",
+				"core_float",
+				"fish_school",
+				"movement_follow_boat",
+				"cat_sit_block",
+				"llama_follow",
+				"tameable_sit",
 		};
 		
 		List<String> pathfinders = new ArrayList<>();
@@ -239,7 +245,7 @@ public class CommandTabCompleter implements TabCompleter {
 						Player target = Bukkit.getPlayer(args[1]);
 						String packet = args[2];
 						
-						switch (packet.replaceAll("pminecraft:", "")) {
+						switch (packet.replaceAll("minecraft:", "")) {
 							case "spawn_entity":
 								if (args.length == 3) {
 									List<String> entities = new ArrayList<>();
@@ -306,7 +312,7 @@ public class CommandTabCompleter implements TabCompleter {
 							case "camera_block_break_animation":
 								break;
 							case "playergui_set_item_inventory":
-								if (args.length == 3) {
+								if (args.length == 4) {
 									List<String> inventoryList = new ArrayList<>();
 			
 									inventoryList.add("armor.head");
@@ -358,7 +364,7 @@ public class CommandTabCompleter implements TabCompleter {
 									inventoryList.add("cursor");
 									
 									return inventoryList;
-								} else if (args.length == 4) {
+								} else if (args.length == 5) {
 									List<String> materials = new ArrayList<>();
 									
 									for (Material m : Material.values()) {
@@ -389,6 +395,77 @@ public class CommandTabCompleter implements TabCompleter {
 					
 				}
 				break;
+			case "pathfinders": {
+				
+			}
+			case "quantumpen": {
+				switch (args.length) {
+					case 1: {
+						List<String> actions = new ArrayList<>();
+						
+						actions.add("");
+						break;
+					}
+				}
+			}
+			case "server": {
+				switch (args.length) {
+					case 1:
+						List<String> arg0 = new ArrayList<>();
+						arg0.add("get");
+						arg0.add("set");
+						
+						return arg0;
+					case 2: 
+						switch (args[0]) {
+							case "get": {
+								
+								String[] fetched = {
+										"settings_allowend",
+										"settings_allownether",
+										"settings_allowflight",
+										"chunk_limit_spawnambient",
+										"chunk_limit_spawnanimal",
+										"bukkit_version",
+										"settings_defaultgamemode",
+										"settings_generatestructures",
+										"server_motd",
+										"server_name",
+										"settings_onlinemode",
+										"server_version",
+										"settings_viewdistance",
+										"chunk_limit_spawnambient_water",
+										"chunk_limit_spawnanimal_water",
+										"server_defaultworld_type",
+										"settings_hardcore",
+										"server_port",
+										"server_ip",
+										"settings_spawnprotection",
+										"spawns_ambientticks",
+										"spawns_animalticks",
+										"spawns_monsterticks",
+										"spawns_ambientticks_water",
+										"spawns_waterticks",
+										"spawns_undergroundcreatureticks"
+								};
+								List<String> fetched2 = new ArrayList<>();
+								
+								
+								for (String s : fetched) {
+									fetched2.add("minecraft:" + s);
+								}
+
+								
+								Collections.sort(fetched2);
+								
+								return fetched2;
+							}
+							case "set": {
+								
+							}
+						}
+				}
+			}
 		}
 		return null;
 	}

@@ -36,10 +36,15 @@ import net.minecraft.world.entity.ai.goal.PathfinderGoalCatSitOnBed;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalCrossbowAttack;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalDoorOpen;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalEatTile;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalFishSchool;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFleeSun;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalFloat;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowBoat;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowEntity;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowOwner;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalFollowParent;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalJumpOnBlock;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalLlamaFollow;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalLookAtPlayer;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalMeleeAttack;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalMoveThroughVillage;
@@ -57,6 +62,7 @@ import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStroll;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomStrollLand;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomSwim;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalRestrictSun;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalSit;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalSwell;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalTradeWithPlayer;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalWater;
@@ -69,9 +75,11 @@ import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackable
 import net.minecraft.world.entity.animal.EntityAnimal;
 import net.minecraft.world.entity.animal.EntityCat;
 import net.minecraft.world.entity.animal.EntityDolphin;
+import net.minecraft.world.entity.animal.EntityFishSchool;
 import net.minecraft.world.entity.animal.EntityIronGolem;
 import net.minecraft.world.entity.animal.EntityPerchable;
 import net.minecraft.world.entity.animal.EntityWolf;
+import net.minecraft.world.entity.animal.horse.EntityLlama;
 import net.minecraft.world.entity.monster.EntityCreeper;
 import net.minecraft.world.entity.monster.EntityMonster;
 import net.minecraft.world.entity.monster.EntityZombie;
@@ -137,6 +145,12 @@ public class Pathfinders implements CommandExecutor {
 	    else if (p.j() instanceof PathfinderGoalNearestAttackableTarget) return "attack_nearest_target";
 	    else if (p.j() instanceof PathfinderGoalHurtByTarget) return "attack_defensive";
 	    else if (p.j() instanceof PathfinderGoalDefendVillage) return "attack_defendvillage";
+	    else if (p.j() instanceof PathfinderGoalFloat) return "core_float";
+	    else if (p.j() instanceof PathfinderGoalFishSchool) return "fish_school";
+	    else if (p.j() instanceof PathfinderGoalFollowBoat) return "movement_follow_boat";
+	    else if (p.j() instanceof PathfinderGoalJumpOnBlock) return "cat_sit_block";
+	    else if (p.j() instanceof PathfinderGoalLlamaFollow) return "llama_follow";
+	    else if (p.j() instanceof PathfinderGoalSit) return "tameable_sit";
 	    else return "UNSUPPORTED";
   }
 
@@ -745,6 +759,52 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "attack_defendvillage": {
 								PathfinderGoalDefendVillage p = new PathfinderGoalDefendVillage((EntityIronGolem) target);
+								
+								target.bP.a(newP, p);
+								break;
+							}
+							case "core_float": {
+								PathfinderGoalFloat p = new PathfinderGoalFloat(target);
+								
+								target.bP.a(newP, p);
+								break;
+							}
+							case "fish_school": {
+								PathfinderGoalFishSchool p = new PathfinderGoalFishSchool((EntityFishSchool) target);
+								
+								target.bP.a(newP, p);
+								break;
+							}
+							case "movement_follow_boat": {
+								PathfinderGoalFollowBoat p = new PathfinderGoalFollowBoat((EntityCreature) target);
+								
+								target.bP.a(newP, p);
+								break;
+							}
+							case "cat_sit_block": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+								
+								PathfinderGoalJumpOnBlock p = new PathfinderGoalJumpOnBlock((EntityCat) target, Double.parseDouble(args[3]));
+								
+								target.bP.a(newP, p);
+								break;
+							}
+							case "llama_follow": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+								
+								PathfinderGoalLlamaFollow p = new PathfinderGoalLlamaFollow((EntityLlama) target, Double.parseDouble(args[3]));
+								
+								target.bP.a(newP, p);
+								break;
+							}
+							case "tameable_sit": {
+								PathfinderGoalSit p = new PathfinderGoalSit((EntityTameableAnimal) target);
 								
 								target.bP.a(newP, p);
 								break;
