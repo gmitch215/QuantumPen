@@ -167,7 +167,7 @@ public class Pathfinders implements CommandExecutor {
 	    else if (p.j() instanceof PathfinderGoalLlamaFollow) return "llama_follow";
 	    else if (p.j() instanceof PathfinderGoalSit) return "tameable_sit";
 	    else if (p.j() instanceof PathfinderGoalTempt) return "core_tempt";
-	    else return "UNSUPPORTED";
+	    else return (ChatColor.RED + p.j().getClass().getSimpleName());
   }
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
