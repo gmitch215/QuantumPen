@@ -222,6 +222,27 @@ public class CommandTabCompleter implements TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		switch (cmd.getName().toLowerCase()) {
+			case "chunk": {
+				switch(args.length) {
+					case 1:
+						List<String> actions = new ArrayList<>();
+						actions.add("load");
+						actions.add("unload");
+						actions.add("forceload");
+						actions.add("unforceload");
+						return actions;
+					case 2: {
+						switch (args[0]) {
+							case "load":
+							case "unload": {
+								return getTypes(ArgumentType.BOOLEAN);
+							}
+							default:
+								return null;
+						}
+					}
+				}
+			}
 			case "clientpacket":
 				switch (args.length) {
 					case 1:
@@ -438,6 +459,8 @@ public class CommandTabCompleter implements TabCompleter {
 						    return goals;
 						}
 						else return null;
+					default:
+						return null;
 				}
 			}
 			case "quantumpen": {
@@ -445,7 +468,7 @@ public class CommandTabCompleter implements TabCompleter {
 					case 1: {
 						List<String> actions = new ArrayList<>();
 						
-						actions.add("");
+						actions.add("info");
 						break;
 					}
 				}
@@ -506,6 +529,8 @@ public class CommandTabCompleter implements TabCompleter {
 								
 							}
 						}
+					default:
+						return null;
 				}
 			}
 		}

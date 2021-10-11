@@ -24,7 +24,7 @@ commands:
     aliases: [edite, eentity, ee, eden, edentity]
   chunk:
     description: Edit chunk data
-    usage: /chunk <world> <x> <z> <load|unload|forceload|setage> <parameters...>
+    usage: /chunk <world> <x> <z> <load|unload|forceload|unforceload|setage> <parameters...>
     aliases: [chnk, chk]
   world:
     description: Edit world data
