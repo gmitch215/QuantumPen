@@ -11,20 +11,24 @@ import java.util.function.Predicate;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
 import me.gamercoder215.quantumpen.Main;
 import me.gamercoder215.quantumpen.packets.ClientPacket;
+import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.EntityInsentient;
 import net.minecraft.world.entity.EntityLiving;
 import net.minecraft.world.entity.EntityTameableAnimal;
+import net.minecraft.world.entity.ai.goal.PathfinderGoal;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalArrowAttack;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalAvoidTarget;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalBeg;
@@ -64,6 +68,7 @@ import net.minecraft.world.entity.ai.goal.PathfinderGoalRandomSwim;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalRestrictSun;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalSit;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalSwell;
+import net.minecraft.world.entity.ai.goal.PathfinderGoalTempt;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalTradeWithPlayer;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalWater;
 import net.minecraft.world.entity.ai.goal.PathfinderGoalWaterJump;
@@ -86,6 +91,7 @@ import net.minecraft.world.entity.monster.EntityZombie;
 import net.minecraft.world.entity.monster.IRangedEntity;
 import net.minecraft.world.entity.npc.EntityVillagerAbstract;
 import net.minecraft.world.entity.raid.EntityRaider;
+import net.minecraft.world.item.crafting.RecipeItemStack;
 
 public class Pathfinders implements CommandExecutor {
 	protected Main plugin;
@@ -93,6 +99,7 @@ public class Pathfinders implements CommandExecutor {
 	public Pathfinders(Main plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("pathfinders").setExecutor(this);
+		plugin.getCommand("pathfinders").setTabCompleter(new CommandTabCompleter());
 	}
 
   public static Set<PathfinderGoalWrapped> getPathfinders(LivingEntity en) {
@@ -100,6 +107,14 @@ public class Pathfinders implements CommandExecutor {
     
     return e.bP.c();
   }
+  
+  public static Set<PathfinderGoalWrapped> getPathfindersTarget(LivingEntity en) {
+	    EntityInsentient e = (EntityInsentient) ((CraftEntity) en).getHandle();
+	    
+	    return e.bQ.c();
+  }
+  
+  
 
 	  public static Class<?> matchClass(EntityType t) {
 		  return ClientPacket.matchEntityType(t.name()).a();
@@ -151,6 +166,7 @@ public class Pathfinders implements CommandExecutor {
 	    else if (p.j() instanceof PathfinderGoalJumpOnBlock) return "cat_sit_block";
 	    else if (p.j() instanceof PathfinderGoalLlamaFollow) return "llama_follow";
 	    else if (p.j() instanceof PathfinderGoalSit) return "tameable_sit";
+	    else if (p.j() instanceof PathfinderGoalTempt) return "core_tempt";
 	    else return "UNSUPPORTED";
   }
 
@@ -197,11 +213,23 @@ public class Pathfinders implements CommandExecutor {
         		Main.sendNoPermission(sender);
         		return false;
         	}
-          for (PathfinderGoalWrapped p : getPathfinders(bukkittarget)) {
-            target.bP.a(p.j());
-          }
+        	sender.sendMessage(ChatColor.GREEN + "Clearing...");
+          List<PathfinderGoal> newgoals = new ArrayList<>();
+          
+          getPathfinders(bukkittarget).forEach(p -> {
+        	  newgoals.add(p.j());
+          });
+          
+          getPathfindersTarget(bukkittarget).forEach(p -> {
+        	  newgoals.add(p.j());
+          });
+          
+          newgoals.forEach(p2 -> {
+        	  target.bP.a(p2);
+          });
+          sender.sendMessage(ChatColor.GREEN + "Goals Cleared Successfully!");
           break;
-        case "add":
+        case "add": {
         	if (!(sender.hasPermission("quantumpen.pathfinder.add"))) {
         		Main.sendNoPermission(sender);
         		return false;
@@ -217,13 +245,19 @@ public class Pathfinders implements CommandExecutor {
 					}
 
 
-          int maxPriority = priorities.get(0);
+          int maxPriority = -1;
+          
+          try {
+        	  maxPriority = priorities.get(0);
+          } catch (IndexOutOfBoundsException e) {
+        	  maxPriority = -1;
+          }
 
           for (int i = 1; i < priorities.toArray().length; i++) if (priorities.get(i) > maxPriority) maxPriority = priorities.get(i);
 
           int newP = maxPriority + 1;
           try {
-            switch (args[2].toLowerCase()) {
+            switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
               case "attack_arrow": {
                 if (args.length < 4) {
                 	Main.sendValidSpeedModifier(sender);
@@ -268,12 +302,11 @@ public class Pathfinders implements CommandExecutor {
                 }
                 
 
-				Class<EntityInsentient> entityClass = ((Class<EntityInsentient>) matchClass(EntityType.valueOf(args[3])));
+				Class<EntityInsentient> entityClass = ((Class<EntityInsentient>) matchClass(EntityType.valueOf(args[3].replaceAll("minecraft:", "").toUpperCase())));
 
 				PathfinderGoalAvoidTarget<?> p = new PathfinderGoalAvoidTarget<>((EntityCreature) target, entityClass, Float.parseFloat(args[4]), Double.parseDouble(args[5]), Double.parseDouble(args[5]) * 1.25);
 				
-				target.bP.a(newP, p);
-								
+				target.bP.a(newP, p);	
                 break;
               }
 							case "wolf_beg": {
@@ -379,6 +412,7 @@ public class Pathfinders implements CommandExecutor {
 								PathfinderGoalFleeSun p = new PathfinderGoalFleeSun((EntityCreature) target, Double.parseDouble(args[3]));
 
 								target.bP.a(newP, p);
+								break;
 							}
 							case "movement_follow_entity": {
 								if (args.length < 4) {
@@ -809,6 +843,40 @@ public class Pathfinders implements CommandExecutor {
 								target.bP.a(newP, p);
 								break;
 							}
+							case "core_tempt": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+								
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide valid items.");
+									return false;
+								}
+								
+								List<Material> items = new ArrayList<>();
+								
+								for (int i = 4; i < args.length; i++) {
+									items.add(Material.matchMaterial(args[i].toUpperCase()));
+								}
+								
+								List<net.minecraft.world.item.ItemStack> nmsItemStacks = new ArrayList<>();
+								
+								for (Material m : items) {
+									org.bukkit.inventory.ItemStack bukkitstack = new org.bukkit.inventory.ItemStack(m);
+									
+									net.minecraft.world.item.ItemStack nmsstack = CraftItemStack.asNMSCopy(bukkitstack);
+									
+									nmsItemStacks.add(nmsstack);
+								}
+								
+								RecipeItemStack recipe = RecipeItemStack.a(nmsItemStacks.stream());
+								
+								PathfinderGoalTempt p = new PathfinderGoalTempt((EntityCreature) target, Double.parseDouble(args[3]), recipe, true);
+								
+								target.bP.a(newP, p);
+								break;
+							}
 							default:
 								Main.sendPluginMessage(sender, ChatColor.RED + "This pathfinder does not exist or is not supported yet.");
 								return false;
@@ -819,11 +887,673 @@ public class Pathfinders implements CommandExecutor {
         	  Main.sendPluginMessage(sender, ChatColor.RED + "This pathfinder is not supported for this entity.");
         	  return false;
           } catch (NumberFormatException | NullPointerException e) {
-        	  Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+        	  Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments:\n" + e.getLocalizedMessage());
         	  return false;
           }
+      }
+        case "add_target": {
+        	if (!(sender.hasPermission("quantumpen.pathfinder.add"))) {
+        		Main.sendNoPermission(sender);
+        		return false;
+        	}
+          List<Integer> priorities = new ArrayList<>();
+          for (PathfinderGoalWrapped p : getPathfinders(bukkittarget)) {
+            priorities.add(p.h());
+          }
+					
+					if (args.length < 3) {
+						Main.sendInvalidArgs(sender);
+						return false;
+					}
 
-        case "remove":
+
+          int maxPriority = -1;
+          
+          try {
+        	  maxPriority = priorities.get(0);
+          } catch (IndexOutOfBoundsException e) {
+        	  maxPriority = -1;
+          }
+
+          for (int i = 1; i < priorities.toArray().length; i++) if (priorities.get(i) > maxPriority) maxPriority = priorities.get(i);
+
+          int newP = maxPriority + 1;
+          try {
+            switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
+              case "attack_arrow": {
+                if (args.length < 4) {
+                	Main.sendValidSpeedModifier(sender);
+                  return false;
+                }
+
+                if (args.length < 5) {
+                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an attacking interval minimum.");
+                  return false;
+                }
+
+                if (args.length < 6) {
+                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an attacking interval maximum.");
+                  return false;
+                }
+
+                if (args.length < 7) {
+                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an attack radius.");
+                  return false;
+                }
+
+                PathfinderGoalArrowAttack p = new PathfinderGoalArrowAttack((IRangedEntity) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]), Float.parseFloat(args[6]));
+
+                target.bQ.a(newP, p);
+
+                break;
+              }
+              case "target_avoid": {
+                if (args.length < 4) {
+                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the entity type to avoid.");
+                  return false;
+                }
+                
+                if (args.length < 5) {
+                	Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a sensitivity distance (how far away the target must be to avoid)");
+                	return false;
+                }
+                
+                if (args.length < 6) {
+                	Main.sendValidSpeedModifier(sender);
+                	return false;
+                }
+                
+
+				Class<EntityInsentient> entityClass = ((Class<EntityInsentient>) matchClass(EntityType.valueOf(args[3].replaceAll("minecraft:", "").toUpperCase())));
+
+				PathfinderGoalAvoidTarget<?> p = new PathfinderGoalAvoidTarget<>((EntityCreature) target, entityClass, Float.parseFloat(args[4]), Double.parseDouble(args[5]), Double.parseDouble(args[5]) * 1.25);
+				
+				target.bQ.a(newP, p);	
+                break;
+              }
+							case "wolf_beg": {
+								if (args.length < 4) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a looking distance.");
+									return false;
+								}
+
+								PathfinderGoalBeg p = new PathfinderGoalBeg((EntityWolf) target, Float.parseFloat(args[3]));
+
+								target.bQ.a(newP, p);
+							}
+							case "attack_range_bow": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a minimum attack interval.");
+									return false;
+								}
+
+								if (args.length < 6) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attack radius.");
+									return false;
+								}
+
+								PathfinderGoalBowShoot p = new PathfinderGoalBowShoot((EntityMonster) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), Float.parseFloat(args[5]));
+
+								target.bQ.a(newP, p);
+							}
+							case "attack_breakdoor": {
+								if (args.length < 4) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide how long it will take to break the door.");
+									return false;
+								}
+
+								Predicate<EnumDifficulty> diff = (d) -> (d == EnumDifficulty.d); 
+
+								PathfinderGoalBreakDoor p = new PathfinderGoalBreakDoor(target, Integer.parseInt(args[3]), diff);
+
+								target.bQ.a(newP, p);
+							}
+							case "cat_sit_bed": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid search range.");
+									return false;
+								}
+
+								PathfinderGoalCatSitOnBed p = new PathfinderGoalCatSitOnBed((EntityCat) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]));
+
+								target.bQ.a(p);
+							}
+							case "attack_range_crossbow": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attack radius.");
+									return false;
+								}
+								
+								
+								PathfinderGoalCrossbowAttack p = new PathfinderGoalCrossbowAttack((EntityMonster) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]));
+
+								target.bQ.a(newP, p);
+								break;
+							}
+
+							case "ambient_eattile": {
+								PathfinderGoalEatTile p = new PathfinderGoalEatTile(target);
+
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "core_interact_opendoor": {
+								if (args.length < 4) {
+									PathfinderGoalDoorOpen p = new PathfinderGoalDoorOpen(target, false);
+
+									target.bQ.a(newP, p);
+									break;
+								} else {
+									PathfinderGoalDoorOpen p = new PathfinderGoalDoorOpen(target, Boolean.parseBoolean(args[3]));
+
+									target.bQ.a(newP, p);
+									break;
+								}
+							}
+							case "movement_fleesun": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								PathfinderGoalFleeSun p = new PathfinderGoalFleeSun((EntityCreature) target, Double.parseDouble(args[3]));
+
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "movement_follow_entity": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a distance to how far away the entity is to stop this mob (stop distance).");
+									return false;
+								}
+
+								if (args.length < 6) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an area size.");
+									return false;
+								}
+
+								PathfinderGoalFollowEntity p = new PathfinderGoalFollowEntity(target, Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]));
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "movement_follow_owner": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid start distance.");
+									return false;
+								}
+
+								if (args.length < 6) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stop distance.");
+									return false;
+								}
+
+								if (args.length < 7) {
+									PathfinderGoalFollowOwner p = new PathfinderGoalFollowOwner((EntityTameableAnimal) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]), false);
+
+									target.bQ.a(newP, p);
+								} else {
+									PathfinderGoalFollowOwner p = new PathfinderGoalFollowOwner((EntityTameableAnimal) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]), Boolean.parseBoolean(args[6]));
+
+									target.bQ.a(newP, p);
+								}
+							}
+							case "movement_follow_parent": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								PathfinderGoalFollowParent p = new PathfinderGoalFollowParent((EntityAnimal) target, Double.parseDouble(args[3]));
+
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "illager_raid": {
+								
+								PathfinderGoalRaid<EntityRaider> p = new PathfinderGoalRaid<EntityRaider>((EntityRaider) target);
+
+								target.bQ.a(newP, p);
+							}
+							case "attack_melee": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								if (args.length < 5) {
+									PathfinderGoalMeleeAttack p = new PathfinderGoalMeleeAttack((EntityCreature) target, Double.parseDouble(args[3]), false);
+
+									target.bQ.a(newP, p);
+									break;
+								} else {
+									PathfinderGoalMeleeAttack p = new PathfinderGoalMeleeAttack((EntityCreature) target, Double.parseDouble(args[3]), Boolean.parseBoolean(args[4]));
+
+									target.bQ.a(newP, p);
+									break;
+								}
+							}
+							case "ocelot_attack": {
+								PathfinderGoalOcelotAttack p = new PathfinderGoalOcelotAttack(target);
+
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "golem_offer_flower": {
+								PathfinderGoalOfferFlower p = new PathfinderGoalOfferFlower((EntityIronGolem) target);
+
+								target.bQ.a(newP, p);
+							}
+							case "core_panic": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								PathfinderGoalPanic p = new PathfinderGoalPanic((EntityCreature) target, Double.parseDouble(args[3]));
+
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "core_lookatentity": {
+								if (args.length < 4) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type.");
+									return false;
+								}
+
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a look distance.");
+									return false;
+								}
+
+								if (args.length < 6) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid probability.");
+									return false;
+								}
+
+								if (Float.parseFloat(args[5]) > 100f) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid probability.");
+									return false;
+								}
+
+								if (args.length < 7) {
+									PathfinderGoalLookAtPlayer p = new PathfinderGoalLookAtPlayer(target, (Class<? extends EntityLiving>) matchClass(EntityType.valueOf(args[3].replaceAll("minecraft:", "").toUpperCase())), Float.parseFloat(args[4]), Float.parseFloat(args[5]),false);
+
+									target.bQ.a(newP, p);
+									break;
+								} else {
+									PathfinderGoalLookAtPlayer p = new PathfinderGoalLookAtPlayer(target, (Class<? extends EntityLiving>) matchClass(EntityType.valueOf(args[3].replaceAll("minecraft:", "").toUpperCase())), Float.parseFloat(args[4]), Float.parseFloat(args[5]),Boolean.parseBoolean(args[6]));
+
+									target.bQ.a(newP, p);
+									break;
+								}
+							}
+							case "core_waterbreathe": {
+								PathfinderGoalBreath p = new PathfinderGoalBreath((EntityCreature) target);
+
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "animal_breed": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								PathfinderGoalBreed p = new PathfinderGoalBreed((EntityAnimal) target, Double.parseDouble(args[3]));
+
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "movement_throughvillage": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid reach distance.");
+									return false;
+								}
+
+								if (args.length < 6) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please prrovide whether or not the entity can deal with doors.");
+									return false;
+								}
+
+								BooleanSupplier sup = () -> Boolean.parseBoolean(args[5]);
+
+								if (args.length < 7) {
+									PathfinderGoalMoveThroughVillage p = new PathfinderGoalMoveThroughVillage((EntityCreature) target, Double.parseDouble(args[3]), false, Integer.parseInt(args[4]), sup);
+
+									target.bQ.a(newP, p);
+									break;
+								} else {
+									PathfinderGoalMoveThroughVillage p = new PathfinderGoalMoveThroughVillage((EntityCreature) target, Double.parseDouble(args[3]), Boolean.parseBoolean(args[6]), Integer.parseInt(args[4]), sup);
+
+									target.bQ.a(newP, p);
+									break;
+								}
+							}
+							case "movement_towards_restriction": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								PathfinderGoalMoveTowardsRestriction p = new PathfinderGoalMoveTowardsRestriction((EntityCreature) target, Double.parseDouble(args[3]));
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "movement_towards_target": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid reach distance.");
+									return false;
+								}
+
+								PathfinderGoalMoveTowardsTarget p = new PathfinderGoalMoveTowardsTarget((EntityCreature) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]));
+
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "movement_nearest_village": {
+								if (args.length < 4) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid search interval.");
+									return false;
+								}
+
+								PathfinderGoalNearestVillage p = new PathfinderGoalNearestVillage((EntityCreature) target, Integer.parseInt(args[3]));
+
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "dragon_perch": {
+								PathfinderGoalPerch p = new PathfinderGoalPerch((EntityPerchable) target);
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "random_fly": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								PathfinderGoalRandomFly p = new PathfinderGoalRandomFly((EntityCreature) target, Double.parseDouble(args[3]));
+
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "random_lookaround": {
+								PathfinderGoalRandomLookaround p = new PathfinderGoalRandomLookaround(target);
+
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "random_move": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+								
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a walking interval.");
+									return false;
+								}
+								
+								if (args.length < 6) {
+									PathfinderGoalRandomStroll p = new PathfinderGoalRandomStroll((EntityCreature) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), false);
+									
+									target.bQ.a(newP, p);
+									break;
+								} else {
+									PathfinderGoalRandomStroll p = new PathfinderGoalRandomStroll((EntityCreature) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), Boolean.parseBoolean(args[5]));
+									
+									target.bQ.a(newP, p);
+									break;
+								}
+							}
+							case "random_move_land": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+								
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a probability.");
+									return false;
+								}
+								
+								PathfinderGoalRandomStrollLand p = new PathfinderGoalRandomStrollLand((EntityCreature) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]));
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "random_swim": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+								
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a walking interval.");
+									return false;
+								}
+								
+								PathfinderGoalRandomSwim p = new PathfinderGoalRandomSwim((EntityCreature) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]));
+								target.bQ.a(newP, p);
+								
+								break;
+							}
+							case "movement_restrictsun": {
+								PathfinderGoalRestrictSun p = new PathfinderGoalRestrictSun((EntityCreature) target);
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "creeper_swell": {
+								PathfinderGoalSwell p = new PathfinderGoalSwell((EntityCreeper) target);
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "dolphin_waterjump": {
+								if (args.length < 4) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid jumping interval.");
+									return false;
+								}
+								
+								PathfinderGoalWaterJump p = new PathfinderGoalWaterJump((EntityDolphin) target, Integer.parseInt(args[3]));
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "villager_tradeplayer": {
+								PathfinderGoalTradeWithPlayer p = new PathfinderGoalTradeWithPlayer((EntityVillagerAbstract) target);
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "movement_findwater": {
+								PathfinderGoalWater p = new PathfinderGoalWater((EntityCreature) target);
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "zombie_attack": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+
+								if (args.length < 5) {
+									PathfinderGoalZombieAttack p = new PathfinderGoalZombieAttack((EntityZombie) target, Double.parseDouble(args[3]), false);
+
+									target.bQ.a(newP, p);
+									break;
+								} else {
+									PathfinderGoalZombieAttack p = new PathfinderGoalZombieAttack((EntityZombie) target, Double.parseDouble(args[3]), Boolean.parseBoolean(args[4]));
+
+									target.bQ.a(newP, p);
+									break;
+								}
+							}
+							case "attack_nearest_target": {
+								if (args.length < 4) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type.");
+									return false;
+								}
+								Class<EntityLiving> entityClass = (Class<EntityLiving>)matchClass(EntityType.valueOf(args[3]));
+								if (args.length < 5) {
+									PathfinderGoalNearestAttackableTarget<EntityLiving> p = new PathfinderGoalNearestAttackableTarget<EntityLiving>(target, entityClass, true);
+									target.bQ.a(newP, p);
+									break;
+								} else {
+									PathfinderGoalNearestAttackableTarget<EntityLiving> p = new PathfinderGoalNearestAttackableTarget<EntityLiving>(target, entityClass, Boolean.parseBoolean(args[4]));
+									target.bQ.a(newP, p);
+									break;
+								}
+							}
+							case "attack_defensive": {
+								List<Class<EntityLiving>> ignoreList = new ArrayList<>();
+								
+								for (int i = 3; i < args.length; i++) {
+									Class<EntityLiving> entityClass = (Class<EntityLiving>) matchClass(EntityType.valueOf(args[i]));
+									
+									ignoreList.add(entityClass);
+								}
+									
+								PathfinderGoalHurtByTarget p = new PathfinderGoalHurtByTarget((EntityCreature) target, ignoreList.toArray(new Class<?>[0]));
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "attack_defendvillage": {
+								PathfinderGoalDefendVillage p = new PathfinderGoalDefendVillage((EntityIronGolem) target);
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "core_float": {
+								PathfinderGoalFloat p = new PathfinderGoalFloat(target);
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "fish_school": {
+								PathfinderGoalFishSchool p = new PathfinderGoalFishSchool((EntityFishSchool) target);
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "movement_follow_boat": {
+								PathfinderGoalFollowBoat p = new PathfinderGoalFollowBoat((EntityCreature) target);
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "cat_sit_block": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+								
+								PathfinderGoalJumpOnBlock p = new PathfinderGoalJumpOnBlock((EntityCat) target, Double.parseDouble(args[3]));
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "llama_follow": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+								
+								PathfinderGoalLlamaFollow p = new PathfinderGoalLlamaFollow((EntityLlama) target, Double.parseDouble(args[3]));
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "tameable_sit": {
+								PathfinderGoalSit p = new PathfinderGoalSit((EntityTameableAnimal) target);
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							case "core_tempt": {
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+								
+								if (args.length < 5) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide valid items.");
+									return false;
+								}
+								
+								List<Material> items = new ArrayList<>();
+								
+								for (int i = 4; i < args.length; i++) {
+									items.add(Material.matchMaterial(args[i].toUpperCase()));
+								}
+								
+								List<net.minecraft.world.item.ItemStack> nmsItemStacks = new ArrayList<>();
+								
+								for (Material m : items) {
+									org.bukkit.inventory.ItemStack bukkitstack = new org.bukkit.inventory.ItemStack(m);
+									
+									net.minecraft.world.item.ItemStack nmsstack = CraftItemStack.asNMSCopy(bukkitstack);
+									
+									nmsItemStacks.add(nmsstack);
+								}
+								
+								RecipeItemStack recipe = RecipeItemStack.a(nmsItemStacks.stream());
+								
+								PathfinderGoalTempt p = new PathfinderGoalTempt((EntityCreature) target, Double.parseDouble(args[3]), recipe, true);
+								
+								target.bQ.a(newP, p);
+								break;
+							}
+							default:
+								Main.sendPluginMessage(sender, ChatColor.RED + "This pathfinder does not exist or is not supported yet.");
+								return false;
+            }
+            sender.sendMessage(ChatColor.GREEN + "Target Pathfinder Successfully added!");
+            return true;
+          } catch (ClassCastException e) {
+        	  Main.sendPluginMessage(sender, ChatColor.RED + "This target pathfinder is not supported for this entity.");
+        	  return false;
+          } catch (NumberFormatException | NullPointerException e) {
+        	  Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments:\n" + e.getLocalizedMessage());
+        	  return false;
+          }
+        }
+        case "remove": {
         	if (!(sender.hasPermission("quantumpen.pathfinder.remove"))) {
         		Main.sendNoPermission(sender);
         		return false;
@@ -843,6 +1573,28 @@ public class Pathfinders implements CommandExecutor {
         	}
         	
         	break;
+        }
+        case "remove_target": {
+        	if (!(sender.hasPermission("quantumpen.pathfinder.remove"))) {
+        		Main.sendNoPermission(sender);
+        		return false;
+        	}
+        	try {
+                for (PathfinderGoalWrapped p : getPathfindersTarget(bukkittarget)) {
+                	if (p.h() == Integer.parseInt(args[2])) {
+                		target.bQ.a(p.j());
+                		sender.sendMessage(ChatColor.GREEN + "Target Pathfinder successfully removed!");
+                		break;
+                	}
+                }
+                
+        	} catch (NumberFormatException e) {
+        		Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the pathfinder priority ID. If you do not know it, use the list function.");
+        		return false;
+        	}
+        	
+        	break;
+        }
         case "list":
         	if (!(sender.hasPermission("quantumpen.pathfinder.list"))) {
         		Main.sendNoPermission(sender);
@@ -860,7 +1612,20 @@ public class Pathfinders implements CommandExecutor {
         	  messages.add(ChatColor.BLUE + "Priority: " + ChatColor.GOLD + Integer.toString(priority) + ChatColor.DARK_AQUA + " | " + ChatColor.BLUE + "Goal Name: " + ChatColor.GOLD + goal);
           });
           
-          String msg = ChatColor.AQUA + "" + ChatColor.UNDERLINE + "Entity Goals\n" + String.join("\n", messages);
+          Map<Integer, String> targetgoals = new HashMap<>();
+          
+          for (PathfinderGoalWrapped p : getPathfindersTarget(bukkittarget)) {
+        	  targetgoals.put(p.h(), matchGoal(p));
+          }
+          
+          List<String> messages2 = new ArrayList<>();
+          
+          targetgoals.forEach((priority, goal) -> {
+        	  messages2.add(ChatColor.BLUE + "Priority: " + ChatColor.GOLD + Integer.toString(priority) + ChatColor.DARK_AQUA + " | " + ChatColor.BLUE + "Goal Name: " + ChatColor.GOLD + goal);
+          });
+          
+          
+          String msg = ChatColor.AQUA + "" + ChatColor.UNDERLINE + "Entity Goals\n" + String.join("\n", messages) + ChatColor.AQUA + "" + ChatColor.UNDERLINE + "\n\nEntity Target Goals\n" + String.join("\n", messages2);
           
           sender.sendMessage(msg);
 
@@ -870,7 +1635,7 @@ public class Pathfinders implements CommandExecutor {
           return false;
       }
     } catch (IllegalArgumentException e) {
-      Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid UUID.");
+      Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments:\n" + e.getLocalizedMessage());
       return false;
     }
 	return true;
