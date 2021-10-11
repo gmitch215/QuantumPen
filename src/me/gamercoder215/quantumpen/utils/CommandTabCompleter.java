@@ -3,6 +3,7 @@ package me.gamercoder215.quantumpen.utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
@@ -11,8 +12,12 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+
+import net.minecraft.world.entity.EntityInsentient;
 
 public class CommandTabCompleter implements TabCompleter {
 	
@@ -71,16 +76,15 @@ public class CommandTabCompleter implements TabCompleter {
 				"gui_edit_slotselected",
 				"combat_enter",
 				"combat_end",
-				"camera_shader_enderman",
-				"camera_shader_creeper",
-				"camera_shader_spider",
 				"animation_play_leavebed",
 				"animation_play_swing_mainhand",
 				"animation_play_swing_offhand",
 				"animation_play_takedmg",
 				"animation_play_crit",
 				"animation_play_crit_magical",
-			
+				"camera_shader_enderman",
+				"camera_shader_creeper",
+				"camera_shader_spider",
 			};
 			
 			List<String> actualPacketList = new ArrayList<>();
@@ -179,6 +183,7 @@ public class CommandTabCompleter implements TabCompleter {
 				"cat_sit_block",
 				"llama_follow",
 				"tameable_sit",
+				"core_tempt",
 		};
 		
 		List<String> pathfinders = new ArrayList<>();
@@ -241,7 +246,7 @@ public class CommandTabCompleter implements TabCompleter {
 						
 						switch (packet.replaceAll("minecraft:", "")) {
 							case "spawn_entity":
-								if (args.length == 3) {
+								if (args.length == 4) {
 									List<String> entities = new ArrayList<>();
 									
 									for (EntityType t : EntityType.values()) {
@@ -249,17 +254,17 @@ public class CommandTabCompleter implements TabCompleter {
 									}
 									
 									return entities;	
-								} else if (args.length == 4) {
+								} else if (args.length == 5) {
 									List<String> xPos = new ArrayList<>();
 									
 									xPos.add(Integer.toString(target.getLocation().getBlockX()));
 									return xPos;
-								} else if (args.length == 5) {
+								} else if (args.length == 6) {
 									List<String> xPos = new ArrayList<>();
 									
 									xPos.add(Integer.toString(target.getLocation().getBlockY()));
 									return xPos;
-								} else if (args.length == 6) {
+								} else if (args.length == 7) {
 									List<String> xPos = new ArrayList<>();
 									
 									xPos.add(Integer.toString(target.getLocation().getBlockZ()));
@@ -390,7 +395,49 @@ public class CommandTabCompleter implements TabCompleter {
 				}
 				break;
 			case "pathfinders": {
-				
+				switch (args.length) {
+					case 1:
+						List<String> actions = new ArrayList<>();
+						
+						actions.add("add");
+						actions.add("remove");
+						actions.add("list");
+						actions.add("clear");
+						actions.add("add_target");
+						actions.add("remove_target");
+						
+						return actions;
+					case 2:
+						List<String> uuids = new ArrayList<>();
+						
+						if (sender instanceof Player) {
+							((Player) sender).getNearbyEntities(5, 5, 5).forEach(entity -> {
+								if (!(((CraftEntity) entity).getHandle() instanceof EntityInsentient)) return;
+								uuids.add(entity.getUniqueId().toString());
+							});
+							
+							return uuids;
+						} else return null;
+					case 3:
+						if (args[0].equalsIgnoreCase("add"))
+						return getPathfinderList();
+						else if (args[0].equalsIgnoreCase("remove")) {
+							List<String> goals = new ArrayList<>();
+							
+							UUID uid = UUID.fromString(args[1]);
+							
+							LivingEntity bukkite = (LivingEntity) Bukkit.getEntity(uid);
+							
+						    EntityInsentient e = (EntityInsentient) ((CraftEntity) bukkite).getHandle();
+						    
+						    e.bP.c().forEach(pathfinder -> {
+						    	goals.add(Integer.toString(pathfinder.h()));
+						    });
+						    
+						    return goals;
+						}
+						else return null;
+				}
 			}
 			case "quantumpen": {
 				switch (args.length) {
