@@ -8,7 +8,7 @@ commands:
   clientpacket:
     description: Use a client-bound packet to a player.
     permission: quantumpen.packets.clientpacket
-    usage: /clientpacket <player> <type> <packet> <parameters...>
+    usage: /clientpacket <type> <player> <packet> <parameters...>
     aliases: [cpacket, clientp, clpacket, clp, cp]
   quantumpen:
     description: NovaEditor base command
@@ -16,7 +16,7 @@ commands:
     aliases: [qpen, quantump, quantp, qp, quantpen]
   pathfinders:
     description: Pathfinders base command
-    usage: /pathfinders <add|remove|clear|list> <parameters...>
+    usage: /pathfinders <add|add_target|remove_target|remove|clear|list> <player> <parameters...>
     aliases: [pathfinder, pfinder, pf, pfs, pfinders, pathf, pathfs]
   editentity:
     description: Edit entities (advanced /data command)
