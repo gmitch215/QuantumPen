@@ -28,6 +28,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutAnimation;
 import net.minecraft.network.protocol.game.PacketPlayOutBlockBreakAnimation;
 import net.minecraft.network.protocol.game.PacketPlayOutCamera;
 import net.minecraft.network.protocol.game.PacketPlayOutCloseWindow;
+import net.minecraft.network.protocol.game.PacketPlayOutExperience;
 import net.minecraft.network.protocol.game.PacketPlayOutExplosion;
 import net.minecraft.network.protocol.game.PacketPlayOutGameStateChange;
 import net.minecraft.network.protocol.game.PacketPlayOutHeldItemSlot;
@@ -42,6 +43,8 @@ import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityExperienceOrb;
 import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityPainting;
+import net.minecraft.network.protocol.game.PacketPlayOutUpdateHealth;
+import net.minecraft.network.protocol.game.PacketPlayOutViewDistance;
 import net.minecraft.network.protocol.login.PacketLoginOutDisconnect;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.world.EnumDifficulty;
@@ -66,7 +69,21 @@ public class ClientPacket implements CommandExecutor {
 		plugin.getCommand("clientpacket").setExecutor(this);
 		plugin.getCommand("clientpacket").setTabCompleter(new CommandTabCompleter());
 	}
-
+	
+	public static int getTotalExperience(int level) {
+		try {
+			if (level > 0 && level <= 15) {
+				return (int) (Math.pow(level, 2) + 6 * level);
+			} else if (level > 15 && level <= 31) {
+				return (int) (2.5 * Math.pow(level, 2) - (40.5 * level) + 360);
+			} else if (level > 31) {
+				return (int) (4.5 * Math.pow(level, 2) - (162.5 * level) + 2220);
+			} else return -1;
+		} catch (ClassCastException e) {
+			return 0;
+		}
+	}
+	
 	public static int matchInventorySlot(String name) {
 		String realName = name.toLowerCase().replaceAll("minecraft:", "");
 
@@ -850,18 +867,26 @@ public class ClientPacket implements CommandExecutor {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an experience progress between 1 and 100.");
 						return false;
 					}
+					
+					float progress = Float.parseFloat(args[3]);
+					
+					if (progress < 0 || progress > 100) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an experience progress between 1 and 100.");
+						return false;
+					}
 					int level = Integer.parseInt(args[3]);
 					
 					if (level < 0) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid experience level.");
 						return false;
 					}
-					int expAmount = 0;
-					if (args.length < 6) {
-						 
-					} else {
-						
-					}
+					
+					int expAmount = getTotalExperience(level);
+					
+					PacketPlayOutExperience s = new PacketPlayOutExperience(progress / 100, expAmount, level);
+					
+					cp.b.sendPacket(s);
+					break;
 				}
 				case "camera_shader_creeper": {
 					EntityCreeper entity = new EntityCreeper(EntityTypes.o, ((CraftWorld) p.getWorld()).getHandle());
@@ -910,6 +935,59 @@ public class ClientPacket implements CommandExecutor {
 					((CraftWorld) p.getWorld()).getHandle().addEntity(entity);
 					
 					PacketPlayOutCamera s = new PacketPlayOutCamera(entity);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "playergui_updatehealth": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid health amount.");
+						return false;
+					}
+					
+					float health = Float.parseFloat(args[3]);
+					
+					if (health < 0 || health > 10000) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid health amount between 0 and 10,000.");
+						return false;
+					}
+					
+					PacketPlayOutUpdateHealth s = new PacketPlayOutUpdateHealth(health, p.getFoodLevel(), p.getSaturation());
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "playergui_updatefood": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid food amount.");
+						return false;
+					}
+					
+					int food = Integer.parseInt(args[3]);
+					
+					if (food < 0 || food > 20) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid health amount between 0 and 20.");
+						return false;
+					}
+					
+					PacketPlayOutUpdateHealth s = new PacketPlayOutUpdateHealth((float) p.getHealth(), food, p.getSaturation());
+					
+					cp.b.sendPacket(s);
+				}
+				case "camera_updateviewdistance": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid render distance.");
+						return false;
+					}
+					
+					int distance = Integer.parseInt(args[3]);
+					
+					if (distance < 2 || distance > 32) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid render distance between 2 and 32.");
+						return false;
+					}
+					
+					PacketPlayOutViewDistance s = new PacketPlayOutViewDistance(distance);
 					
 					cp.b.sendPacket(s);
 					break;

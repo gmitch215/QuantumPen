@@ -120,7 +120,8 @@ public class CommandTabCompleter implements TabCompleter {
 
 				"settings_changedifficulty",
 				"playergui_changexp",
-				"playergui_updatehealth"
+				"playergui_updatehealth",
+				"playergui_updatefood"
 			};
 			List<String> actualPacketList = new ArrayList<>();
 			
