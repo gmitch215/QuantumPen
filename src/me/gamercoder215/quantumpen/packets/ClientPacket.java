@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import me.gamercoder215.quantumpen.Main;
@@ -30,6 +31,7 @@ import net.minecraft.network.protocol.game.PacketPlayOutCloseWindow;
 import net.minecraft.network.protocol.game.PacketPlayOutExplosion;
 import net.minecraft.network.protocol.game.PacketPlayOutGameStateChange;
 import net.minecraft.network.protocol.game.PacketPlayOutHeldItemSlot;
+import net.minecraft.network.protocol.game.PacketPlayOutKickDisconnect;
 import net.minecraft.network.protocol.game.PacketPlayOutOpenBook;
 import net.minecraft.network.protocol.game.PacketPlayOutOpenSignEditor;
 import net.minecraft.network.protocol.game.PacketPlayOutOpenWindow;
@@ -53,6 +55,7 @@ import net.minecraft.world.entity.monster.EntityEnderman;
 import net.minecraft.world.entity.monster.EntitySpider;
 import net.minecraft.world.inventory.Containers;
 import net.minecraft.world.level.World;
+import net.minecraft.world.phys.Vec3D;
 
 public class ClientPacket implements CommandExecutor {
 	
@@ -331,7 +334,7 @@ public class ClientPacket implements CommandExecutor {
 						return false;	
 					}
 					
-					PacketPlayOutSpawnEntity s = new PacketPlayOutSpawnEntity(r.nextInt(), UUID.randomUUID(), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[6].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), 0, 0, matchEntityType(args[3]), 0, null);
+					PacketPlayOutSpawnEntity s = new PacketPlayOutSpawnEntity(r.nextInt(), UUID.randomUUID(), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[6].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), 0, 0, matchEntityType(args[3]), 0, Vec3D.a);
 					cp.b.sendPacket(s);
 
 					break;
@@ -789,27 +792,6 @@ public class ClientPacket implements CommandExecutor {
 					cp.b.sendPacket(s);
 					break;
 				}
-				case "camera_shader_enderman": {
-					EntityEnderman enderman = new EntityEnderman(EntityTypes.w, ((CraftWorld) p.getWorld()).getHandle());
-				
-					PacketPlayOutCamera s = new PacketPlayOutCamera(enderman);
-					
-					cp.b.sendPacket(s);
-				}
-				case "camera_shader_creeper": {
-					EntityCreeper creeper = new EntityCreeper(EntityTypes.o, ((CraftWorld) p.getWorld()).getHandle());
-				
-					PacketPlayOutCamera s = new PacketPlayOutCamera(creeper);
-					
-					cp.b.sendPacket(s);
-				}
-				case "camera_shader_spider": {
-					EntitySpider spider = new EntitySpider(EntityTypes.aI, ((CraftWorld) p.getWorld()).getHandle());
-				
-					PacketPlayOutCamera s = new PacketPlayOutCamera(spider);
-					
-					cp.b.sendPacket(s);
-				}
 				case "animation_play_leavebed": {
 					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 2);
 					
@@ -842,6 +824,92 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "animation_play_crit_magical": {
 					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 5);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "connection_kick_player": {
+					String message = "";
+					if (args.length >= 4)
+					for (int i = 3; i < args.length; i++) {
+						message += " " + args[i];
+					}
+					
+					PacketPlayOutKickDisconnect s = new PacketPlayOutKickDisconnect(new ChatComponentText(message));
+					
+					cp.b.sendPacket(s);
+					return false;
+				}
+				case "playergui_changexp": {
+					if (args.length < 4) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid experience level.");
+						return false;
+					}
+					
+					if (args.length < 5) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an experience progress between 1 and 100.");
+						return false;
+					}
+					int level = Integer.parseInt(args[3]);
+					
+					if (level < 0) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid experience level.");
+						return false;
+					}
+					int expAmount = 0;
+					if (args.length < 6) {
+						 
+					} else {
+						
+					}
+				}
+				case "camera_shader_creeper": {
+					EntityCreeper entity = new EntityCreeper(EntityTypes.o, ((CraftWorld) p.getWorld()).getHandle());
+					
+					entity.setPosition(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
+					entity.setNoAI(true);
+					entity.setSilent(true);
+					entity.setNoGravity(true);
+					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
+					entity.setInvulnerable(true);
+					
+					((CraftWorld) p.getWorld()).getHandle().addEntity(entity);
+					
+					PacketPlayOutCamera s = new PacketPlayOutCamera(entity);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "camera_shader_enderman": {
+					EntityEnderman entity = new EntityEnderman(EntityTypes.w, ((CraftWorld) p.getWorld()).getHandle());
+					
+					entity.setPosition(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
+					entity.setNoAI(true);
+					entity.setSilent(true);
+					entity.setNoGravity(true);
+					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
+					entity.setInvulnerable(true);
+					
+					((CraftWorld) p.getWorld()).getHandle().addEntity(entity);
+					
+					PacketPlayOutCamera s = new PacketPlayOutCamera(entity);
+					
+					cp.b.sendPacket(s);
+					break;
+				}
+				case "camera_shader_spider": {
+					EntitySpider entity = new EntitySpider(EntityTypes.aI, ((CraftWorld) p.getWorld()).getHandle());
+					
+					entity.setPosition(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
+					entity.setNoAI(true);
+					entity.setSilent(true);
+					entity.setNoGravity(true);
+					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
+					entity.setInvulnerable(true);
+					
+					((CraftWorld) p.getWorld()).getHandle().addEntity(entity);
+					
+					PacketPlayOutCamera s = new PacketPlayOutCamera(entity);
 					
 					cp.b.sendPacket(s);
 					break;
