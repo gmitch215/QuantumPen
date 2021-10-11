@@ -6,6 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 
 public class Server implements CommandExecutor {
 	
@@ -14,7 +15,7 @@ public class Server implements CommandExecutor {
 	public Server(Main plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("server").setExecutor(this);
-		
+		plugin.getCommand("server").setTabCompleter(new CommandTabCompleter());
 	}
 	
 	@Override
