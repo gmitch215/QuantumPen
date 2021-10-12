@@ -6,6 +6,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.gamercoder215.quantumpen.commands.QuantumPen;
 import me.gamercoder215.quantumpen.commands.Server;
+import me.gamercoder215.quantumpen.edit.Chunk;
 import me.gamercoder215.quantumpen.edit.EditEntity;
 import me.gamercoder215.quantumpen.edit.Pathfinders;
 import me.gamercoder215.quantumpen.packets.ClientPacket;
@@ -33,6 +34,7 @@ public class Main extends JavaPlugin {
 		
 		new Pathfinders(this);
 		new EditEntity(this);
+		new Chunk(this);
 		
     	new QuantumPen(this);
     	new Server(this);
