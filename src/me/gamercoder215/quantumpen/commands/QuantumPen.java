@@ -56,9 +56,19 @@ public class QuantumPen implements CommandExecutor {
 			return false;
 		}
 		switch (args[0].toLowerCase()) {
-		case "info":
-			sender.sendMessage(ChatColor.UNDERLINE + "" + ChatColor.DARK_GREEN + "QuantumPen by GamerCoder215\n\n" + ChatColor.GOLD + "Version v" + plugin.getDescription().getVersion());
-			break;
+			case "info": {
+				sender.sendMessage(ChatColor.UNDERLINE + "" + ChatColor.DARK_GREEN + "QuantumPen by GamerCoder215\n\n" + ChatColor.GOLD + "Version v" + plugin.getDescription().getVersion());
+				break;
+			}
+			case "reloadconfig": {
+				sender.sendMessage(ChatColor.GREEN + "Reloading Configuration...");
+				
+				plugin.saveConfig();
+				plugin.reloadConfig();
+				plugin.saveConfig();
+				
+				sender.sendMessage(ChatColor.GREEN + "Configuration Saved! This does not change the QuantumPen JAR; You need to reload or restart your server for the JAR to update.");
+			}
 		}
 
 		return true;
