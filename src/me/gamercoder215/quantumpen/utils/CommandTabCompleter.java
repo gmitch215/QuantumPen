@@ -34,6 +34,44 @@ public class CommandTabCompleter implements TabCompleter {
 			return bool;
 		} else return null;
 	}
+	
+	public static List<String> getWorldActions() {
+		String[] actionsList = {
+				"server_save",
+				"spawns_ambientlimit",
+				"spawns_animallimit",
+				"server_autosave",
+				"game_clearweathertime",
+				"settings_difficulty",
+				"settomgs_hardcore",
+				"settings_keepspawnloaded",
+				"settings_pvp",
+				"spawns_monsterlimit",
+				"spawns_ticksper_ambient",
+				"spawns_ticksper_animal",
+				"spawns_ticksper_monster",
+				"spawns_ticksper_ambient_water",
+				"spawns_ticksper_animal_water",
+				"game_thunderduration",
+				"game_thundering",
+				"game_strikelightning",
+				"game_strikelightning_effect",
+				"game_time",
+				"game_weatherduration",
+				"game_spawnflags",
+		};
+		
+		List<String> actualActionsList = new ArrayList<>();
+		
+		for (String s : actionsList) {
+			actualActionsList.add("minecraft:" + s);
+		}
+
+		
+		Collections.sort(actualActionsList);
+		
+		return (actualActionsList);
+	}
 
 	public static List<String> getClientPacketList(String type) {
 		if (type.equalsIgnoreCase("play")) {
