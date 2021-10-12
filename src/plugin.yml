@@ -38,7 +38,7 @@ commands:
   server:
     description: Edit & Fetch server data
     permission: quantumpen.server
-    usage: /server <data> <parameters...>
+    usage: /server <get|reloaddata|reloadwhitelist> <parameters...>
     aliases: [srvr, s]
 
 permissions:

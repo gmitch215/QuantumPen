@@ -504,14 +504,13 @@ public class CommandTabCompleter implements TabCompleter {
 										"server_defaultworld_type",
 										"settings_hardcore",
 										"server_port",
-										"server_ip",
 										"settings_spawnprotection",
 										"spawns_ambientticks",
 										"spawns_animalticks",
 										"spawns_monsterticks",
 										"spawns_ambientticks_water",
 										"spawns_waterticks",
-										"spawns_undergroundcreatureticks"
+										"settings_idletimeout",
 								};
 								List<String> fetched2 = new ArrayList<>();
 								
@@ -524,9 +523,6 @@ public class CommandTabCompleter implements TabCompleter {
 								Collections.sort(fetched2);
 								
 								return fetched2;
-							}
-							case "set": {
-								
 							}
 						}
 					default:
