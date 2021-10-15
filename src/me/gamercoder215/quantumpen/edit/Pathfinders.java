@@ -41,7 +41,6 @@ import net.minecraft.world.entity.ai.behavior.BehaviorBetterJob;
 import net.minecraft.world.entity.ai.behavior.BehaviorBonemeal;
 import net.minecraft.world.entity.ai.behavior.BehaviorCareer;
 import net.minecraft.world.entity.ai.behavior.BehaviorCelebrate;
-import net.minecraft.world.entity.ai.behavior.BehaviorCelebrateDeath;
 import net.minecraft.world.entity.ai.behavior.BehaviorCelebrateLocation;
 import net.minecraft.world.entity.ai.behavior.BehaviorCooldown;
 import net.minecraft.world.entity.ai.behavior.BehaviorCrossbowAttack;
@@ -134,6 +133,7 @@ import net.minecraft.world.entity.monster.EntityCreeper;
 import net.minecraft.world.entity.monster.EntityMonster;
 import net.minecraft.world.entity.monster.EntityZombie;
 import net.minecraft.world.entity.monster.IRangedEntity;
+import net.minecraft.world.entity.npc.EntityVillager;
 import net.minecraft.world.entity.npc.EntityVillagerAbstract;
 import net.minecraft.world.entity.raid.EntityRaider;
 import net.minecraft.world.item.crafting.RecipeItemStack;
@@ -175,8 +175,7 @@ public class Pathfinders implements CommandExecutor {
 			else if (b instanceof BehaviorBonemeal) return "behavior_villager_bonemeal";
 			else if (b instanceof BehaviorCareer) return "behavior_villager_career";
 			else if (b instanceof BehaviorCelebrate) return "behavior_villager_celebrate";
-			else if (b instanceof BehaviorCelebrateDeath) return "behavior_celebrate_death";
-			else if (b instanceof BehaviorCelebrateLocation) return "behavior_celebrate_location";
+			else if (b instanceof BehaviorCelebrateLocation) return "behavior_celebrate_tolocation";
 			else if (b instanceof BehaviorCooldown) return "behavior_villager_cooldown";
 			else if (b instanceof BehaviorCrossbowAttack) return "behavior_illager_crossbowattack";
 			else if (b instanceof BehaviorFarm) return "behavior_villager_farm";
@@ -365,6 +364,113 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "behavior_bell_ring": {
 								BehaviorBellRing b = new BehaviorBellRing();
+								
+								if (b.e(ws, target, 0)) {
+									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+									break;
+								} else {
+									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+									break;
+								}
+							}
+							case "behavior_villager_betterjob": {
+								BehaviorBetterJob b = new BehaviorBetterJob(((EntityVillager) target).getVillagerData().getProfession());
+								
+								if (b.e(ws, (EntityVillager) target, 0)) {
+									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+									break;
+								} else {
+									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+									break;
+								}
+							}
+							case "behavior_villager_bonemeal": {
+								BehaviorBonemeal b = new BehaviorBonemeal();
+								
+								if (b.e(ws, (EntityVillager) target, 0)) {
+									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+									break;
+								} else {
+									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+									break;
+								}
+							}
+							case "behavior_villager_career": {
+								BehaviorCareer b = new BehaviorCareer();
+								
+								if (b.e(ws, (EntityVillager) target, 0)) {
+									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+									break;
+								} else {
+									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+									break;
+								}
+							}
+							case "behavior_villager_celebrate": {
+								if (args.length < 3) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a minimum duration.");
+									return false;
+								}
+								
+								if (args.length < 4) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a maximum duration.");
+									return false;
+								}
+								
+								BehaviorCelebrate b = new BehaviorCelebrate(Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+								
+								if (b.e(ws, (EntityVillager) target, 0)) {
+									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+									break;
+								} else {
+									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+									break;
+								}
+							}
+							case "behavior_celebrate_tolocation": {
+								if (args.length < 3) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
+									return false;
+								}
+								
+								if (args.length < 4) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+								
+								BehaviorCelebrateLocation b = new BehaviorCelebrateLocation(Integer.parseInt(args[2]), Float.parseFloat(args[3]));
+								
+								if (b.e(ws, target, 0)) {
+									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+									break;
+								} else {
+									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+									break;
+								}
+							}
+							case "behavior_villager_farm": {
+								BehaviorFarm b = new BehaviorFarm();
+								
+								if (b.e(ws, (EntityVillager) target, 0)) {
+									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+									break;
+								} else {
+									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+									break;
+								}
+							}
+							case "behavior_finditem": {
+								if (args.length < 2) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
+									return false;
+								}
+								
+								if (args.length < 3) {
+									Main.sendValidSpeedModifier(sender);
+									return false;
+								}
+								
+								BehaviorFindAdmirableItem b = new BehaviorFindAdmirableItem(Float.parseFloat(args[2]), true, Integer.parseInt(args[3]));
 								
 								if (b.e(ws, target, 0)) {
 									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
@@ -1921,16 +2027,13 @@ public class Pathfinders implements CommandExecutor {
         	  messages2.add(ChatColor.BLUE + "Priority: " + ChatColor.GOLD + Integer.toString(priority) + ChatColor.DARK_AQUA + " | " + ChatColor.BLUE + "Goal Name: " + ChatColor.GOLD + goal);
           });
 
-					Map<String, String> activities = new HashMap<>();
+			List<String> activities = new ArrayList<>();
 
-					for (Behavior b : target.getBehaviorController().d()) {
-						activities.put(null, null);
-					}
-
-					List<String> messages3 = new ArrayList<>();
+			for (Behavior b : target.getBehaviorController().d()) {
+				activities.add(matchBehavior(b));
+			}
           
-          
-          String msg = ChatColor.AQUA + "" + ChatColor.UNDERLINE + "Entity Goals\n" + String.join("\n", messages) + ChatColor.AQUA + "" + ChatColor.UNDERLINE + "\n\nEntity Target Goals\n" + String.join("\n", messages2);
+          String msg = ChatColor.AQUA + "" + ChatColor.UNDERLINE + "Entity Goals\n" + String.join("\n", messages) + ChatColor.AQUA + "" + ChatColor.UNDERLINE + "\n\nEntity Target Goals\n" + String.join("\n", messages2) + ChatColor.AQUA + "" + ChatColor.UNDERLINE + "\n\nEntity Behaviors\n" + String.join("\n", activities);
           
           sender.sendMessage(msg);
 
