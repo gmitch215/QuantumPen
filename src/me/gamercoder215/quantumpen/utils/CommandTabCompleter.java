@@ -22,7 +22,52 @@ import net.minecraft.world.entity.EntityInsentient;
 public class CommandTabCompleter implements TabCompleter {
 	
 	public enum ArgumentType {
-		BOOLEAN;
+		BOOLEAN, INTEGER, ENTITYTYPE, DECIMAL;
+	}
+
+	public static List<String> getBlockActions() {
+		String[] actionList = {
+			"game_breaknaturally",
+			"game_breaknaturally_tool",
+			"game_setbiome",
+			"game_settype",
+			"game_update"
+		};
+		List<String> actions = new ArrayList<>();
+		for (String s : actionList) {
+			actions.add("minecraft:" + s);
+		}
+
+		Collections.sort(actions);
+
+		return actions;
+	}
+
+	public static List<String> getBlockProperties() {
+		String[] propertiesList = {
+			"game_biome",
+			"game_redstonepower",
+			"game_breakspeed",
+			"game_humidity",
+			"game_light_fromblocks",
+			"game_light_fromsky",
+			"game_lightlevel",
+			"game_temperature",
+			"game_powered",
+			"game_powered_indirectly",
+			"game_isempty",
+			"game_ispassable",
+			"game_isliquid",
+			"game_ispreferredmaterial"
+		};
+		List<String> properties = new ArrayList<>();
+		for (String s : propertiesList) {
+			properties.add("minecraft:" + s);
+		}
+
+		Collections.sort(properties);
+
+		return properties;
 	}
 
 	public static List<String> getTypes(ArgumentType type) {
@@ -32,6 +77,13 @@ public class CommandTabCompleter implements TabCompleter {
 			bool.add("false");
 
 			return bool;
+		} else if (type == ArgumentType.ENTITYTYPE) {
+			List<String> types = new ArrayList<>();
+			for (EntityType t : EntityType.values()) {
+				types.add("minecraft:" + t.name());
+			}
+
+			return types;
 		} else return null;
 	}
 	
@@ -40,10 +92,12 @@ public class CommandTabCompleter implements TabCompleter {
 				"server_save",
 				"spawns_ambientlimit",
 				"spawns_animallimit",
+				"spawns_ambientlimit_water",
+				"spawns_animallimit_water",
 				"server_autosave",
 				"game_clearweathertime",
 				"settings_difficulty",
-				"settomgs_hardcore",
+				"settings_hardcore",
 				"settings_keepspawnloaded",
 				"settings_pvp",
 				"spawns_monsterlimit",
@@ -57,7 +111,7 @@ public class CommandTabCompleter implements TabCompleter {
 				"game_strikelightning",
 				"game_strikelightning_effect",
 				"game_time",
-				"game_weatherduration",
+				"game_fulltime",
 				"game_spawnflags",
 		};
 		
@@ -236,24 +290,76 @@ public class CommandTabCompleter implements TabCompleter {
 		return pathfinders;
 	}
 
+	public static List<String> getControllerActions() {
+		String[] oldactions = {
+			"movement_strafe",
+			"movement_goto",
+			"movement_tick",
+			"looking_lookatentity",
+			"looking_lookatcoordinates",
+			"looking_tick",
+			"looking_clamptobody",
+			"looking_resetxrot",
+			"jumping_jump",
+			"jumping_tick",
+			"looking_rotate_head_necessary",
+			"looking_rotate_body_necessary",
+			"looking_rotate_head_front",
+			"looking_tick_client"
+		};
+
+		List<String> actions = new ArrayList<>();
+
+		for (String s : oldactions) {
+			actions.add("minecraft:" + s);
+		}
+
+		Collections.sort(actions);
+
+		return actions;
+	}
+
 	public static List<String> getEntityActions(String type) {
 		if (type.equalsIgnoreCase("edit")) {
+
+			String[] oldedits = {
+				"set_velocity",
+				"set_ai",
+				"set_collidable",
+				"set_lastdamage",
+				"set_arrowsinbody",
+				"set_max_air",
+				"set_max_nodamageticks",
+				"set_nodamageticks",
+				"set_arrowcooldown",
+			}
 			List<String> edits = new ArrayList<>();
-				edits.add("set_velocity");
-				edits.add("set_ai");
-				edits.add("set_collidable");
-				edits.add("set_lastdamage");
-				edits.add("set_arrowsinbody");
-				edits.add("set_max_air");
-				edits.add("set_invisible");
-				edits.add("set_health");
-				edits.add("set_max_nodamageticks");
-				edits.add("set_nodamageticks");
-				edits.add("set_arrowcooldown");
+			
+			for (String s : oldedits) {
+				edits.add("minecraft:" + s);
+			}
 
 			Collections.sort(edits);
 
 			return edits;
+		} else if (type.equalsIgnoreCase("do")) {
+			String[] oldactions = {
+				"swing_mainhand",
+				"swing_offhand",
+				"game_ejectpassenger",
+				"game_remove",
+				"game_leavevehicle"
+			};
+
+			List<String> actions = new ArrayList<>();
+
+			for (String s : oldactions) {
+				actions.add("minecraft:" + s);
+			}
+
+			Collections.sort(actions);
+
+			return actions;
 		} else return null;
 	}
  	
@@ -450,6 +556,13 @@ public class CommandTabCompleter implements TabCompleter {
 						Collections.sort(uuids);
 						return uuids;
 					case 2:
+						List<String> editActions = new ArrayList<>();
+
+						editActions.add("do");
+						editActions.add("edit");
+						
+						return editActions;
+					case 3:
 						return getEntityActions(args[1]);
 					
 				}
@@ -464,6 +577,8 @@ public class CommandTabCompleter implements TabCompleter {
 						actions.add("list");
 						actions.add("clear");
 						actions.add("add_target");
+						actions.add("controller");
+						actions.add("navigation");
 						actions.add("remove_target");
 						
 						return actions;

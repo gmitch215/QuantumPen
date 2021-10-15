@@ -16,19 +16,26 @@ commands:
     aliases: [qpen, quantump, quantp, qp, quantpen]
   pathfinders:
     description: Pathfinders base command
-    usage: /pathfinders <add|add_target|remove_target|remove|clear|list> <player> <parameters...>
+    usage: /pathfinders <add|add_target|controller|remove_target|remove|clear|list> <player> <parameters...>
     aliases: [pathfinder, pfinder, pf, pfs, pfinders, pathf, pathfs]
   editentity:
     description: Edit entities (advanced /data command)
     usage: /editentity <parameters...>
     aliases: [edite, eentity, ee, eden, edentity]
+  block:
+    permission: quantumpen.world.block
+    description: Edit & Fetch data of blocks (World based on current world)
+    usage: /block <world> <x> <y> <z> <parameters...>
+    aliases: [bl, blck]
   chunk:
+    permission: quantumpen.world.chunk
     description: Edit chunk data
     usage: /chunk <world> <x> <z> <load|unload|forceload|unforceload|setage> <parameters...>
     aliases: [chnk, chk]
   world:
     description: Edit world data
-    usage: /world <name> <parameters...>
+    permission: quantumpen.world
+    usage: /world <name> <action> <parameters...>
     aliases: [wrld, w]
   playerdata:
     description: Fetch & Modify player data
@@ -75,6 +82,7 @@ permissions:
       quantumpen.pathfinder.remove: true
       quantumpen.pathfinder.clear: true
       quantumpen.pathfinder.list: true
+      quantumpen.pathfinder.controller: true
   quantumpen.pathfinder.add:
     default: op
     description: Enable ability to add pathfinders
@@ -92,6 +100,7 @@ permissions:
     description: Enable ability to edit world data
     children:
       quantumpen.world.chunk: true
+      quantumpen.world.block: true
   quantumpen.world.chunk:
     default: op
     description: Enable ability to edit chunk data
@@ -103,6 +112,11 @@ permissions:
   quantumpen.server.playerdata:
     default: op
     description: Enable ability to fetch player data
-    
+  quantumpen.world.block:
+    default: op
+    description: Enable ability to edit & fetch block data
+  quantumpen.pathfinders.controller:
+    default: op
+    description: Enable ability to use entity controllers  
       
   

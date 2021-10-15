@@ -17,6 +17,18 @@ public class Main extends JavaPlugin {
 		sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.AQUA + "QuantumPen" + ChatColor.GOLD + "] " + ChatColor.BLUE + message);
 	}
 
+	public static void sendValidType(CommandSender sender, CommandTabCompleter.ArgumentType type) {
+		if (type == ArgumentType.BOOLEAN) {
+			sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.AQUA + "QuantumPen" + ChatColor.GOLD + "] " + ChatColor.RED + "Please provide true or false.");
+		} else if (type == ArgumentType.INTEGER) {
+			sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.AQUA + "QuantumPen" + ChatColor.GOLD + "] " + ChatColor.RED + "Please provide a valid integer.");
+		} else if (type == ArgumentType.ENTITYTYPE) {
+			sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.AQUA + "QuantumPen" + ChatColor.GOLD + "] " + ChatColor.RED + "Please provide a valid entity type.");
+		} else if (type == ArgumentType.DECIMAL) {
+			sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.AQUA + "QuantumPen" + ChatColor.GOLD + "]" + ChatColor.RED + "Please provide a valid decimal.");
+		}
+	}
+
 	public static void sendInvalidArgs(CommandSender sender) {
 	  	sender.sendMessage(ChatColor.GOLD + "[" + ChatColor.AQUA + "QuantumPen" + ChatColor.GOLD + "] " + ChatColor.RED + "Please provide valid arguments.");
 	}

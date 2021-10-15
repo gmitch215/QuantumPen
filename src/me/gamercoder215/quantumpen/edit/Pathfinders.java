@@ -119,6 +119,43 @@ public class Pathfinders implements CommandExecutor {
 	  public static Class<?> matchClass(EntityType t) {
 		  return ClientPacket.matchEntityType(t.name()).a();
 	  }
+
+		public static String matchBehavior(Behavior<?> b) {
+			if (b instanceof BehaviorAttack) return "behavior_attack";
+			else if (b instanceof BehaviorBedJump) return "behavior_bedjump";
+			else if (b instanceof BehaviorBell) return "behavior_bell";
+			else if (b instanceof BehaviorBellAlert) return "behavior_bell_alert";
+			else if (b instanceof BehaviorBellRing) return "behavior_bell_ring";
+			else if (b instanceof BehaviorBetterJob) return "behavior_villager_betterjob";
+			else if (b instanceof BehaviorBonemeal) return "behavior_villager_bonemeal";
+			else if (b instanceof BehaviorVillager) return "behavior_villager_career";
+			else if (b instanceof BehaviorCelebrate) return "behavior_villager_celebrate";
+			else if (b instanceof BehaviorCelebrateDeath) return "behavior_celebrate_death";
+			else if (b instanceof BehaviorCelebrateLocation) return "behavior_celebrate_location";
+			else if (b instanceof BehaviorCooldown) return "behavior_villager_cooldown";
+			else if (b instanceof BehaviorCrossbowAttack) return "behavior_illager_crossbowattack";
+			else if (b instanceof BehaviorFarm) return "behavior_villager_farm";
+			else if (b instanceof BehaviorFindAdmirableItem) return "behavior_finditem";
+			else if (b instanceof BehaviorForgetAnger) return "behavior_forgetanger";
+			else if (b instanceof BehaviorHide) return "behavior_hide";
+			else if (b instanceof BehaviorHome) return "behavior_home";
+			else if (b instanceof BehaviorHomeRaid) return "behavior_homeraid";
+			else if (b instanceof BehaviorInteractDoor) return "behavior_interact_door";
+			else if (b instanceof BehaviorInteractPlayer) return "behavior_interact_player";
+			else if (b instanceof BehaviorLeaveJob) return "behavior_villager_leavejob";
+			else if (b instanceof BehaviorMakeLove) return "behavior_breed";
+			else if (b instanceof BehaviorMakeLoveAnimal) return "behavior_breed_animal";
+			else if (b instanceof BehaviorNearestVillage) return "behavior_nearestvillage";
+			else if (b instanceof BehaviorPanic) return "behavior_panic";
+			else if (b instanceof Behaviorplay) return "behavior_play";
+			else if (b instanceof BehaviorPositionEntity) return "behavior_position_entity";
+			else if (b instanceof BehaviorPotentialJobSite) return "behavior_potentialjobsite";
+			else if (b instanceof BehaviorProfession) return "behavior_villager_profession";
+			else if (b instanceof BehaviorRaid) return "behavior_raid";
+			else if (b instanceof BehaviorRaidReset) return "behavior_raid_reset";
+			
+		}
+
   	public static String matchGoal(PathfinderGoalWrapped p) {
 	    if (p.j() instanceof PathfinderGoalArrowAttack) return "attack_arrow";
 	    else if (p.j() instanceof PathfinderGoalAvoidTarget) return "target_avoid";
@@ -208,6 +245,145 @@ public class Pathfinders implements CommandExecutor {
       EntityInsentient target = ((EntityInsentient) ((CraftEntity) bukkittarget).getHandle());
 
       switch (args[0].toLowerCase()) {
+				case "behavior": {
+
+				}
+				case "controller": {
+        	if (!(sender.hasPermission("quantumpen.pathfinder.controller"))) {
+        		Main.sendNoPermission(sender);
+        		return false;
+        	}
+
+					if (args.length < 2) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a controller type.");
+						return false;
+					}
+
+					switch (args[1].toLowerCase()) {
+						case "movement_strafe": {
+							if (args.length < 3) {
+								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a strafe forwards amount (negative for backwards).");
+								return false;
+							}
+
+							if (args.length < 4) {
+								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a strafe right amount (negative for left).");
+								return false;
+							}
+
+							target.bM.a(Float.parseFloat(args[2]), Float.parseFloat(args[3]));
+							break;
+						}
+						case "movement_goto": {
+							if (args.length < 3) {
+								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+								return false;
+							}
+
+							if (args.length < 4) {
+								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+								return false;
+							}
+
+							if (args.length < 5) {
+								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+								return false;
+							}
+
+							if (args.length < 6) {
+								Main.sendValidSpeedModifier(sender);
+								return false;
+							}
+
+							target.bM.a(Double.parseDouble(args[2]), Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]));
+							break;
+						}
+						case "movement_tick": {
+							target.bM.a();
+							break;
+						}
+						case "looking_lookatentity": {
+							if (args.length < 3) {
+								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity UUID.");
+								return false;
+							}
+
+							UUID uuid = UUID.fromString(args[2]);
+
+							if (Bukkit.getEntity(uuid) == null) {
+								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity UUID.");
+								return false;
+							}
+
+							org.bukkit.entity.Entity bukkitLookTarget = Bukkit.getEntity(uuid);
+							net.minecraft.world.entity.Entity lookTarget = ((CraftEntity) bukkitLookTarget).getHandle();
+
+							target.bL.a(lookTarget);
+							break;
+						}
+						case "looking_lookatcoordinates": {
+							if (args.length < 3) {
+								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+								return false;
+							}
+
+							if (args.length < 4) {
+								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+								return false;
+							}
+
+							if (args.length < 5) {
+								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+								return false;
+							}
+
+							target.bL.a(Double.parseDouble(args[2]), Double.parseDouble(args[3]), Double.parseDouble(args[4]));
+							break;	
+						}
+						case "looking_tick": {
+							target.bL.a();
+							break;
+						}
+						case "looking_clamptobody": {
+							target.bL.b();
+							break;
+						}
+						case "looking_resetxrot": {
+							target.bL.c();
+							break;	
+						}
+						case "jumping_jump": {
+							target.bN.jump();
+							break;
+						}
+						case "jumping_tick": {
+							target.bN.b();
+							break;
+						}
+						case "looking_rotate_head_necessary": {
+							target.bU.c();
+							break;
+						}
+						case "looking_rotate_body_necessary": {
+							target.bU.c();
+							break;
+						}
+						case "looking_rotate_head_front": {
+							target.bU.d();
+							break;
+						}
+						case "looking_tick_client": {
+							target.bU.a();
+							break;
+						}
+						default: {
+							Main.sendPluginMessage(sender, ChatColor.RED + "This controller type does not exist.");
+							return false;
+						}
+					}
+					sender.sendMessage(ChatColor.GREEN + "Controller Successful!");
+					return true;
+				}
         case "clear":
         	if (!(sender.hasPermission("quantumpen.pathfinder.clear"))) {
         		Main.sendNoPermission(sender);
@@ -1623,6 +1799,16 @@ public class Pathfinders implements CommandExecutor {
           targetgoals.forEach((priority, goal) -> {
         	  messages2.add(ChatColor.BLUE + "Priority: " + ChatColor.GOLD + Integer.toString(priority) + ChatColor.DARK_AQUA + " | " + ChatColor.BLUE + "Goal Name: " + ChatColor.GOLD + goal);
           });
+
+					Map<String, String> activities = new HashMap<>();
+
+					for (Behavior b : target.getBehaviorController().d()) {
+						activities.put()
+					}
+
+					List<String> messages3 = new ArrayList<>();
+
+
           
           
           String msg = ChatColor.AQUA + "" + ChatColor.UNDERLINE + "Entity Goals\n" + String.join("\n", messages) + ChatColor.AQUA + "" + ChatColor.UNDERLINE + "\n\nEntity Target Goals\n" + String.join("\n", messages2);
@@ -1635,9 +1821,11 @@ public class Pathfinders implements CommandExecutor {
           return false;
       }
     } catch (IllegalArgumentException e) {
-      Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments:\n" + e.getLocalizedMessage());
+      Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments."
       return false;
-    }
+    } catch (Exception e) {
+			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+		}
 	return true;
 	}
 }
