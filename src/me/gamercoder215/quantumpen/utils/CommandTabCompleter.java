@@ -290,6 +290,65 @@ public class CommandTabCompleter implements TabCompleter {
 		return pathfinders;
 	}
 
+	public static List<String> getBehaviorList() {
+		String[] oldbehaviors = {
+			"behavior_attack",
+			"behavior_bedjump",
+			"behavior_bell",
+			"behavior_bell_alert",
+			"behavior_bell_ring",
+			"behavior_villager_betterjob",
+			"behavior_villager_bonemeal",
+			"behavior_villager_career",
+			"behavior_villager_celebrate",
+			"behavior_celebrate_death",
+			"behavior_celebrate_location",
+			"behavior_villager_cooldown",
+			"behavior_illager_crossbowattack",
+			"behavior_villager_farm",
+			"behavior_finditem",
+			"behavior_forgetanger",
+			"behavior_hide",
+			"behavior_home",
+			"behavior_homeraid",
+			"behavior_interact_door",
+			"behavior_interact_player",
+			"behavior_villager_leavejob",
+			"behavior_breed",
+			"behavior_breed_animal",
+			"behavior_nearestvillage",
+			"behavior_panic",
+			"behavior_play",
+			"behavior_position_entity",
+			"behavior_potentialjobsite",
+			"behavior_villager_profession",
+			"behavior_raid",
+			"behavior_raid_reset",
+			"behavior_retreat",
+			"behavior_sleep",
+			"behavior_swim",
+			"behavior_villager_herogift",
+			"behavior_wake",
+			"behavior_walkhome",
+			"behavior_villager_work",
+			"behavior_villager_work_composter",
+			"behavior_move",
+			"behavior_swim_random",
+			"behavior_findwater",
+			"behavior_panic_animal",
+		};
+
+		List<String> behaviors = new ArrayList<>();
+
+		for (String s : oldbehaviors) {
+			behaviors.add("minecraft:" + s);
+		}
+
+		Collections.sort(behaviors);
+
+		return behaviors;
+	}
+
 	public static List<String> getControllerActions() {
 		String[] oldactions = {
 			"movement_strafe",

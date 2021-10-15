@@ -147,13 +147,25 @@ public class Pathfinders implements CommandExecutor {
 			else if (b instanceof BehaviorMakeLoveAnimal) return "behavior_breed_animal";
 			else if (b instanceof BehaviorNearestVillage) return "behavior_nearestvillage";
 			else if (b instanceof BehaviorPanic) return "behavior_panic";
-			else if (b instanceof Behaviorplay) return "behavior_play";
+			else if (b instanceof AnimalPanic) return "behavior_panic_animal";
+			else if (b instanceof BehaviorPlay) return "behavior_play";
 			else if (b instanceof BehaviorPositionEntity) return "behavior_position_entity";
 			else if (b instanceof BehaviorPotentialJobSite) return "behavior_potentialjobsite";
 			else if (b instanceof BehaviorProfession) return "behavior_villager_profession";
 			else if (b instanceof BehaviorRaid) return "behavior_raid";
 			else if (b instanceof BehaviorRaidReset) return "behavior_raid_reset";
-			
+			else if (b instanceof BehaviorRetreat) return "behavior_retreat";
+			else if (b instanceof BehaviorSleep) return "behavior_sleep";
+			else if (b instanceof BehaviorSwim) return "behavior_swim";
+			else if (b instanceof BehaviorVilageHeroGift) return "behavior_villager_herogift";
+			else if (b instanceof BehaviorWake) return "behavior_wake";
+			else if (b instanceof BehaviorWalkHome) return "behavior_walkhome";
+			else if (b instanceof BehaviorWork) return "behavior_villager_work";
+			else if (b instanceof BehaviorWorkComposter) return "behavior_villager_work_composter";
+			else if (b instanceof BehaviorMove) return "behavior_move";
+			else if (b instanceof RandomSwim) return "behavior_swim_random";
+			else if (b instanceof TryFindWater) return "behavior_findwater";
+			else return "UNSUPPORTED";
 		}
 
   	public static String matchGoal(PathfinderGoalWrapped p) {
@@ -246,7 +258,42 @@ public class Pathfinders implements CommandExecutor {
 
       switch (args[0].toLowerCase()) {
 				case "behavior": {
+					if (args.length < 2) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid behavior type.");
+						return false;
+					}
 
+					WorldServer ws = ((CraftWorld) bukkittarget.getWorld()).getHandle();
+					try {
+						switch (args[1].toLowerCase().replaceAll("minecraft:", "")) {
+							case "behavior_attack": {
+								if (args.length < 3) {
+									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid cooldown between attacks.");
+									return false;
+								}
+
+								BehaviorAttack b = new BehaviorAttack(Integer.parseInt(args[2]));
+
+								b.a(ws, target);
+								break;
+							}
+							default: {
+								Main.sendPluginMessage(sender, ChatColor.RED + "This behavior does not exist.");
+								return false;
+							}
+						}
+					} catch (IllegalArgumentException e) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+						return false;
+					} catch (ClassCastException e) {
+						Main.sendPluginmessage(sender, ChatColor.RED + "This behavior is not supported for this entity.");
+						return false;
+					} catch (Exception e) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+						return false;
+					}
+					sender.sendMessage(ChatColor.GREEN + "Behavior successfully activated!");
+					return true;
 				}
 				case "controller": {
         	if (!(sender.hasPermission("quantumpen.pathfinder.controller"))) {
