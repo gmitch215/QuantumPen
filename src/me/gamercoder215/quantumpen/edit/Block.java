@@ -1,11 +1,25 @@
 package me.gamercoder215.quantumpen.edit;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import me.gamercoder215.quantumpen.Main;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
+import net.minecraft.nbt.MojangsonParser;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class Block implements CommandExecutor {
 	protected Main plugin;
@@ -13,7 +27,7 @@ public class Block implements CommandExecutor {
 	public Block(Main plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("block").setExecutor(this);
-		plugin.getCommand("block").setTabComplete(this);
+		plugin.getCommand("block").setTabCompleter(new CommandTabCompleter());
 	}
 
 	private boolean success(CommandSender sender, String returnType) {
@@ -142,7 +156,7 @@ public class Block implements CommandExecutor {
 
 							ItemStack i = new ItemStack(Material.matchMaterial(args[6]));
 
-							success(sender, b.isPreferredTool(i));
+							success(sender, Boolean.toString(b.isPreferredTool(i)));
 							break;
 						}
 						default: {
@@ -157,7 +171,7 @@ public class Block implements CommandExecutor {
 						return false;
 					}
 
-					switch (args[5].toLowerCase().replaceAll("minecraft:"), "") {
+					switch (args[5].toLowerCase().replaceAll("minecraft:", "")) {
 						case "game_breaknaturally": {
 							if (b.breakNaturally()) {
 								sender.sendMessage(ChatColor.GREEN + "Block break successful!");
@@ -177,14 +191,14 @@ public class Block implements CommandExecutor {
 							String nbtStr = String.join("\\s", nbtStrArgs);
 
 							try {
-								NBTTagCompund nbt = MojangsonParser.parse(nbtStr);
+								NBTTagCompound nbt = MojangsonParser.parse(nbtStr);
 								org.bukkit.inventory.ItemStack item = CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.a(nbt));
 
 								if (b.breakNaturally(item)) {
-									sender.sendMessage(sender, ChatColor.GREEN + "Block break successful!");
+									sender.sendMessage(ChatColor.GREEN + "Block break successful!");
 									break;
 								} else {
-									sender.sendMessage(sender, ChatColor.RED + "Block break unsuccessful.");
+									sender.sendMessage(ChatColor.RED + "Block break unsuccessful.");
 									break;
 								}
 							} catch (CommandSyntaxException e) {
@@ -203,7 +217,7 @@ public class Block implements CommandExecutor {
 								return false;
 							}
 
-							Biome biome = Biome.valueOf(args[6].toLowerCase().replaceAll("minecraft:").toUpperCase());
+							Biome biome = Biome.valueOf(args[6].toLowerCase().replaceAll("minecraft:", "").toUpperCase());
 
 							b.setBiome(biome);
 							sender.sendMessage(ChatColor.GREEN + "Successfully set biome to \"" + biome.name().toLowerCase() + "\".");
@@ -265,5 +279,6 @@ public class Block implements CommandExecutor {
 			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
 			return false;
 		}
+		return true;
 	}
 }

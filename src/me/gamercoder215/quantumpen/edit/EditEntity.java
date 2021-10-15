@@ -9,8 +9,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.util.Vector;
 
 import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
+import me.gamercoder215.quantumpen.utils.CommandTabCompleter.ArgumentType;
 
 public class EditEntity implements CommandExecutor {
 	
@@ -58,7 +61,7 @@ public class EditEntity implements CommandExecutor {
 						return false;
 					}
 					try {
-						switch (args[2].toLoweCase().replaceAll("minecraft:", "")) {
+						switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
 							case "set_velocity": {
 								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an X velocity.");
@@ -98,7 +101,7 @@ public class EditEntity implements CommandExecutor {
 							}
 							case "set_lastdamage": {
 								if (args.length < 4) {
-									Main.sendValidType(ArgumentType.DECIMAL);
+									Main.sendValidType(sender, ArgumentType.DECIMAL);
 									return false;
 								}
 

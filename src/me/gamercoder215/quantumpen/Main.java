@@ -10,6 +10,8 @@ import me.gamercoder215.quantumpen.edit.Chunk;
 import me.gamercoder215.quantumpen.edit.EditEntity;
 import me.gamercoder215.quantumpen.edit.Pathfinders;
 import me.gamercoder215.quantumpen.packets.ClientPacket;
+import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
+import me.gamercoder215.quantumpen.utils.CommandTabCompleter.ArgumentType;
 
 public class Main extends JavaPlugin {
 	

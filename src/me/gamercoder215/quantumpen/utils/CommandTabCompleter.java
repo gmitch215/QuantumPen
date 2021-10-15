@@ -105,7 +105,6 @@ public class CommandTabCompleter implements TabCompleter {
 				"spawns_ticksper_animal",
 				"spawns_ticksper_monster",
 				"spawns_ticksper_ambient_water",
-				"spawns_ticksper_animal_water",
 				"game_thunderduration",
 				"game_thundering",
 				"game_strikelightning",
@@ -357,14 +356,8 @@ public class CommandTabCompleter implements TabCompleter {
 			"looking_lookatentity",
 			"looking_lookatcoordinates",
 			"looking_tick",
-			"looking_clamptobody",
-			"looking_resetxrot",
 			"jumping_jump",
 			"jumping_tick",
-			"looking_rotate_head_necessary",
-			"looking_rotate_body_necessary",
-			"looking_rotate_head_front",
-			"looking_tick_client"
 		};
 
 		List<String> actions = new ArrayList<>();
@@ -391,7 +384,7 @@ public class CommandTabCompleter implements TabCompleter {
 				"set_max_nodamageticks",
 				"set_nodamageticks",
 				"set_arrowcooldown",
-			}
+			};
 			List<String> edits = new ArrayList<>();
 			
 			for (String s : oldedits) {

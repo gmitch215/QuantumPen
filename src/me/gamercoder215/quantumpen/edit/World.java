@@ -1,11 +1,16 @@
 package me.gamercoder215.quantumpen.edit;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Difficulty;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import me.gamercoder215.quantumpen.Main;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
+import me.gamercoder215.quantumpen.utils.CommandTabCompleter.ArgumentType;
 
 public class World implements CommandExecutor {
 	
@@ -179,16 +184,6 @@ public class World implements CommandExecutor {
 					success(sender);
 					break;
 				}
-				case "spawns_ticksper_animal_water": {
-					if (args.length < 4) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
-						return false;
-					}
-
-					w.setTicksPerWaterAnimalSpawns(Integer.parseInt(args[3]));
-					success(sender);
-					break;
-				}
 				case "spawns_ambientlimit_water": {
 					if (args.length < 4) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
@@ -280,7 +275,7 @@ public class World implements CommandExecutor {
 				}
 				case "game_time": {
 					if (args.length < 4) {
-						Main.sendValidType(ArgumentType.INTEGER);
+						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
@@ -290,7 +285,7 @@ public class World implements CommandExecutor {
 				}
 				case "game_fulltime": {
 					if (args.length < 4) {
-						Main.sendValidType(ArgumentType.INTEGER);
+						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
