@@ -4,11 +4,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.gamercoder215.quantumpen.commands.PlayerData;
 import me.gamercoder215.quantumpen.commands.QuantumPen;
 import me.gamercoder215.quantumpen.commands.Server;
+import me.gamercoder215.quantumpen.edit.Block;
 import me.gamercoder215.quantumpen.edit.Chunk;
 import me.gamercoder215.quantumpen.edit.EditEntity;
 import me.gamercoder215.quantumpen.edit.Pathfinders;
+import me.gamercoder215.quantumpen.edit.World;
 import me.gamercoder215.quantumpen.packets.ClientPacket;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter.ArgumentType;
@@ -48,7 +51,11 @@ public class Main extends JavaPlugin {
 		
 		new Pathfinders(this);
 		new EditEntity(this);
+		
 		new Chunk(this);
+		new Block(this);
+		new World(this);
+		new PlayerData(this);
 		
     	new QuantumPen(this);
     	new Server(this);
