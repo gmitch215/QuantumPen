@@ -16,4 +16,7 @@
 #
 DisabledCommands:
   -
+  
+# UseTabComplete
+# Enable the usage of suggestions with commands
 UseTabComplete: true
