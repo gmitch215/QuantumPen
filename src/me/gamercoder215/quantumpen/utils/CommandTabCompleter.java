@@ -42,6 +42,77 @@ public class CommandTabCompleter implements TabCompleter {
 
 		return actions;
 	}
+	
+	public static List<String> getPlayerDataProperties() {
+		String[] actionList = {
+			"property_canseeplayer",
+			"property_canfly",
+			"property_client_viewdistance",
+			"property_flyspeed",
+			"property_healthscale",
+			"property_ping",
+			"property_name_display",
+			"property_name_custom",
+			"property_name_playerlist",
+			"property_timestamp",
+			"property_timestamp_offset",
+			"property_exp",
+			"property_exp_total",
+			"property_flying",
+			"property_healthscaled",
+			"property_sleepingignored",
+			"property_timerelative",
+			"property_sprinting",
+			"property_attackcooldown",
+			"property_exhaustion",
+			"property_foodlevel",
+			"property_saturation",
+			"property_sleepticks",
+			"property_usingshield",
+		};
+		
+		List<String> actions = new ArrayList<>();
+		
+		for (String s : actionList) {
+			actions.add("minecraft:" + s);
+		}
+		
+		Collections.sort(actions);
+		
+		return actions;
+	}
+	
+	public static List<String> getPlayerDataActions() {
+		String[] actionList = {
+			"camera_hideplayer",
+			"server_loaddata",
+			"server_kick",
+			"server_resettime",
+			"server_resetweather",
+			"playergui_resettitle",
+			"server_savedata",
+			"playergui_healthscale",
+			"playergui_healthscale_isscaled",
+			"settings_walkspeed",
+			"camera_showplayer",
+			"server_updatecommands",
+			"server_updateinventory",
+			"playergui_closeinventory",
+			"playergui_open_enchanting",
+			"playergui_open_crafting",
+			"playergui_open_merchant",
+		};
+		
+		List<String> actions = new ArrayList<>();
+		
+		for (String s : actionList) {
+			actions.add("minecraft:" + s);
+		}
+		
+		Collections.sort(actions);
+		
+		return actions;
+	}
 
 	public static List<String> getBlockProperties() {
 		String[] propertiesList = {
@@ -307,18 +378,17 @@ public class CommandTabCompleter implements TabCompleter {
 			"behavior_finditem",
 			"behavior_forgetanger",
 			"behavior_hide",
-			"behavior_home",
-			"behavior_homeraid",
+			"behavior_findhidingplace",
+			"behavior_findhidingplace_raid",
 			"behavior_interact_door",
 			"behavior_interact_player",
 			"behavior_villager_leavejob",
-			"behavior_breed",
+			"behavior_breed_villager",
 			"behavior_breed_animal",
-			"behavior_nearestvillage",
-			"behavior_panic",
+			"behavior_villager_nearestvillage",
+			"behavior_panic_villager",
 			"behavior_play",
-			"behavior_position_entity",
-			"behavior_potentialjobsite",
+			"behavior_villager_potentialjobsite",
 			"behavior_villager_profession",
 			"behavior_raid",
 			"behavior_raid_reset",
@@ -349,7 +419,6 @@ public class CommandTabCompleter implements TabCompleter {
 
 	public static List<String> getControllerActions() {
 		String[] oldactions = {
-			"movement_strafe",
 			"movement_goto",
 			"movement_tick",
 			"looking_lookatentity",
@@ -595,7 +664,7 @@ public class CommandTabCompleter implements TabCompleter {
 						}
 				}
 				break;
-			case "editentity":
+			case "editentity": {
 				switch(args.length) {
 					case 1:
 						List<String> uuids = new ArrayList<>();
@@ -618,6 +687,35 @@ public class CommandTabCompleter implements TabCompleter {
 					
 				}
 				break;
+			}
+			case "playerdata": {
+				switch (args.length) {
+					case 1: {
+						List<String> players = new ArrayList<>();
+						
+						for (Player p : Bukkit.getOnlinePlayers()) {
+							players.add(p.getName());
+						}
+						
+						return players;
+					}
+					case 2: {
+						List<String> actions = new ArrayList<>();
+						
+						actions.add("action");
+						actions.add("property");
+						
+						return actions;
+					}
+					case 3: {
+						if (args[1].equalsIgnoreCase("property")) {
+							return getPlayerDataProperties();
+						} else if (args[1].equalsIgnoreCase("action")) {
+							return getPlayerDataActions();
+						}
+					}
+				}
+			}
 			case "pathfinders": {
 				switch (args.length) {
 					case 1:
@@ -629,7 +727,6 @@ public class CommandTabCompleter implements TabCompleter {
 						actions.add("clear");
 						actions.add("add_target");
 						actions.add("controller");
-						actions.add("navigation");
 						actions.add("remove_target");
 						
 						return actions;

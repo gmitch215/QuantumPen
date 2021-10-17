@@ -40,7 +40,7 @@ commands:
   playerdata:
     description: Fetch & Modify player data
     permission: quantumpen.server.playerdata
-    usage: /playerdata <player> <fetchdata|modifydata>
+    usage: /playerdata <player> <property|action>
     aliases: [pdata, playerd, pd, pdta]
   server:
     description: Edit & Fetch server data
