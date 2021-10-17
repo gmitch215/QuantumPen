@@ -973,6 +973,7 @@ public class ClientPacket implements CommandExecutor {
 					PacketPlayOutUpdateHealth s = new PacketPlayOutUpdateHealth((float) p.getHealth(), food, p.getSaturation());
 					
 					cp.b.sendPacket(s);
+					break;
 				}
 				case "camera_updateviewdistance": {
 					if (args.length < 4) {
