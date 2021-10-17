@@ -27,10 +27,20 @@ commands:
     description: Edit & Fetch data of blocks (World based on current world)
     usage: /block <world> <x> <y> <z> <parameters...>
     aliases: [bl, blck]
+  createworld:
+    permission: quantumpen.world.create
+    description: Create a world or load an existing world
+    usage: /createworld <name> <type> <options>
+    aliases: [cworld, createw, cw]
+  unloadworld:
+    permission: quantumpen.world.unload
+    description: Unload an existing world
+    usage: /unloadworld <name>
+    aliases: [uworld, uw, unloadw]
   chunk:
     permission: quantumpen.world.chunk
     description: Edit chunk data
-    usage: /chunk <world> <x> <z> <load|unload|forceload|unforceload|setage> <parameters...>
+    usage: /chunk <world> <x> <z> <load|unload|forceload|unforceload|setage|addticket|removeticket> <parameters...>
     aliases: [chnk, chk]
   world:
     description: Edit world data
@@ -60,8 +70,11 @@ permissions:
       quantumpen.pathfinder.remove: true
       quantumpen.pathfinder.clear: true
       quantumpen.pathfinder.list: true
+      quantumpen.pathfinder.controller: true
       quantumpen.world: true
+      quantumpen.world.block: true
       quantumpen.world.chunk: true
+      quantumpen.world.create: true
       quantumpen.statistic: true
       quantumpen.server: true
   # Packets
@@ -101,6 +114,8 @@ permissions:
     children:
       quantumpen.world.chunk: true
       quantumpen.world.block: true
+      quantumpen.world.create: true
+      quantumpen.world.unload: true
   quantumpen.world.chunk:
     default: op
     description: Enable ability to edit chunk data
@@ -118,5 +133,8 @@ permissions:
   quantumpen.pathfinders.controller:
     default: op
     description: Enable ability to use entity controllers  
+  quantumpen.world.create:
+    default: op
+    description: Enable ability to create worlds
       
   

@@ -122,6 +122,16 @@ public class Chunk implements CommandExecutor {
 					sender.sendMessage(ChatColor.GREEN + "Successfully set age to \"" + Long.toString(age) + "\" ticks. (" + df.format(age / 20) + " seconds).");
 					break;
 				}
+				case "addticket": {
+					chunk.addPluginChunkTicket(plugin);
+					sender.sendMessage(ChatColor.GREEN + "Successfully added a plugin chunk ticket!");
+					break;
+				}
+				case "removeticket": {
+					chunk.removePluginChunkTicket(plugin);
+					sender.sendMessage(ChatColor.GREEN + "Successfully removed a plugin chunk ticket!");
+					break;
+				}
 			}
 		} catch (IllegalArgumentException e) {
 			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
