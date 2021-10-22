@@ -103,15 +103,14 @@ public class Main extends JavaPlugin {
     	
     	this.saveConfig();
     	
-    	
     	// Disabled Commands
     	new DisabledCommandCatch(this);
     	
     	// Tab Complete
     	if (!(this.getConfig().getBoolean("UseTabComplete"))) {
-    	for (Command c : PluginCommandYamlParser.parse(this)) {
-    		((PluginCommand) c).setTabCompleter(null);
-    	}
+				for (Command c : PluginCommandYamlParser.parse(this)) {
+					((PluginCommand) c).setTabCompleter(null);
+				}
     	}
 	}
 	

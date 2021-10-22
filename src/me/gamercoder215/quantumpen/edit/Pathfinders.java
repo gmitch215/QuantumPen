@@ -303,16 +303,16 @@ public class Pathfinders implements CommandExecutor {
 
       switch (args[0].toLowerCase()) {
 				case "behavior": {
-					if (args.length < 2) {
+					if (args.length < 3) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid behavior type.");
 						return false;
 					}
 
 					WorldServer ws = ((CraftWorld) bukkittarget.getWorld()).getHandle();
 					try {
-						switch (args[1].toLowerCase().replaceAll("minecraft:", "")) {
+						switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
 							case "behavior_attack": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid cooldown between attacks.");
 									return false;
 								}
@@ -328,7 +328,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_bedjump": {
-								if (args.length < 3){
+								if (args.length < 4) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -410,12 +410,12 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_villager_celebrate": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a minimum duration.");
 									return false;
 								}
 								
-								if (args.length < 4) {
+								if (args.length < 5) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a maximum duration.");
 									return false;
 								}
@@ -431,12 +431,12 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_celebrate_tolocation": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
 									return false;
 								}
 								
-								if (args.length < 4) {
+								if (args.length < 5) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -468,7 +468,7 @@ public class Pathfinders implements CommandExecutor {
 									return false;
 								}
 								
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -495,12 +495,12 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_hide": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
 									return false;
 								}
 								
-								if (args.length < 4) {
+								if (args.length < 5) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hiding duration, in SECONDS.");
 									return false;
 								}
@@ -516,17 +516,17 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_findhidingplace": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
 									return false;
 								}
 								
-								if (args.length < 4) {
+								if (args.length < 5) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hook range (distance to hide).");
 									return false;
 								}
 								
-								if (args.length < 5) {
+								if (args.length < 6) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -542,12 +542,12 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_findhidingplace_raid": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
 									return false;
 								}
 								
-								if (args.length < 4) {
+								if (args.length < 5) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -574,7 +574,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_interact_player": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -591,7 +591,7 @@ public class Pathfinders implements CommandExecutor {
 								
 							}
 							case "behavior_villager_leavejob": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -618,7 +618,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_breed_animal": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -634,12 +634,12 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_villager_nearestvillage": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
 									return false;
 								}
 								
-								if (args.length < 4) {
+								if (args.length < 5) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -677,7 +677,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_villager_potentialjobsite": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -726,12 +726,12 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_retreat": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid distance.");
 									return false;
 								}
 								
-								if (args.length < 4) {
+								if (args.length < 5) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -758,7 +758,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_swim": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid chance.");
 									return false;
 								}
@@ -781,7 +781,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_villager_herogift": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid gift interval.");
 									return false;
 								}
@@ -808,7 +808,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_walkhome": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -857,7 +857,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_swim_random": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -873,12 +873,12 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_findwater": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
 									return false;
 								}
 								
-								if (args.length < 4) {
+								if (args.length < 5) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -894,7 +894,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 							}
 							case "behavior_panic_animal": {
-								if (args.length < 3) {
+								if (args.length < 4) {
 									Main.sendValidSpeedModifier(sender);
 									return false;
 								}
@@ -2418,7 +2418,7 @@ public class Pathfinders implements CommandExecutor {
         	
         	break;
         }
-        case "list":
+        case "list": {
         	if (!(sender.hasPermission("quantumpen.pathfinder.list"))) {
         		Main.sendNoPermission(sender);
         		return false;
@@ -2458,6 +2458,15 @@ public class Pathfinders implements CommandExecutor {
           sender.sendMessage(msg);
 
           break;
+				}
+				case "navigation": {
+					if (args.length < 3) {
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a navigation action.");
+						return false;
+					}
+
+					
+				}
         default:
           Main.sendInvalidArgs(sender);
           return false;

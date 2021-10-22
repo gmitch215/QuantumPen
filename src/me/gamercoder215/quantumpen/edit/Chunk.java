@@ -54,6 +54,17 @@ public class Chunk implements CommandExecutor {
 			org.bukkit.Chunk chunk = w.getChunkAt(Integer.parseInt(args[1]), Integer.parseInt(args[2]));
 			
 			switch (args[3].toLowerCase()) {
+				case "gettickets": {
+					List<String> plugins = new ArrayList<>();
+
+					for (Plugin p : chunk.getPluginChunkTickets()) {
+						plugins.add(ChatColor.BLUE + "Name: " + ChatColor.GOLD + p.getDescription().getName() + " | " +
+						ChatColor.BLUE + "Version: " + ChatColor.GOLD + p.getDescription().getVersion());
+					}
+
+					sender.sendMessage(ChatColor.AQUA + "" + ChatColor.UNDERLINE + "Plugin Chunk Tickets\n" + String.join("\n", plugins));
+					break;
+				}
 				case "load": {
 					if (args.length < 5) {
 						boolean loaded = chunk.load();

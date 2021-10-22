@@ -486,6 +486,32 @@ public class CommandTabCompleter implements TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		switch (cmd.getName().toLowerCase()) {
+			case "attribute": {
+				switch (args.length) {
+					case 1: {
+						List<String> actions = new ArrayList<>();
+						actions.add("add");
+						actions.add("set");
+						actions.add("has");
+						actions.add("list");
+
+						return actions;
+					}
+					case 2: {
+						List<String> uuids = new ArrayList<>();
+						
+						if (sender instanceof Player) {
+							((Player) sender).getNearbyEntities(5, 5, 5).forEach(entity -> {
+								if (!(((CraftEntity) entity).getHandle() instanceof EntityCreature)) return;
+								uuids.add(entity.getUniqueId().toString());
+							});
+							
+							return uuids;
+						} else return null;
+					}
+
+				}
+			}
 			case "chunk": {
 				switch(args.length) {
 					case 1:

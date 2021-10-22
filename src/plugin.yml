@@ -19,6 +19,7 @@ commands:
     usage: /pathfinders <add|add_target|controller|remove_target|remove|clear|list> <player> <parameters...>
     aliases: [pathfinder, pfinder, pf, pfs, pfinders, pathf, pathfs]
   editentity:
+    permission: quantumpen.world.entity
     description: Edit entities (advanced /data command)
     usage: /editentity <parameters...>
     aliases: [edite, eentity, ee, eden, edentity]
@@ -57,11 +58,16 @@ commands:
     permission: quantumpen.server
     usage: /server <get|reloaddata|reloadwhitelist> <parameters...>
     aliases: [srvr, s]
+  attribute:
+    description: Edit entity attributes
+    permission: quantumpen.world.entity
+    usage: /attribute <add|list|has|set> <uuid> <attribute> <parameters...>
+    aliases: [attr, att]
 
 permissions:
   quantumpen.*:
     default: op
-    description: All NovaEditor permissions
+    description: All QuantumPen permissions
     children:
       quantumpen.packets: true
       quantumpen.packets.clientpacket: true
@@ -75,7 +81,8 @@ permissions:
       quantumpen.world.block: true
       quantumpen.world.chunk: true
       quantumpen.world.create: true
-      quantumpen.statistic: true
+      quantumpen.world.entity: true
+      quantumpen.server.playerdata: true
       quantumpen.server: true
   # Packets
   quantumpen.packets:
@@ -96,6 +103,9 @@ permissions:
       quantumpen.pathfinder.clear: true
       quantumpen.pathfinder.list: true
       quantumpen.pathfinder.controller: true
+  quantumpen.pathfinders.controller:
+    default: op
+    description: Enable ability to use entity controllers  
   quantumpen.pathfinder.add:
     default: op
     description: Enable ability to add pathfinders
@@ -108,6 +118,7 @@ permissions:
   quantumpen.pathfinder.clear:
     default: op
     description: Enable ability to clear pathfinders
+  # World & Server
   quantumpen.world:
     default: op
     description: Enable ability to edit world data
@@ -130,9 +141,6 @@ permissions:
   quantumpen.world.block:
     default: op
     description: Enable ability to edit & fetch block data
-  quantumpen.pathfinders.controller:
-    default: op
-    description: Enable ability to use entity controllers  
   quantumpen.world.create:
     default: op
     description: Enable ability to create worlds

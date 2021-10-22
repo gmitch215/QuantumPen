@@ -70,7 +70,7 @@ public class QuantumPen implements CommandExecutor {
 				plugin.reloadConfig();
 				plugin.saveConfig();
 				
-				sender.sendMessage(ChatColor.GREEN + "Configuration Saved! This does not change the QuantumPen JAR; You need to reload or restart your server for the JAR to update.");
+				sender.sendMessage(ChatColor.GREEN + "Configuration Reloaded & Saved! This does not change the QuantumPen JAR; You need to reload or restart your server for the JAR to update.");
 				break;
 			}
 			case "cleartickets": {
