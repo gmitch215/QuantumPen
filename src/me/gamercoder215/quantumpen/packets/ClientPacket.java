@@ -966,7 +966,7 @@ public class ClientPacket implements CommandExecutor {
 					int food = Integer.parseInt(args[3]);
 					
 					if (food < 0 || food > 20) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid health amount between 0 and 20.");
+						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid food amount between 0 and 20.");
 						return false;
 					}
 					
