@@ -27,31 +27,6 @@ public class QuantumPen implements CommandExecutor {
 		plugin.getCommand("quantumpen").setExecutor(this);
 		plugin.getCommand("quantumpen").setTabCompleter(new CommandTabCompleter());
 	}
-	/*
-
-	private static HttpClient httpClient = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-
-	
-	private static String sendGETRequest(String url) {
-		try {
-			HttpRequest request = HttpRequest.newBuilder()
-					.GET()
-					.uri(URI.create(url))
-					.setHeader("User-Agent", "Java 11 HttpClient Bot")
-					.build();
-			HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-	
-			if (response.statusCode() == 200) {
-				return response.body();
-			}
-	
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	
-		return null;
-	}
-	*/
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
