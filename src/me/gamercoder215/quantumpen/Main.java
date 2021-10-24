@@ -12,12 +12,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.gamercoder215.quantumpen.commands.PlayerData;
 import me.gamercoder215.quantumpen.commands.QuantumPen;
 import me.gamercoder215.quantumpen.commands.Server;
+import me.gamercoder215.quantumpen.edit.Attribute;
 import me.gamercoder215.quantumpen.edit.Block;
 import me.gamercoder215.quantumpen.edit.Chunk;
 import me.gamercoder215.quantumpen.edit.EditEntity;
 import me.gamercoder215.quantumpen.edit.Pathfinders;
 import me.gamercoder215.quantumpen.edit.World;
 import me.gamercoder215.quantumpen.misc.CreateWorld;
+import me.gamercoder215.quantumpen.misc.Pen;
 import me.gamercoder215.quantumpen.misc.UnloadWorld;
 import me.gamercoder215.quantumpen.packets.ClientPacket;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
@@ -71,10 +73,12 @@ public class Main extends JavaPlugin {
 		new Pathfinders(this);
 		new EditEntity(this);
 		
+		new Attribute(this);
 		new Chunk(this);
 		new Block(this);
 		new World(this);
 		
+		new Pen(this);
 		new CreateWorld(this);
 		new UnloadWorld(this);
 		
@@ -108,9 +112,9 @@ public class Main extends JavaPlugin {
     	
     	// Tab Complete
     	if (!(this.getConfig().getBoolean("UseTabComplete"))) {
-				for (Command c : PluginCommandYamlParser.parse(this)) {
-					((PluginCommand) c).setTabCompleter(null);
-				}
+			for (Command c : PluginCommandYamlParser.parse(this)) {
+				((PluginCommand) c).setTabCompleter(null);
+			}
     	}
 	}
 	
