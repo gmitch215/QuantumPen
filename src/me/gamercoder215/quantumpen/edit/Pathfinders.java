@@ -24,6 +24,7 @@ import org.bukkit.entity.LivingEntity;
 import me.gamercoder215.quantumpen.Main;
 import me.gamercoder215.quantumpen.packets.ClientPacket;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
+import me.gamercoder215.quantumpen.utils.CommandTabCompleter.ArgumentType;
 import net.minecraft.server.level.WorldServer;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.entity.EntityCreature;
@@ -123,6 +124,7 @@ import net.minecraft.world.entity.ai.goal.PathfinderGoalZombieAttack;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalDefendVillage;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalHurtByTarget;
 import net.minecraft.world.entity.ai.goal.target.PathfinderGoalNearestAttackableTarget;
+import net.minecraft.world.entity.ai.navigation.Navigation;
 import net.minecraft.world.entity.animal.EntityAnimal;
 import net.minecraft.world.entity.animal.EntityCat;
 import net.minecraft.world.entity.animal.EntityDolphin;
@@ -302,631 +304,632 @@ public class Pathfinders implements CommandExecutor {
       EntityInsentient target = ((EntityInsentient) ((CraftEntity) bukkittarget).getHandle());
 
       switch (args[0].toLowerCase()) {
-				case "behavior": {
-					if (args.length < 3) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid behavior type.");
-						return false;
-					}
+  
+		case "behavior": {
+			if (args.length < 3) {
+				Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid behavior type.");
+				return false;
+			}
 
-					WorldServer ws = ((CraftWorld) bukkittarget.getWorld()).getHandle();
-					try {
-						switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
-							case "behavior_attack": {
-								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid cooldown between attacks.");
-									return false;
-								}
-
-								BehaviorAttack b = new BehaviorAttack(Integer.parseInt(args[2]));
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_bedjump": {
-								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorBedJump b = new BehaviorBedJump(Float.parseFloat(args[2]));
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_bell": {
-								BehaviorBell b = new BehaviorBell();
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_bell_alert": {
-								BehaviorBellAlert b = new BehaviorBellAlert();
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_bell_ring": {
-								BehaviorBellRing b = new BehaviorBellRing();
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_villager_betterjob": {
-								BehaviorBetterJob b = new BehaviorBetterJob(((EntityVillager) target).getVillagerData().getProfession());
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_villager_bonemeal": {
-								BehaviorBonemeal b = new BehaviorBonemeal();
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_villager_career": {
-								BehaviorCareer b = new BehaviorCareer();
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_villager_celebrate": {
-								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a minimum duration.");
-									return false;
-								}
-								
-								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a maximum duration.");
-									return false;
-								}
-								
-								BehaviorCelebrate b = new BehaviorCelebrate(Integer.parseInt(args[2]), Integer.parseInt(args[3]));
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_celebrate_tolocation": {
-								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
-									return false;
-								}
-								
-								if (args.length < 5) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorCelebrateLocation b = new BehaviorCelebrateLocation(Integer.parseInt(args[2]), Float.parseFloat(args[3]));
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_villager_farm": {
-								BehaviorFarm b = new BehaviorFarm();
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_finditem": {
-								if (args.length < 2) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
-									return false;
-								}
-								
-								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorFindAdmirableItem b = new BehaviorFindAdmirableItem(Float.parseFloat(args[2]), true, Integer.parseInt(args[3]));
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_forgetanger": {
-								BehaviorForgetAnger b = new BehaviorForgetAnger();
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_hide": {
-								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
-									return false;
-								}
-								
-								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hiding duration, in SECONDS.");
-									return false;
-								}
-								
-								BehaviorHide b = new BehaviorHide(Integer.parseInt(args[2]), Integer.parseInt(args[3]));
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_findhidingplace": {
-								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
-									return false;
-								}
-								
-								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hook range (distance to hide).");
-									return false;
-								}
-								
-								if (args.length < 6) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorHome b = new BehaviorHome(Integer.parseInt(args[2]), Float.parseFloat(args[4]), Integer.parseInt(args[3]));
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_findhidingplace_raid": {
-								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
-									return false;
-								}
-								
-								if (args.length < 5) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorHomeRaid b = new BehaviorHomeRaid(Integer.parseInt(args[2]), Float.parseFloat(args[3]));
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_interact_door": {
-								BehaviorInteractDoor b = new BehaviorInteractDoor();
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_interact_player": {
-								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorInteractPlayer b = new BehaviorInteractPlayer(Float.parseFloat(args[2]));
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-								
-							}
-							case "behavior_villager_leavejob": {
-								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorLeaveJob b = new BehaviorLeaveJob(Float.parseFloat(args[2]));
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_breed_villager": {
-								BehaviorMakeLove b = new BehaviorMakeLove();
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_breed_animal": {
-								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorMakeLoveAnimal b = new BehaviorMakeLoveAnimal((EntityTypes<? extends EntityAnimal>) target.getEntityType(), Float.parseFloat(args[2]));
-								
-								if (b.e(ws, (EntityAnimal) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_villager_nearestvillage": {
-								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
-									return false;
-								}
-								
-								if (args.length < 5) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorNearestVillage b = new BehaviorNearestVillage(Float.parseFloat(args[3]), Integer.parseInt(args[2]));
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_panic_villager": {
-								BehaviorPanic b = new BehaviorPanic();
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_play": {
-								BehaviorPlay b = new BehaviorPlay();
-								
-								if (b.e(ws, (EntityCreature) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_villager_potentialjobsite": {
-								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorPotentialJobSite b = new BehaviorPotentialJobSite(Float.parseFloat(args[2]));
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_villager_profession": {
-								BehaviorProfession b = new BehaviorProfession();
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_raid": {
-								BehaviorRaid b = new BehaviorRaid();
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_raid_reset": {
-								BehaviorRaidReset b = new BehaviorRaidReset();
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_retreat": {
-								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid distance.");
-									return false;
-								}
-								
-								if (args.length < 5) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorRetreat b = new BehaviorRetreat(Integer.parseInt(args[2]), Float.parseFloat(args[3]));
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_sleep": {
-								BehaviorSleep b = new BehaviorSleep();
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_swim": {
-								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid chance.");
-									return false;
-								}
-								
-								float chance = Float.parseFloat(args[2]);
-								
-								if (chance < 0 || chance > 100) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid chance between 0 and 100.");
-									return false;
-								}
-								
-								BehaviorSwim b = new BehaviorSwim(chance);
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_villager_herogift": {
-								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid gift interval.");
-									return false;
-								}
-								
-								BehaviorVillageHeroGift b = new BehaviorVillageHeroGift(Integer.parseInt(args[2]));
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_wake": {
-								BehaviorWake b = new BehaviorWake();
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_walkhome": {
-								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								BehaviorWalkHome b = new BehaviorWalkHome(Float.parseFloat(args[2]));
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_villager_work": {
-								BehaviorWork b = new BehaviorWork();
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_villager_work_composter": {
-								BehaviorWorkComposter b = new BehaviorWorkComposter();
-								
-								if (b.e(ws, (EntityVillager) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_move": {
-								BehavorMove b = new BehavorMove();
-								
-								if (b.e(ws, target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_swim_random": {
-								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								RandomSwim b = new RandomSwim(Float.parseFloat(args[2]));
-								
-								if (b.e(ws, (EntityCreature) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_findwater": {
-								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
-									return false;
-								}
-								
-								if (args.length < 5) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								TryFindWater b = new TryFindWater(Integer.parseInt(args[2]), Float.parseFloat(args[3]));
-								
-								if (b.e(ws, (EntityCreature) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							case "behavior_panic_animal": {
-								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
-									return false;
-								}
-								
-								AnimalPanic b = new AnimalPanic(Float.parseFloat(args[2]));
-								
-								if (b.e(ws, (EntityCreature) target, 0)) {
-									sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
-									break;
-								} else {
-									sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
-									break;
-								}
-							}
-							default: {
-								Main.sendPluginMessage(sender, ChatColor.RED + "This behavior does not exist.");
-								return false;
-							}
+			WorldServer ws = ((CraftWorld) bukkittarget.getWorld()).getHandle();
+			try {
+				switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
+					case "behavior_attack": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid cooldown between attacks.");
+							return false;
 						}
 
-					} catch (IllegalArgumentException e) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
-						return false;
-					} catch (ClassCastException e) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "This behavior is not supported for this entity.");
-						return false;
-					} catch (Exception e) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+						BehaviorAttack b = new BehaviorAttack(Integer.parseInt(args[2]));
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_bedjump": {
+						if (args.length < 4) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorBedJump b = new BehaviorBedJump(Float.parseFloat(args[2]));
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_bell": {
+						BehaviorBell b = new BehaviorBell();
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_bell_alert": {
+						BehaviorBellAlert b = new BehaviorBellAlert();
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_bell_ring": {
+						BehaviorBellRing b = new BehaviorBellRing();
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_villager_betterjob": {
+						BehaviorBetterJob b = new BehaviorBetterJob(((EntityVillager) target).getVillagerData().getProfession());
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_villager_bonemeal": {
+						BehaviorBonemeal b = new BehaviorBonemeal();
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_villager_career": {
+						BehaviorCareer b = new BehaviorCareer();
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_villager_celebrate": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a minimum duration.");
+							return false;
+						}
+						
+						if (args.length < 5) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a maximum duration.");
+							return false;
+						}
+						
+						BehaviorCelebrate b = new BehaviorCelebrate(Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_celebrate_tolocation": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
+							return false;
+						}
+						
+						if (args.length < 5) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorCelebrateLocation b = new BehaviorCelebrateLocation(Integer.parseInt(args[2]), Float.parseFloat(args[3]));
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_villager_farm": {
+						BehaviorFarm b = new BehaviorFarm();
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_finditem": {
+						if (args.length < 2) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
+							return false;
+						}
+						
+						if (args.length < 4) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorFindAdmirableItem b = new BehaviorFindAdmirableItem(Float.parseFloat(args[2]), true, Integer.parseInt(args[3]));
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_forgetanger": {
+						BehaviorForgetAnger b = new BehaviorForgetAnger();
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_hide": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
+							return false;
+						}
+						
+						if (args.length < 5) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hiding duration, in SECONDS.");
+							return false;
+						}
+						
+						BehaviorHide b = new BehaviorHide(Integer.parseInt(args[2]), Integer.parseInt(args[3]));
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_findhidingplace": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
+							return false;
+						}
+						
+						if (args.length < 5) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hook range (distance to hide).");
+							return false;
+						}
+						
+						if (args.length < 6) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorHome b = new BehaviorHome(Integer.parseInt(args[2]), Float.parseFloat(args[4]), Integer.parseInt(args[3]));
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_findhidingplace_raid": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
+							return false;
+						}
+						
+						if (args.length < 5) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorHomeRaid b = new BehaviorHomeRaid(Integer.parseInt(args[2]), Float.parseFloat(args[3]));
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_interact_door": {
+						BehaviorInteractDoor b = new BehaviorInteractDoor();
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_interact_player": {
+						if (args.length < 4) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorInteractPlayer b = new BehaviorInteractPlayer(Float.parseFloat(args[2]));
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+						
+					}
+					case "behavior_villager_leavejob": {
+						if (args.length < 4) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorLeaveJob b = new BehaviorLeaveJob(Float.parseFloat(args[2]));
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_breed_villager": {
+						BehaviorMakeLove b = new BehaviorMakeLove();
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_breed_animal": {
+						if (args.length < 4) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorMakeLoveAnimal b = new BehaviorMakeLoveAnimal((EntityTypes<? extends EntityAnimal>) target.getEntityType(), Float.parseFloat(args[2]));
+						
+						if (b.e(ws, (EntityAnimal) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_villager_nearestvillage": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
+							return false;
+						}
+						
+						if (args.length < 5) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorNearestVillage b = new BehaviorNearestVillage(Float.parseFloat(args[3]), Integer.parseInt(args[2]));
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_panic_villager": {
+						BehaviorPanic b = new BehaviorPanic();
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_play": {
+						BehaviorPlay b = new BehaviorPlay();
+						
+						if (b.e(ws, (EntityCreature) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_villager_potentialjobsite": {
+						if (args.length < 4) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorPotentialJobSite b = new BehaviorPotentialJobSite(Float.parseFloat(args[2]));
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_villager_profession": {
+						BehaviorProfession b = new BehaviorProfession();
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_raid": {
+						BehaviorRaid b = new BehaviorRaid();
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_raid_reset": {
+						BehaviorRaidReset b = new BehaviorRaidReset();
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_retreat": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid distance.");
+							return false;
+						}
+						
+						if (args.length < 5) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorRetreat b = new BehaviorRetreat(Integer.parseInt(args[2]), Float.parseFloat(args[3]));
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_sleep": {
+						BehaviorSleep b = new BehaviorSleep();
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_swim": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid chance.");
+							return false;
+						}
+						
+						float chance = Float.parseFloat(args[2]);
+						
+						if (chance < 0 || chance > 100) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid chance between 0 and 100.");
+							return false;
+						}
+						
+						BehaviorSwim b = new BehaviorSwim(chance);
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_villager_herogift": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid gift interval.");
+							return false;
+						}
+						
+						BehaviorVillageHeroGift b = new BehaviorVillageHeroGift(Integer.parseInt(args[2]));
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_wake": {
+						BehaviorWake b = new BehaviorWake();
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_walkhome": {
+						if (args.length < 4) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						BehaviorWalkHome b = new BehaviorWalkHome(Float.parseFloat(args[2]));
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_villager_work": {
+						BehaviorWork b = new BehaviorWork();
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_villager_work_composter": {
+						BehaviorWorkComposter b = new BehaviorWorkComposter();
+						
+						if (b.e(ws, (EntityVillager) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_move": {
+						BehavorMove b = new BehavorMove();
+						
+						if (b.e(ws, target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_swim_random": {
+						if (args.length < 4) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						RandomSwim b = new RandomSwim(Float.parseFloat(args[2]));
+						
+						if (b.e(ws, (EntityCreature) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_findwater": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
+							return false;
+						}
+						
+						if (args.length < 5) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						TryFindWater b = new TryFindWater(Integer.parseInt(args[2]), Float.parseFloat(args[3]));
+						
+						if (b.e(ws, (EntityCreature) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					case "behavior_panic_animal": {
+						if (args.length < 4) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						AnimalPanic b = new AnimalPanic(Float.parseFloat(args[2]));
+						
+						if (b.e(ws, (EntityCreature) target, 0)) {
+							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
+							break;
+						} else {
+							sender.sendMessage(ChatColor.RED + "Behavior addition unsuccessful.");
+							break;
+						}
+					}
+					default: {
+						Main.sendPluginMessage(sender, ChatColor.RED + "This behavior does not exist.");
 						return false;
 					}
-					sender.sendMessage(ChatColor.GREEN + "Behavior successfully activated!");
-					return true;
+				}
+
+			} catch (IllegalArgumentException e) {
+				Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+				return false;
+			} catch (ClassCastException e) {
+				Main.sendPluginMessage(sender, ChatColor.RED + "This behavior is not supported for this entity.");
+				return false;
+			} catch (Exception e) {
+				Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+				return false;
+			}
+			sender.sendMessage(ChatColor.GREEN + "Behavior successfully activated!");
+			return true;
 				}
 				case "controller": {
 		        	if (!(sender.hasPermission("quantumpen.pathfinder.controller"))) {
@@ -939,35 +942,7 @@ public class Pathfinders implements CommandExecutor {
 						return false;
 					}
 
-					switch (args[2].toLowerCase()) {
-						case "movement_goto": {
-							if (args.length < 4) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
-								return false;
-							}
-
-							if (args.length < 5) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
-								return false;
-							}
-
-							if (args.length < 6) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
-								return false;
-							}
-
-							if (args.length < 7) {
-								Main.sendValidSpeedModifier(sender);
-								return false;
-							}
-
-							target.getControllerMove().a(Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]), Double.parseDouble(args[5]));
-							break;
-						}
-						case "movement_tick": {
-							target.getControllerMove().a();
-							break;
-						}
+					switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
 						case "looking_lookatentity": {
 							if (args.length < 4) {
 								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity UUID.");
@@ -1604,10 +1579,12 @@ public class Pathfinders implements CommandExecutor {
 							case "attack_defensive": {
 								List<Class<EntityLiving>> ignoreList = new ArrayList<>();
 								
-								for (int i = 3; i < args.length; i++) {
-									Class<EntityLiving> entityClass = (Class<EntityLiving>) matchClass(EntityType.valueOf(args[i]));
-									
-									ignoreList.add(entityClass);
+								if (args.length >= 3) {
+									for (int i = 3; i < args.length; i++) {
+										Class<EntityLiving> entityClass = (Class<EntityLiving>) matchClass(EntityType.valueOf(args[i]));
+										
+										ignoreList.add(entityClass);
+									}
 								}
 									
 								PathfinderGoalHurtByTarget p = new PathfinderGoalHurtByTarget((EntityCreature) target, ignoreList.toArray(new Class<?>[0]));
@@ -2458,25 +2435,81 @@ public class Pathfinders implements CommandExecutor {
           sender.sendMessage(msg);
 
           break;
-				}
-				case "navigation": {
-					if (args.length < 3) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a navigation action.");
+			}
+		case "navigation": {
+			if (args.length < 3) {
+				Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a navigation action.");
+				return false;
+			}
+			
+			try {
+				switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
+					case "movement_goto": {
+						if (args.length < 4) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+							return false;
+						}
+						
+						if (args.length < 5) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+							return false;
+						}
+						
+						if (args.length < 6) {
+							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+							return false;
+						}
+						
+						if (args.length < 7) {
+							Main.sendValidSpeedModifier(sender);
+							return false;
+						}
+						
+						target.getNavigation().a(Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]), Double.parseDouble(args[6]));
+						break;
+					}
+					case "ground_canopendoors": {
+						if (args.length < 4) {
+							Main.sendValidType(sender, ArgumentType.BOOLEAN);
+							return false;
+						}
+						
+						((Navigation) target.getNavigation()).b(Boolean.parseBoolean(args[3]));
+						break;
+					}
+					case "ground_avoidsun": {
+						if (args.length < 4) {
+							Main.sendValidType(sender, ArgumentType.BOOLEAN);
+							return false;
+						}
+						
+						((Navigation) target.getNavigation()).c(Boolean.parseBoolean(args[3]));
+						break;
+					}
+					default: {
+						Main.sendPluginMessage(sender, ChatColor.RED + "This navigation type does not exist.");
 						return false;
 					}
-
-					
 				}
-        default:
+			} catch (ClassCastException e) {
+				Main.sendPluginMessage(sender, ChatColor.RED + "This navigation type is not supported for this entity.");
+				return false;
+			}
+			sender.sendMessage(ChatColor.GREEN + "Navigation successful!");
+			return true;
+		}
+        default: {
           Main.sendInvalidArgs(sender);
           return false;
+        }
       }
     } catch (IllegalArgumentException e) {
       Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments:\n" + e.getLocalizedMessage());
       return false;
     } catch (Exception e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
-		}
+		Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+		return false;
+	}
 	return true;
 	}
 }
