@@ -1,12 +1,15 @@
 package me.gamercoder215.quantumpen.edit;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 
 import me.gamercoder215.quantumpen.Main;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;

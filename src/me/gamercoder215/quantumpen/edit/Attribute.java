@@ -1,3 +1,27 @@
+package me.gamercoder215.quantumpen.edit;
+
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
+import org.bukkit.entity.LivingEntity;
+
+import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
+import net.minecraft.world.entity.EntityCreature;
+import net.minecraft.world.entity.ai.attributes.AttributeBase;
+import net.minecraft.world.entity.ai.attributes.AttributeModifiable;
+import net.minecraft.world.entity.ai.attributes.GenericAttributes;
+
 public class Attribute implements CommandExecutor {
 
 	protected Main plugin;
@@ -28,7 +52,7 @@ public class Attribute implements CommandExecutor {
 		else return null;
 	}
 
-	public boolean onCommand(CommandSender sender, Command cmd, String label, Stirng[] args) {
+	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
 			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attribute action.");
 			return false;
@@ -56,7 +80,7 @@ public class Attribute implements CommandExecutor {
 			EntityCreature target = (EntityCreature) ((CraftEntity) bukkittarget).getHandle();
 
 			switch (args[0].toLowerCase()) {
-				case "add_instance": {
+				case "add": {
 					if (args.length < 3) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attribute type.");
 						return false;
@@ -67,7 +91,7 @@ public class Attribute implements CommandExecutor {
 						return false;
 					}
 					target.getAttributeMap().b(matchAttribute(args[2]));
-					if (args.length < 4)
+					if (args.length < 4) {
 						target.getAttributeInstance(matchAttribute(args[2])).setValue(0);
 						sender.sendMessage(ChatColor.GREEN + "Successfuly registered attribute with base value of 0.");
 					} else {
@@ -76,7 +100,7 @@ public class Attribute implements CommandExecutor {
 					}
 					break;
 				}
-				case "set_basevalue": {
+				case "set": {
 					if (args.length < 3) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attribute type.");
 						return false;
@@ -99,11 +123,11 @@ public class Attribute implements CommandExecutor {
 						return false;
 					}
 
-					target.getAttributeMap().getInstance(matchAttribute(args[2])).setValue(newValue);
+					target.getAttributeMap().a(matchAttribute(args[2])).setValue(newValue);
 					sender.sendMessage(ChatColor.GREEN + "Successfully set new value to \"" + args[3] + "\".");
 					break;
 				}
-				case "has_attribute": {
+				case "has": {
 					String msg = ChatColor.RED + " does not ";
 
 					if (args.length < 3) {
@@ -121,11 +145,11 @@ public class Attribute implements CommandExecutor {
 					sender.sendMessage(ChatColor.GOLD + "This entity" + msg + ChatColor.GOLD + "contain this attribute.");
 					break;
 				}
-				case "list_attribute": {
+				case "list": {
 					List<String> attributes = new ArrayList<>();
-					DecimalFormat df = new DecimalFormat("###.###")
+					DecimalFormat df = new DecimalFormat("###.###");
 					for (AttributeModifiable a : target.getAttributeMap().getAttributes()) {
-						attributes.add(ChatColor.BLUE + "Name: " + ChatColor.GOLD + a.getAttribute().getName() + ChatColor.BLUE + "\nBase Value: " + ChatColor.GOLD + df.format(a.getBaseValue()) + ChatColor.BLUE + "\nValue: " + ChatColor.GOLD + df.format(a.getValue());
+						attributes.add(ChatColor.BLUE + "Name: " + ChatColor.GOLD + a.getAttribute().getName() + ChatColor.BLUE + "\nBase Value: " + ChatColor.GOLD + df.format(a.getBaseValue()) + ChatColor.BLUE + "\nValue: " + ChatColor.GOLD + df.format(a.getValue()));
 					}
 
 					sender.sendMessage(ChatColor.AQUA + "" + ChatColor.UNDERLINE + "Entity Attributes" + String.join(ChatColor.AQUA + "----------", attributes));
