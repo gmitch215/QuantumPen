@@ -7,8 +7,11 @@ import java.util.UUID;
 
 import org.bukkit.Art;
 import org.bukkit.Bukkit;
+import org.bukkit.Difficulty;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -17,12 +20,13 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
+import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.EntityInsentient;
 
 public class CommandTabCompleter implements TabCompleter {
 	
 	public enum ArgumentType {
-		BOOLEAN, INTEGER, ENTITYTYPE, DECIMAL;
+		BOOLEAN, INTEGER, ENTITYTYPE, DECIMAL, GAMEMODE, MATERIAL;
 	}
 
 	public static List<String> getBlockActions() {
@@ -151,10 +155,26 @@ public class CommandTabCompleter implements TabCompleter {
 		} else if (type == ArgumentType.ENTITYTYPE) {
 			List<String> types = new ArrayList<>();
 			for (EntityType t : EntityType.values()) {
-				types.add("minecraft:" + t.name());
+				types.add("minecraft:" + t.toString().toLowerCase());
 			}
 
 			return types;
+		} else if (type == ArgumentType.GAMEMODE) {
+			List<String> gamemodes = new ArrayList<>();
+			
+			for (GameMode g : GameMode.values()) {
+				gamemodes.add(g.toString().toLowerCase());
+			}
+			
+			return gamemodes;
+		} else if (type == ArgumentType.MATERIAL) {
+			List<String> material = new ArrayList<>();
+			
+			for (Material m : Material.values()) {
+				material.add("minecraft:" + m.toString());
+			}
+			
+			return material;
 		} else return null;
 	}
 	
@@ -419,8 +439,6 @@ public class CommandTabCompleter implements TabCompleter {
 
 	public static List<String> getControllerActions() {
 		String[] oldactions = {
-			"movement_goto",
-			"movement_tick",
 			"looking_lookatentity",
 			"looking_lookatcoordinates",
 			"looking_tick",
@@ -486,6 +504,19 @@ public class CommandTabCompleter implements TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		switch (cmd.getName().toLowerCase()) {
+			case "pen": {
+				switch (args.length) {
+					case 1: {
+						List<String> actions = new ArrayList<>();
+						
+						actions.add("calculate");
+						
+						Collections.sort(actions);
+						
+						return actions;
+					}
+				}
+			}
 			case "attribute": {
 				switch (args.length) {
 					case 1: {
@@ -509,19 +540,52 @@ public class CommandTabCompleter implements TabCompleter {
 							return uuids;
 						} else return null;
 					}
-
+					case 3: {
+						String[] oldAttributes = {
+								"generic.max_health",
+								"generic_follow_range",
+								"generic.knockback_resistance",
+								"generic.movement_speed",
+								"generic.flying_speed",
+								"generic.attack_damage",
+								"generic.attack_knockback",
+								"generic.attack_speed",
+								"generic.armor",
+								"generic.armor_toughness",
+								"generic.luck",
+								"zombie.spawn_reinforcements",
+								"horse.jump_strength",
+						};
+						
+						List<String> attributes = new ArrayList<>();
+						
+						for (String s : oldAttributes) {
+							attributes.add(s);
+						}
+						
+						Collections.sort(attributes);
+						
+						return attributes;
+					}
+					default: {
+						return null;
+					}
 				}
 			}
 			case "chunk": {
 				switch(args.length) {
-					case 1:
+					case 4:
 						List<String> actions = new ArrayList<>();
 						actions.add("load");
 						actions.add("unload");
 						actions.add("forceload");
 						actions.add("unforceload");
+						actions.add("gettickets");
+						actions.add("addticket");
+						actions.add("removeticket");
+						actions.add("setage");
 						return actions;
-					case 2: {
+					case 5: {
 						switch (args[0]) {
 							case "load":
 							case "unload": {
@@ -559,13 +623,7 @@ public class CommandTabCompleter implements TabCompleter {
 						switch (packet.replaceAll("minecraft:", "")) {
 							case "spawn_entity":
 								if (args.length == 4) {
-									List<String> entities = new ArrayList<>();
-									
-									for (EntityType t : EntityType.values()) {
-										entities.add("minecraft:" + t.name().toLowerCase());
-									}
-									
-									return entities;	
+									return getTypes(ArgumentType.ENTITYTYPE);
 								} else if (args.length == 5) {
 									List<String> xPos = new ArrayList<>();
 									
@@ -600,7 +658,7 @@ public class CommandTabCompleter implements TabCompleter {
 									List<String> art = new ArrayList<>();
 			
 									for (Art a : Art.values()) {
-										art.add("minecraft:" + a.name().toLowerCase());
+										art.add("minecraft:" + a.toString().toLowerCase());
 									}
 			
 									return art;
@@ -676,15 +734,12 @@ public class CommandTabCompleter implements TabCompleter {
 									
 									return inventoryList;
 								} else if (args.length == 5) {
-									List<String> materials = new ArrayList<>();
-									
-									for (Material m : Material.values()) {
-										materials.add("minecraft:" + m.name().toLowerCase());
-									}
-									
-									return materials;
+									return getTypes(ArgumentType.MATERIAL);
 								}
 								break;
+							case "state_gamemode_change": {
+								return getTypes(ArgumentType.GAMEMODE);
+							}
 							default:
 								return null;
 						}
@@ -740,6 +795,40 @@ public class CommandTabCompleter implements TabCompleter {
 							return getPlayerDataActions();
 						}
 					}
+					case 4: {
+						switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
+							case "property_canseeplayer": {
+								List<String> players = new ArrayList<>();
+								
+								for (Player p : Bukkit.getOnlinePlayers()) {
+									players.add(p.getName());
+								}
+								
+								return players;
+							}
+							case "camera_hideplayer": {
+								List<String> players = new ArrayList<>();
+								
+								for (Player p : Bukkit.getOnlinePlayers()) {
+									players.add(p.getName());
+								}
+								
+								return players;
+							}
+							case "playergui_healthscale_isscaled": {
+								return getTypes(ArgumentType.BOOLEAN);
+							}
+							case "camera_showplayer": {
+								List<String> players = new ArrayList<>();
+								
+								for (Player p : Bukkit.getOnlinePlayers()) {
+									players.add(p.getName());
+								}
+								
+								return players;
+							}
+						}
+					}
 				}
 			}
 			case "pathfinders": {
@@ -753,10 +842,12 @@ public class CommandTabCompleter implements TabCompleter {
 						actions.add("clear");
 						actions.add("add_target");
 						actions.add("controller");
+						actions.add("behavior");
+						actions.add("navigation");
 						actions.add("remove_target");
 						
 						return actions;
-					case 2:
+					case 2: {
 						List<String> uuids = new ArrayList<>();
 						
 						if (sender instanceof Player) {
@@ -767,10 +858,11 @@ public class CommandTabCompleter implements TabCompleter {
 							
 							return uuids;
 						} else return null;
+					}
 					case 3:
-						if (args[0].equalsIgnoreCase("add"))
+						if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("add_target"))
 						return getPathfinderList();
-						else if (args[0].equalsIgnoreCase("remove")) {
+						else if (args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("remove_target")) {
 							List<String> goals = new ArrayList<>();
 							
 							UUID uid = UUID.fromString(args[1]);
@@ -784,8 +876,68 @@ public class CommandTabCompleter implements TabCompleter {
 						    });
 						    
 						    return goals;
-						}
+						} else if (args[0].equalsIgnoreCase("navigation")) {
+							String[] oldNavigation = {
+									"movement_goto",
+									"ground_canopendoors",
+									"ground_avoidsun",
+							};
+							
+							List<String> navigation = new ArrayList<>();
+							
+							for (String s : oldNavigation) {
+								navigation.add("minecraft:" + s);
+							}
+							
+							Collections.sort(navigation);
+							
+							return navigation;
+						} else if (args[0].equalsIgnoreCase("behavior")) return getBehaviorList();
 						else return null;
+					case 4: {
+						switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
+							case "looking_lookatentity": {
+								List<String> uuids = new ArrayList<>();
+								
+								if (sender instanceof Player) {
+									((Player) sender).getNearbyEntities(5, 5, 5).forEach(entity -> {
+										if (!(((CraftEntity) entity).getHandle() instanceof EntityInsentient)) return;
+										uuids.add(entity.getUniqueId().toString());
+									});
+									
+									return uuids;
+								} else return null;
+							}
+							case "core_lookatentity":
+							case "target_avoid": {
+								return getTypes(ArgumentType.ENTITYTYPE);
+							}
+							case "ground_avoidsun":
+							case "ground_canopendoors": {
+								return getTypes(ArgumentType.BOOLEAN);
+							}
+							default: {
+								return null;
+							}
+						}
+					}
+					case 5: {
+						switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
+							case "core_tempt": {
+								return getTypes(ArgumentType.MATERIAL);
+							}
+						}
+					}
+					case 6: {
+						switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
+							case "movement_throughvillage": {
+								return getTypes(ArgumentType.BOOLEAN);
+							}
+							default: {
+								return null;
+							}
+						}
+					}
 					default:
 						return null;
 				}
@@ -796,6 +948,8 @@ public class CommandTabCompleter implements TabCompleter {
 						List<String> actions = new ArrayList<>();
 						
 						actions.add("info");
+						actions.add("reloadconfig");
+						actions.add("cleartickets");
 						break;
 					}
 				}
@@ -805,7 +959,8 @@ public class CommandTabCompleter implements TabCompleter {
 					case 1:
 						List<String> arg0 = new ArrayList<>();
 						arg0.add("get");
-						arg0.add("set");
+						arg0.add("reloadwhitelist");
+						arg0.add("reloaddata");
 						
 						return arg0;
 					case 2: 
@@ -855,6 +1010,97 @@ public class CommandTabCompleter implements TabCompleter {
 					default:
 						return null;
 				}
+			}
+			case "world": {
+				switch (args.length) {
+					case 1: {
+						List<String> worlds = new ArrayList<>();
+						
+						for (World w : Bukkit.getWorlds()) {
+							worlds.add(w.getName());
+						}
+						
+						return worlds;
+					}
+					case 2: {
+						return getWorldActions();
+					}
+					case 3: {
+						switch (args[1].toLowerCase().replaceAll("minecraft:", "")) {
+							case "settings_pvp":
+							case "settings_hardcore":
+							case "server_autosave":
+							case "settings_keepspawnloaded": {
+								return getTypes(ArgumentType.BOOLEAN);
+							}
+							case "settings_difficulty": {
+								List<String> difficulty = new ArrayList<>();
+										
+								for (Difficulty d : Difficulty.values()) {
+									difficulty.add(d.toString().toLowerCase());
+								}
+								
+								return difficulty;
+							}
+						}
+					}
+					default:
+						return null;
+				}
+			}
+			case "block": {
+				switch (args.length) {
+					case 1: {
+						List<String> worlds = new ArrayList<>();
+						
+						for (World w : Bukkit.getWorlds()) {
+							worlds.add(w.getName());
+						}
+						
+						return worlds;
+					}
+					case 5: {
+						List<String> blockActions = new ArrayList<>();
+						
+						blockActions.add("get");
+						blockActions.add("modify");
+						
+						return blockActions;
+					}
+					case 6: {
+						if (args[4].equalsIgnoreCase("get")) return getBlockProperties();
+						else if (args[4].equalsIgnoreCase("modify")) return getBlockActions();
+					}
+					case 7: {
+						switch (args[5].toLowerCase().replaceAll("minecraft:", "")) {
+							case "game_breakspeed": {
+								List<String> players = new ArrayList<>();
+								
+								for (Player p : Bukkit.getOnlinePlayers()) {
+									players.add(p.getName());
+								}
+								
+								return players;
+							}
+							case "game_settype":
+							case "game_ispreferredmaterial": {
+								return getTypes(ArgumentType.MATERIAL);
+							}
+							case "game_setbiome": {
+								List<String> biomes = new ArrayList<>();
+								
+								for (Biome b : Biome.values()) {
+									biomes.add(b.toString().toLowerCase());
+								}
+							}
+							
+						}
+					}
+					
+				}
+			}
+			default: {
+				return null;
 			}
 		}
 		return null;
