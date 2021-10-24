@@ -53,47 +53,47 @@ public class World implements CommandExecutor {
 					break;
 				}
 				case "spawns_ambientlimit": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setAmbientSpawnLimit(Integer.parseInt(args[3]));
+					w.setAmbientSpawnLimit(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_animallimit": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setAnimalSpawnLimit(Integer.parseInt(args[3]));
+					w.setAnimalSpawnLimit(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "server_autosave": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.BOOLEAN);
 						return false;
 					}
 
-					w.setAutoSave(Boolean.parseBoolean(args[3]));
+					w.setAutoSave(Boolean.parseBoolean(args[2]));
 					success(sender);
 					break;
 				}
 				case "game_clearweathertime": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setClearWeatherDuration(Integer.parseInt(args[3]));
+					w.setClearWeatherDuration(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "settings_difficulty": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid difficulty.");
 						return false;
 					}
@@ -105,107 +105,107 @@ public class World implements CommandExecutor {
 					break;
 				}
 				case "settings_hardcore": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.BOOLEAN);
 						return false;
 					}
 
-					w.setHardcore(Boolean.parseBoolean(args[3]));
+					w.setHardcore(Boolean.parseBoolean(args[2]));
 					success(sender);
 					break;
 				}
 				case "settings_keepspawnloaded": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.BOOLEAN);
 						return false;
 					}
 
-					w.setKeepSpawnInMemory(Boolean.parseBoolean(args[3]));
+					w.setKeepSpawnInMemory(Boolean.parseBoolean(args[2]));
 					success(sender);
 					break;
 				}
 				case "settings_pvp": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.BOOLEAN);
 						return false;
 					}
 
-					w.setPVP(Boolean.parseBoolean(args[3]));
+					w.setPVP(Boolean.parseBoolean(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_monsterlimit": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setMonsterSpawnLimit(Integer.parseInt(args[3]));
+					w.setMonsterSpawnLimit(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_ticksper_ambient": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setTicksPerAmbientSpawns(Integer.parseInt(args[3]));
+					w.setTicksPerAmbientSpawns(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_ticksper_animal": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setTicksPerAnimalSpawns(Integer.parseInt(args[3]));
+					w.setTicksPerAnimalSpawns(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_ticksper_monster": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setTicksPerMonsterSpawns(Integer.parseInt(args[3]));
+					w.setTicksPerMonsterSpawns(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_ticksper_ambient_water": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setTicksPerWaterAmbientSpawns(Integer.parseInt(args[3]));
+					w.setTicksPerWaterAmbientSpawns(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_ambientlimit_water": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setWaterAmbientSpawnLimit(Integer.parseInt(args[3]));
+					w.setWaterAmbientSpawnLimit(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_animallimit_water": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setWaterAnimalSpawnLimit(Integer.parseInt(args[3]));
+					w.setWaterAnimalSpawnLimit(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "game_thunderduration": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
@@ -215,95 +215,95 @@ public class World implements CommandExecutor {
 						return false;
 					}
 					
-					w.setThunderDuration(Integer.parseInt(args[3]));
+					w.setThunderDuration(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "game_thundering": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.BOOLEAN);
 						return false;
 					}
 
-					w.setThundering(Boolean.parseBoolean(args[3]));
+					w.setThundering(Boolean.parseBoolean(args[2]));
 					success(sender);
 					break;
 				}
 				case "game_strikelightning": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
 						return false;
 					}
 
-					if (args.length < 5) {
+					if (args.length < 4) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
 						return false;
 					}
 
-					if (args.length < 6) {
+					if (args.length < 5) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
 						return false;
 					}
 
-					Location loc = new Location(w, Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
+					Location loc = new Location(w, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
 
 					w.strikeLightning(loc);
 					success(sender);
 					break;
 				}
 				case "game_strikelightning_effect": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
 						return false;
 					}
 
-					if (args.length < 5) {
+					if (args.length < 4) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
 						return false;
 					}
 
-					if (args.length < 6) {
+					if (args.length < 5) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
 						return false;
 					}
 
-					Location loc = new Location(w, Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]));
+					Location loc = new Location(w, Integer.parseInt(args[2]), Integer.parseInt(args[3]), Integer.parseInt(args[4]));
 
 					w.strikeLightningEffect(loc);
 					success(sender);
 					break;
 				}
 				case "game_time": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setTime(Integer.parseInt(args[3]));
+					w.setTime(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "game_fulltime": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setFullTime(Integer.parseInt(args[3]));
+					w.setFullTime(Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "game_spawnflags": {
-					if (args.length < 4) {
+					if (args.length < 3) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the boolean for \"allowMonsters\".");
 						return false;
 					}
-					if (args.length < 5) {
+					if (args.length < 4) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the boolean for \"allowAnimals\".");
 						return false;
 					}
 
-					w.setSpawnFlags(Boolean.parseBoolean(args[3]), Boolean.parseBoolean(args[4]));
+					w.setSpawnFlags(Boolean.parseBoolean(args[2]), Boolean.parseBoolean(args[3]));
 					success(sender);
 					break;
 				}
