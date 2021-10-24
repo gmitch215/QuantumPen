@@ -20,3 +20,8 @@ DisabledCommands:
 # UseTabComplete
 # Enable the usage of suggestions with commands
 UseTabComplete: true
+
+# CalculateDigits
+# The number of digits to display when large numbers are in scientific notation & decimal places
+# Default: 7
+CalculateDigits: 7

@@ -41,15 +41,24 @@ public class Pen implements CommandExecutor {
 				for (int i = 1; i < args.length; i++) {
 					arguments.add(args[i]);
 				}
-
+				
+				String hashTags = "#";
+				
+				for (int i = plugin.getConfig().getInt("CalculateDigits"); i > 1; i--) {
+					hashTags += "#";
+				}
+				
 				String equation = String.join(" ", arguments);
-				DecimalFormat df = new DecimalFormat("###.#####");
 				try {
+					DecimalFormat df = new DecimalFormat("###." + hashTags);
+					DecimalFormat nf = new DecimalFormat("0." + hashTags + "E0");
 					double answer = QuantumUtils.solveEquation(equation);
 					
-					if ((answer == Math.floor(answer)) && !Double.isInfinite(answer)) {
-					    int answerInt = (int) answer;
-					    Main.sendPluginMessage(sender, "= " + Integer.toString(answerInt));
+					if ((answer == Math.floor(answer)) && !Double.isInfinite(answer) && answer < Long.MAX_VALUE) {
+					    long answerInt = (long) answer;
+					    Main.sendPluginMessage(sender, "= " + Long.toString(answerInt));
+					} else if (answer > 1000000000) {
+						Main.sendPluginMessage(sender, "= " + nf.format(answer));
 					} else Main.sendPluginMessage(sender, "= " + df.format(answer));
 				} catch (RuntimeException e) {
 					Main.sendPluginMessage(sender, ChatColor.RED + "There was an error executing the equation:\n" + e.getLocalizedMessage());

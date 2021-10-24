@@ -12,7 +12,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.gamercoder215.quantumpen.commands.PlayerData;
 import me.gamercoder215.quantumpen.commands.QuantumPen;
 import me.gamercoder215.quantumpen.commands.Server;
-import me.gamercoder215.quantumpen.edit.Attribute;
 import me.gamercoder215.quantumpen.edit.Block;
 import me.gamercoder215.quantumpen.edit.Chunk;
 import me.gamercoder215.quantumpen.edit.EditEntity;
@@ -73,7 +72,6 @@ public class Main extends JavaPlugin {
 		new Pathfinders(this);
 		new EditEntity(this);
 		
-		new Attribute(this);
 		new Chunk(this);
 		new Block(this);
 		new World(this);
@@ -103,6 +101,14 @@ public class Main extends JavaPlugin {
     	
     	if (!(this.getConfig().get("UseTabComplete") instanceof Boolean)) {
     		this.getConfig().set("UseTabComplete", true);
+    	}
+    	
+    	if (this.getConfig().get("CalculateDigits") == null) {
+    		this.getConfig().set("CalculateDigits", 7);
+    	}
+    	
+    	if (!(this.getConfig().get("CalculateDigits") instanceof Integer)) {
+    		this.getConfig().set("CalculateDigits", 7);
     	}
     	
     	this.saveConfig();

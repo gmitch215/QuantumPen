@@ -20,7 +20,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import net.minecraft.world.entity.EntityCreature;
 import net.minecraft.world.entity.EntityInsentient;
 
 public class CommandTabCompleter implements TabCompleter {
@@ -515,58 +514,6 @@ public class CommandTabCompleter implements TabCompleter {
 						
 						return actions;
 					}
-				}
-			}
-			case "attribute": {
-				switch (args.length) {
-					case 1: {
-						List<String> actions = new ArrayList<>();
-						actions.add("add");
-						actions.add("set");
-						actions.add("has");
-						actions.add("list");
-
-						return actions;
-					}
-					case 2: {
-						List<String> uuids = new ArrayList<>();
-						
-						if (sender instanceof Player) {
-							((Player) sender).getNearbyEntities(5, 5, 5).forEach(entity -> {
-								if (!(((CraftEntity) entity).getHandle() instanceof EntityCreature)) return;
-								uuids.add(entity.getUniqueId().toString());
-							});
-							
-							return uuids;
-						} else return null;
-					}
-					case 3: {
-						String[] oldAttributes = {
-								"generic.max_health",
-								"generic_follow_range",
-								"generic.knockback_resistance",
-								"generic.movement_speed",
-								"generic.flying_speed",
-								"generic.attack_damage",
-								"generic.attack_knockback",
-								"generic.attack_speed",
-								"generic.armor",
-								"generic.armor_toughness",
-								"generic.luck",
-								"zombie.spawn_reinforcements",
-								"horse.jump_strength",
-						};
-						
-						List<String> attributes = new ArrayList<>();
-						
-						for (String s : oldAttributes) {
-							attributes.add(s);
-						}
-						
-						Collections.sort(attributes);
-						
-						return attributes;
-					}
 					default: {
 						return null;
 					}
@@ -574,6 +521,15 @@ public class CommandTabCompleter implements TabCompleter {
 			}
 			case "chunk": {
 				switch(args.length) {
+					case 1: {
+						List<String> worlds = new ArrayList<>();
+						
+						for (World w : Bukkit.getWorlds()) {
+							worlds.add(w.getName());
+						}
+						
+						return worlds;
+					}
 					case 4:
 						List<String> actions = new ArrayList<>();
 						actions.add("load");
@@ -594,6 +550,9 @@ public class CommandTabCompleter implements TabCompleter {
 							default:
 								return null;
 						}
+					}
+					default: {
+						return null;
 					}
 				}
 			}
@@ -743,8 +702,10 @@ public class CommandTabCompleter implements TabCompleter {
 							default:
 								return null;
 						}
+					default: {
+						return null;
+					}
 				}
-				break;
 			case "editentity": {
 				switch(args.length) {
 					case 1:
@@ -765,9 +726,11 @@ public class CommandTabCompleter implements TabCompleter {
 						return editActions;
 					case 3:
 						return getEntityActions(args[1]);
+					default: {
+						return null;
+					}
 					
 				}
-				break;
 			}
 			case "playerdata": {
 				switch (args.length) {
@@ -828,6 +791,9 @@ public class CommandTabCompleter implements TabCompleter {
 								return players;
 							}
 						}
+					}
+					default: {
+						return null;
 					}
 				}
 			}
@@ -950,7 +916,11 @@ public class CommandTabCompleter implements TabCompleter {
 						actions.add("info");
 						actions.add("reloadconfig");
 						actions.add("cleartickets");
-						break;
+						
+						return actions;
+					}
+					default: {
+						return null;
 					}
 				}
 			}
@@ -1096,6 +1066,9 @@ public class CommandTabCompleter implements TabCompleter {
 							
 						}
 					}
+					default: {
+						return null;
+					}
 					
 				}
 			}
@@ -1103,7 +1076,6 @@ public class CommandTabCompleter implements TabCompleter {
 				return null;
 			}
 		}
-		return null;
 	}
 
 }

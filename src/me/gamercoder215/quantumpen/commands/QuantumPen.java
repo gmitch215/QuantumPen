@@ -40,11 +40,14 @@ public class QuantumPen implements CommandExecutor {
 			}
 			case "reloadconfig": {
 				sender.sendMessage(ChatColor.GREEN + "Reloading Configuration...");
+				plugin.getLogger().info("Reloding Configuration...");
 				
 				plugin.saveConfig();
 				plugin.reloadConfig();
 				plugin.saveConfig();
 				
+				
+				plugin.getLogger().info("Successfully Reloaded QuantumPen Configuration");
 				sender.sendMessage(ChatColor.GREEN + "Configuration Reloaded & Saved! This does not change the QuantumPen JAR; You need to reload or restart your server for the JAR to update.");
 				break;
 			}

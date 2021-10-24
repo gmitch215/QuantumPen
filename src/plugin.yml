@@ -58,11 +58,6 @@ commands:
     permission: quantumpen.server
     usage: /server <get|reloaddata|reloadwhitelist> <parameters...>
     aliases: [srvr, s]
-  attribute:
-    description: Edit entity attributes
-    permission: quantumpen.world.entity
-    usage: /attribute <add|list|has|set> <uuid> <attribute> <parameters...>
-    aliases: [attr, att]
   pen:
     description: Miscellaneous QuantumPen actions
     permission: quantumpen.misc

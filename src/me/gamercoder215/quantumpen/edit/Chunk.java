@@ -146,6 +146,10 @@ public class Chunk implements CommandExecutor {
 					sender.sendMessage(ChatColor.GREEN + "Successfully removed a plugin chunk ticket!");
 					break;
 				}
+				default: {
+					Main.sendPluginMessage(sender, ChatColor.RED + "This action does not exist.");
+					return false;
+				}
 			}
 		} catch (IllegalArgumentException e) {
 			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
@@ -154,7 +158,7 @@ public class Chunk implements CommandExecutor {
 			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
 			return false;
 		}
-		return false;
+		return true;
 	}
 
 }
