@@ -83,6 +83,7 @@ permissions:
       quantumpen.world.chunk: true
       quantumpen.world.create: true
       quantumpen.world.entity: true
+      quantumpen.world.unload: true
       quantumpen.server.playerdata: true
       quantumpen.server: true
   quantumpen.misc:
