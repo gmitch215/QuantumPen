@@ -2423,14 +2423,8 @@ public class Pathfinders implements CommandExecutor {
           targetgoals.forEach((priority, goal) -> {
         	  messages2.add(ChatColor.BLUE + "Priority: " + ChatColor.GOLD + Integer.toString(priority) + ChatColor.DARK_AQUA + " | " + ChatColor.BLUE + "Goal Name: " + ChatColor.GOLD + goal);
           });
-
-			List<String> activities = new ArrayList<>();
-
-			for (Behavior b : target.getBehaviorController().d()) {
-				activities.add(ChatColor.GOLD + matchBehavior(b));
-			}
           
-          String msg = ChatColor.AQUA + "" + ChatColor.UNDERLINE + "Entity Goals\n" + String.join("\n", messages) + ChatColor.AQUA + "" + ChatColor.UNDERLINE + "\n\nEntity Target Goals\n" + String.join("\n", messages2) + ChatColor.AQUA + "" + ChatColor.UNDERLINE + "\n\nEntity Behaviors\n" + String.join("\n", activities);
+          String msg = ChatColor.AQUA + "" + ChatColor.UNDERLINE + "Entity Goals\n" + String.join("\n", messages) + ChatColor.AQUA + "" + ChatColor.UNDERLINE + "\n\nEntity Target Goals\n" + String.join("\n", messages2);
           
           sender.sendMessage(msg);
 
