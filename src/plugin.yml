@@ -143,6 +143,9 @@ permissions:
   quantumpen.server.playerdata:
     default: op
     description: Enable ability to fetch player data
+  quantumpen.world.unload:
+    default: op
+    description: Enable ability to unload worlds
   quantumpen.world.block:
     default: op
     description: Enable ability to edit & fetch block data

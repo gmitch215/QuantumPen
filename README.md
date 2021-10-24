@@ -25,3 +25,9 @@ Modify chunks and worlds using /chunk and /world!
 Fetch & Modify server data with the /server command!
 
 ## Screenshots
+
+<img src="https://cdn.discordapp.com/attachments/829075817509290036/901876126937411644/2021-10-24_11.40.33.png" alt="drawing" style="width:480px;"/>
+<br></br>
+<img src="https://cdn.discordapp.com/attachments/829075817509290036/901876090463715429/2021-10-24_11.41.36.png" alt="drawing" style="width:480px;"/>
+<br></br>
+<img src="https://cdn.discordapp.com/attachments/829075817509290036/901876074194018334/2021-10-24_11.52.33.png" alt="drawing" style="width:480px;"/>
