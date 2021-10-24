@@ -188,7 +188,7 @@ public class Block implements CommandExecutor {
 								nbtStrArgs.add(args[i]);
 							}
 
-							String nbtStr = String.join("\\s", nbtStrArgs);
+							String nbtStr = String.join(" ", nbtStrArgs);
 
 							try {
 								NBTTagCompound nbt = MojangsonParser.parse(nbtStr);
