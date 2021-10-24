@@ -1,4 +1,4 @@
-name: QuantumPen
+name: QuantumPen-Lite
 main: me.gamercoder215.quantumpen.Main
 version: 1.0.0
 api-version: 1.17
@@ -63,12 +63,18 @@ commands:
     permission: quantumpen.world.entity
     usage: /attribute <add|list|has|set> <uuid> <attribute> <parameters...>
     aliases: [attr, att]
+  pen:
+    description: Miscellaneous QuantumPen actions
+    permission: quantumpen.misc
+    usage: /pen <action> <parameters...>
+    aliases: [miscellaneous, msc]
 
 permissions:
   quantumpen.*:
     default: op
     description: All QuantumPen permissions
     children:
+      quantumpen.misc: true
       quantumpen.packets: true
       quantumpen.packets.clientpacket: true
       quantumpen.pathfinder: true
@@ -84,6 +90,9 @@ permissions:
       quantumpen.world.entity: true
       quantumpen.server.playerdata: true
       quantumpen.server: true
+  quantumpen.misc:
+    default: true
+    description: Non-Admin Miscellaneous Actions
   # Packets
   quantumpen.packets:
     default: op
