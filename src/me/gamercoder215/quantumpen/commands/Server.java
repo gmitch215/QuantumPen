@@ -32,7 +32,7 @@ public class Server implements CommandExecutor {
 					Main.sendInvalidArgs(sender);
 					return false;
 				}
-				Object returnType = "NULL";
+				Object returnType = "UNKNOWN";
 				switch (args[1].replaceAll("minecraft:", "").toLowerCase()) {
 					case "settings_allowend": {
 						returnType = srv.getAllowEnd();
