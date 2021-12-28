@@ -15,7 +15,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftEntity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -837,8 +837,8 @@ public class CommandTabCompleter implements TabCompleter {
 							
 						    EntityInsentient e = (EntityInsentient) ((CraftEntity) bukkite).getHandle();
 						    
-						    e.bP.c().forEach(pathfinder -> {
-						    	goals.add(Integer.toString(pathfinder.h()));
+						    e.bR.c().forEach(pathfinder -> {
+						    	goals.add(Integer.toString(pathfinder.i()));
 						    });
 						    
 						    return goals;

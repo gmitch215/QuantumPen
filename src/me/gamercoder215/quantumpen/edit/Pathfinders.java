@@ -15,9 +15,9 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 
@@ -154,13 +154,13 @@ public class Pathfinders implements CommandExecutor {
   public static Set<PathfinderGoalWrapped> getPathfinders(LivingEntity en) {
     EntityInsentient e = (EntityInsentient) ((CraftEntity) en).getHandle();
     
-    return e.bP.c();
+    return e.bR.c();
   }
   
   public static Set<PathfinderGoalWrapped> getPathfindersTarget(LivingEntity en) {
 	    EntityInsentient e = (EntityInsentient) ((CraftEntity) en).getHandle();
 	    
-	    return e.bQ.c();
+	    return e.bS.c();
   }
   
   
@@ -216,54 +216,54 @@ public class Pathfinders implements CommandExecutor {
 		}
 
   	public static String matchGoal(PathfinderGoalWrapped p) {
-	    if (p.j() instanceof PathfinderGoalArrowAttack) return "attack_arrow";
-	    else if (p.j() instanceof PathfinderGoalAvoidTarget) return "target_avoid";
-	    else if (p.j() instanceof PathfinderGoalBeg) return "wolf_beg";
-	    else if (p.j() instanceof PathfinderGoalBowShoot) return "attack_range_bow";
-	    else if (p.j() instanceof PathfinderGoalBreakDoor) return "attack_breakdoor";
-	    else if (p.j() instanceof PathfinderGoalCatSitOnBed) return "cat_sit_bed";
-	    else if (p.j() instanceof PathfinderGoalCrossbowAttack) return "attack_range_crossbow";
-	    else if (p.j() instanceof PathfinderGoalEatTile) return "ambient_eattile";
-	    else if (p.j() instanceof PathfinderGoalDoorOpen) return "core_interact_opendoor";
-	    else if (p.j() instanceof PathfinderGoalFleeSun) return "movement_fleesun";
-	    else if (p.j() instanceof PathfinderGoalFollowEntity) return "movement_follow_entity";
-	    else if (p.j() instanceof PathfinderGoalFollowOwner) return "movement_follow_owner";
-	    else if (p.j() instanceof PathfinderGoalFollowParent) return "movement_follow_parent";
-	    else if (p.j() instanceof PathfinderGoalRaid) return "illager_raid";
-	    else if (p.j() instanceof PathfinderGoalMeleeAttack) return "attack_melee";
-	    else if (p.j() instanceof PathfinderGoalOcelotAttack) return "ocelot_attack";
-	    else if (p.j() instanceof PathfinderGoalOfferFlower) return "golem_offer_flower";
-	    else if (p.j() instanceof PathfinderGoalPanic) return "core_panic";
-	    else if (p.j() instanceof PathfinderGoalLookAtPlayer) return "core_lookatentity";
-	    else if (p.j() instanceof PathfinderGoalBreath) return "core_waterbreathe";
-	    else if (p.j() instanceof PathfinderGoalBreed) return "animal_breed";
-	    else if (p.j() instanceof PathfinderGoalMoveThroughVillage) return "movement_throughvillage";
-	    else if (p.j() instanceof PathfinderGoalMoveTowardsRestriction) return "movement_towards_restriction";
-	    else if (p.j() instanceof PathfinderGoalMoveTowardsTarget) return "movement_towards_target";
-	    else if (p.j() instanceof PathfinderGoalNearestVillage) return "movement_nearest_village";
-	    else if (p.j() instanceof PathfinderGoalPerch) return "dragon_perch";
-	    else if (p.j() instanceof PathfinderGoalRandomFly) return "random_fly";
-	    else if (p.j() instanceof PathfinderGoalRandomLookaround) return "random_lookaround";
-	    else if (p.j() instanceof PathfinderGoalRandomStroll) return "random_move";
-	    else if (p.j() instanceof PathfinderGoalRandomStrollLand) return "random_move_land";
-	    else if (p.j() instanceof PathfinderGoalRandomSwim) return "random_swim";
-	    else if (p.j() instanceof PathfinderGoalRestrictSun) return "movement_restrictsun";
-	    else if (p.j() instanceof PathfinderGoalSwell) return "creeper_swell";
-	    else if (p.j() instanceof PathfinderGoalWaterJump) return "dolphin_waterjump";
-	    else if (p.j() instanceof PathfinderGoalTradeWithPlayer) return "villager_tradeplayer";
-	    else if (p.j() instanceof PathfinderGoalWater) return "movement_findwater";
-	    else if (p.j() instanceof PathfinderGoalZombieAttack) return "zombie_attack";
-	    else if (p.j() instanceof PathfinderGoalNearestAttackableTarget) return "attack_nearest_target";
-	    else if (p.j() instanceof PathfinderGoalHurtByTarget) return "attack_defensive";
-	    else if (p.j() instanceof PathfinderGoalDefendVillage) return "attack_defendvillage";
-	    else if (p.j() instanceof PathfinderGoalFloat) return "core_float";
-	    else if (p.j() instanceof PathfinderGoalFishSchool) return "fish_school";
-	    else if (p.j() instanceof PathfinderGoalFollowBoat) return "movement_follow_boat";
-	    else if (p.j() instanceof PathfinderGoalJumpOnBlock) return "cat_sit_block";
-	    else if (p.j() instanceof PathfinderGoalLlamaFollow) return "llama_follow";
-	    else if (p.j() instanceof PathfinderGoalSit) return "tameable_sit";
-	    else if (p.j() instanceof PathfinderGoalTempt) return "core_tempt";
-	    else return (ChatColor.RED + p.j().getClass().getSimpleName());
+	    if (p.k() instanceof PathfinderGoalArrowAttack) return "attack_arrow";
+	    else if (p.k() instanceof PathfinderGoalAvoidTarget) return "target_avoid";
+	    else if (p.k() instanceof PathfinderGoalBeg) return "wolf_beg";
+	    else if (p.k() instanceof PathfinderGoalBowShoot) return "attack_range_bow";
+	    else if (p.k() instanceof PathfinderGoalBreakDoor) return "attack_breakdoor";
+	    else if (p.k() instanceof PathfinderGoalCatSitOnBed) return "cat_sit_bed";
+	    else if (p.k() instanceof PathfinderGoalCrossbowAttack) return "attack_range_crossbow";
+	    else if (p.k() instanceof PathfinderGoalEatTile) return "ambient_eattile";
+	    else if (p.k() instanceof PathfinderGoalDoorOpen) return "core_interact_opendoor";
+	    else if (p.k() instanceof PathfinderGoalFleeSun) return "movement_fleesun";
+	    else if (p.k() instanceof PathfinderGoalFollowEntity) return "movement_follow_entity";
+	    else if (p.k() instanceof PathfinderGoalFollowOwner) return "movement_follow_owner";
+	    else if (p.k() instanceof PathfinderGoalFollowParent) return "movement_follow_parent";
+	    else if (p.k() instanceof PathfinderGoalRaid) return "illager_raid";
+	    else if (p.k() instanceof PathfinderGoalMeleeAttack) return "attack_melee";
+	    else if (p.k() instanceof PathfinderGoalOcelotAttack) return "ocelot_attack";
+	    else if (p.k() instanceof PathfinderGoalOfferFlower) return "golem_offer_flower";
+	    else if (p.k() instanceof PathfinderGoalPanic) return "core_panic";
+	    else if (p.k() instanceof PathfinderGoalLookAtPlayer) return "core_lookatentity";
+	    else if (p.k() instanceof PathfinderGoalBreath) return "core_waterbreathe";
+	    else if (p.k() instanceof PathfinderGoalBreed) return "animal_breed";
+	    else if (p.k() instanceof PathfinderGoalMoveThroughVillage) return "movement_throughvillage";
+	    else if (p.k() instanceof PathfinderGoalMoveTowardsRestriction) return "movement_towards_restriction";
+	    else if (p.k() instanceof PathfinderGoalMoveTowardsTarget) return "movement_towards_target";
+	    else if (p.k() instanceof PathfinderGoalNearestVillage) return "movement_nearest_village";
+	    else if (p.k() instanceof PathfinderGoalPerch) return "dragon_perch";
+	    else if (p.k() instanceof PathfinderGoalRandomFly) return "random_fly";
+	    else if (p.k() instanceof PathfinderGoalRandomLookaround) return "random_lookaround";
+	    else if (p.k() instanceof PathfinderGoalRandomStroll) return "random_move";
+	    else if (p.k() instanceof PathfinderGoalRandomStrollLand) return "random_move_land";
+	    else if (p.k() instanceof PathfinderGoalRandomSwim) return "random_swim";
+	    else if (p.k() instanceof PathfinderGoalRestrictSun) return "movement_restrictsun";
+	    else if (p.k() instanceof PathfinderGoalSwell) return "creeper_swell";
+	    else if (p.k() instanceof PathfinderGoalWaterJump) return "dolphin_waterjump";
+	    else if (p.k() instanceof PathfinderGoalTradeWithPlayer) return "villager_tradeplayer";
+	    else if (p.k() instanceof PathfinderGoalWater) return "movement_findwater";
+	    else if (p.k() instanceof PathfinderGoalZombieAttack) return "zombie_attack";
+	    else if (p.k() instanceof PathfinderGoalNearestAttackableTarget) return "attack_nearest_target";
+	    else if (p.k() instanceof PathfinderGoalHurtByTarget) return "attack_defensive";
+	    else if (p.k() instanceof PathfinderGoalDefendVillage) return "attack_defendvillage";
+	    else if (p.k() instanceof PathfinderGoalFloat) return "core_float";
+	    else if (p.k() instanceof PathfinderGoalFishSchool) return "fish_school";
+	    else if (p.k() instanceof PathfinderGoalFollowBoat) return "movement_follow_boat";
+	    else if (p.k() instanceof PathfinderGoalJumpOnBlock) return "cat_sit_block";
+	    else if (p.k() instanceof PathfinderGoalLlamaFollow) return "llama_follow";
+	    else if (p.k() instanceof PathfinderGoalSit) return "tameable_sit";
+	    else if (p.k() instanceof PathfinderGoalTempt) return "core_tempt";
+	    else return (ChatColor.RED + p.k().getClass().getSimpleName());
   }
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -380,7 +380,7 @@ public class Pathfinders implements CommandExecutor {
 						}
 					}
 					case "behavior_villager_betterjob": {
-						BehaviorBetterJob b = new BehaviorBetterJob(((EntityVillager) target).getVillagerData().getProfession());
+						BehaviorBetterJob b = new BehaviorBetterJob(((EntityVillager) target).fJ().b());
 						
 						if (b.e(ws, (EntityVillager) target, 0)) {
 							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
@@ -626,7 +626,7 @@ public class Pathfinders implements CommandExecutor {
 							return false;
 						}
 						
-						BehaviorMakeLoveAnimal b = new BehaviorMakeLoveAnimal((EntityTypes<? extends EntityAnimal>) target.getEntityType(), Float.parseFloat(args[2]));
+						BehaviorMakeLoveAnimal b = new BehaviorMakeLoveAnimal((EntityTypes<? extends EntityAnimal>) target.ad(), Float.parseFloat(args[2]));
 						
 						if (b.e(ws, (EntityAnimal) target, 0)) {
 							sender.sendMessage(ChatColor.GREEN + "Behavior addition successful!");
@@ -959,7 +959,7 @@ public class Pathfinders implements CommandExecutor {
 							org.bukkit.entity.Entity bukkitLookTarget = Bukkit.getEntity(uuid);
 							net.minecraft.world.entity.Entity lookTarget = ((CraftEntity) bukkitLookTarget).getHandle();
 
-							target.getControllerLook().a(lookTarget);
+							target.z().a(lookTarget);
 							break;
 						}
 						case "looking_lookatcoordinates": {
@@ -978,19 +978,19 @@ public class Pathfinders implements CommandExecutor {
 								return false;
 							}
 
-							target.getControllerLook().a(Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]));
+							target.z().a(Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]));
 							break;	
 						}
 						case "looking_tick": {
-							target.getControllerLook().a();
+							target.z().a();
 							break;
 						}
 						case "jumping_jump": {
-							target.getControllerJump().jump();
+							target.C().a();
 							break;
 						}
 						case "jumping_tick": {
-							target.getControllerJump().b();
+							target.C().b();
 							break;
 						}
 						default: {
@@ -1011,19 +1011,19 @@ public class Pathfinders implements CommandExecutor {
           List<PathfinderGoal> newgoalsTarget = new ArrayList<>();
           
           getPathfinders(bukkittarget).forEach(p -> {
-        	  newgoals.add(p.j());
+        	  newgoals.add(p.k());
           });
           
           getPathfindersTarget(bukkittarget).forEach(p -> {
-        	  newgoalsTarget.add(p.j());
+        	  newgoalsTarget.add(p.k());
           });
           
           newgoals.forEach(p2 -> {
-        	  target.bP.a(p2);
+        	  target.bR.a(p2);
           });
           
           newgoalsTarget.forEach(p2 -> {
-        	  target.bQ.a(p2);
+        	  target.bS.a(p2);
           });
           sender.sendMessage(ChatColor.GREEN + "Goals Cleared Successfully!");
           break;
@@ -1034,7 +1034,7 @@ public class Pathfinders implements CommandExecutor {
         	}
           List<Integer> priorities = new ArrayList<>();
           for (PathfinderGoalWrapped p : getPathfinders(bukkittarget)) {
-            priorities.add(p.h());
+            priorities.add(p.i());
           }
 					
 					if (args.length < 3) {
@@ -1079,7 +1079,7 @@ public class Pathfinders implements CommandExecutor {
 
                 PathfinderGoalArrowAttack p = new PathfinderGoalArrowAttack((IRangedEntity) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]), Float.parseFloat(args[6]));
 
-                target.bP.a(newP, p);
+                target.bR.a(newP, p);
 
                 break;
               }
@@ -1104,7 +1104,7 @@ public class Pathfinders implements CommandExecutor {
 
 				PathfinderGoalAvoidTarget<?> p = new PathfinderGoalAvoidTarget<>((EntityCreature) target, entityClass, Float.parseFloat(args[4]), Double.parseDouble(args[5]), Double.parseDouble(args[5]) * 1.25);
 				
-				target.bP.a(newP, p);	
+				target.bR.a(newP, p);	
                 break;
               }
 							case "wolf_beg": {
@@ -1115,7 +1115,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalBeg p = new PathfinderGoalBeg((EntityWolf) target, Float.parseFloat(args[3]));
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 							}
 							case "attack_range_bow": {
 								if (args.length < 4) {
@@ -1135,7 +1135,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalBowShoot p = new PathfinderGoalBowShoot((EntityMonster) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), Float.parseFloat(args[5]));
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 							}
 							case "attack_breakdoor": {
 								if (args.length < 4) {
@@ -1147,7 +1147,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalBreakDoor p = new PathfinderGoalBreakDoor(target, Integer.parseInt(args[3]), diff);
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 							}
 							case "cat_sit_bed": {
 								if (args.length < 4) {
@@ -1162,7 +1162,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalCatSitOnBed p = new PathfinderGoalCatSitOnBed((EntityCat) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]));
 
-								target.bP.a(p);
+								target.bR.a(p);
 							}
 							case "attack_range_crossbow": {
 								if (args.length < 4) {
@@ -1178,26 +1178,26 @@ public class Pathfinders implements CommandExecutor {
 								
 								PathfinderGoalCrossbowAttack p = new PathfinderGoalCrossbowAttack((EntityMonster) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]));
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 
 							case "ambient_eattile": {
 								PathfinderGoalEatTile p = new PathfinderGoalEatTile(target);
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "core_interact_opendoor": {
 								if (args.length < 4) {
 									PathfinderGoalDoorOpen p = new PathfinderGoalDoorOpen(target, false);
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalDoorOpen p = new PathfinderGoalDoorOpen(target, Boolean.parseBoolean(args[3]));
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								}
 							}
@@ -1209,7 +1209,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalFleeSun p = new PathfinderGoalFleeSun((EntityCreature) target, Double.parseDouble(args[3]));
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "movement_follow_entity": {
@@ -1229,7 +1229,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 
 								PathfinderGoalFollowEntity p = new PathfinderGoalFollowEntity(target, Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]));
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "movement_follow_owner": {
@@ -1251,11 +1251,11 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 7) {
 									PathfinderGoalFollowOwner p = new PathfinderGoalFollowOwner((EntityTameableAnimal) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]), false);
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 								} else {
 									PathfinderGoalFollowOwner p = new PathfinderGoalFollowOwner((EntityTameableAnimal) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]), Boolean.parseBoolean(args[6]));
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 								}
 							}
 							case "movement_follow_parent": {
@@ -1266,14 +1266,14 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalFollowParent p = new PathfinderGoalFollowParent((EntityAnimal) target, Double.parseDouble(args[3]));
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "illager_raid": {
 								
 								PathfinderGoalRaid<EntityRaider> p = new PathfinderGoalRaid<EntityRaider>((EntityRaider) target);
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 							}
 							case "attack_melee": {
 								if (args.length < 4) {
@@ -1284,25 +1284,25 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 5) {
 									PathfinderGoalMeleeAttack p = new PathfinderGoalMeleeAttack((EntityCreature) target, Double.parseDouble(args[3]), false);
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalMeleeAttack p = new PathfinderGoalMeleeAttack((EntityCreature) target, Double.parseDouble(args[3]), Boolean.parseBoolean(args[4]));
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								}
 							}
 							case "ocelot_attack": {
 								PathfinderGoalOcelotAttack p = new PathfinderGoalOcelotAttack(target);
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "golem_offer_flower": {
 								PathfinderGoalOfferFlower p = new PathfinderGoalOfferFlower((EntityIronGolem) target);
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 							}
 							case "core_panic": {
 								if (args.length < 4) {
@@ -1312,7 +1312,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalPanic p = new PathfinderGoalPanic((EntityCreature) target, Double.parseDouble(args[3]));
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "core_lookatentity": {
@@ -1339,19 +1339,19 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 7) {
 									PathfinderGoalLookAtPlayer p = new PathfinderGoalLookAtPlayer(target, (Class<? extends EntityLiving>) matchClass(EntityType.valueOf(args[3].replaceAll("minecraft:", "").toUpperCase())), Float.parseFloat(args[4]), Float.parseFloat(args[5]),false);
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalLookAtPlayer p = new PathfinderGoalLookAtPlayer(target, (Class<? extends EntityLiving>) matchClass(EntityType.valueOf(args[3].replaceAll("minecraft:", "").toUpperCase())), Float.parseFloat(args[4]), Float.parseFloat(args[5]),Boolean.parseBoolean(args[6]));
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								}
 							}
 							case "core_waterbreathe": {
 								PathfinderGoalBreath p = new PathfinderGoalBreath((EntityCreature) target);
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "animal_breed": {
@@ -1362,7 +1362,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalBreed p = new PathfinderGoalBreed((EntityAnimal) target, Double.parseDouble(args[3]));
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "movement_throughvillage": {
@@ -1386,12 +1386,12 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 7) {
 									PathfinderGoalMoveThroughVillage p = new PathfinderGoalMoveThroughVillage((EntityCreature) target, Double.parseDouble(args[3]), false, Integer.parseInt(args[4]), sup);
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalMoveThroughVillage p = new PathfinderGoalMoveThroughVillage((EntityCreature) target, Double.parseDouble(args[3]), Boolean.parseBoolean(args[6]), Integer.parseInt(args[4]), sup);
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								}
 							}
@@ -1402,7 +1402,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 
 								PathfinderGoalMoveTowardsRestriction p = new PathfinderGoalMoveTowardsRestriction((EntityCreature) target, Double.parseDouble(args[3]));
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "movement_towards_target": {
@@ -1418,7 +1418,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalMoveTowardsTarget p = new PathfinderGoalMoveTowardsTarget((EntityCreature) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]));
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "movement_nearest_village": {
@@ -1429,12 +1429,12 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalNearestVillage p = new PathfinderGoalNearestVillage((EntityCreature) target, Integer.parseInt(args[3]));
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "dragon_perch": {
 								PathfinderGoalPerch p = new PathfinderGoalPerch((EntityPerchable) target);
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "random_fly": {
@@ -1445,13 +1445,13 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalRandomFly p = new PathfinderGoalRandomFly((EntityCreature) target, Double.parseDouble(args[3]));
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "random_lookaround": {
 								PathfinderGoalRandomLookaround p = new PathfinderGoalRandomLookaround(target);
 
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "random_move": {
@@ -1468,12 +1468,12 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 6) {
 									PathfinderGoalRandomStroll p = new PathfinderGoalRandomStroll((EntityCreature) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), false);
 									
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalRandomStroll p = new PathfinderGoalRandomStroll((EntityCreature) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), Boolean.parseBoolean(args[5]));
 									
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								}
 							}
@@ -1489,7 +1489,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 								
 								PathfinderGoalRandomStrollLand p = new PathfinderGoalRandomStrollLand((EntityCreature) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]));
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "random_swim": {
@@ -1504,20 +1504,20 @@ public class Pathfinders implements CommandExecutor {
 								}
 								
 								PathfinderGoalRandomSwim p = new PathfinderGoalRandomSwim((EntityCreature) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]));
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								
 								break;
 							}
 							case "movement_restrictsun": {
 								PathfinderGoalRestrictSun p = new PathfinderGoalRestrictSun((EntityCreature) target);
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "creeper_swell": {
 								PathfinderGoalSwell p = new PathfinderGoalSwell((EntityCreeper) target);
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "dolphin_waterjump": {
@@ -1527,19 +1527,19 @@ public class Pathfinders implements CommandExecutor {
 								}
 								
 								PathfinderGoalWaterJump p = new PathfinderGoalWaterJump((EntityDolphin) target, Integer.parseInt(args[3]));
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "villager_tradeplayer": {
 								PathfinderGoalTradeWithPlayer p = new PathfinderGoalTradeWithPlayer((EntityVillagerAbstract) target);
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "movement_findwater": {
 								PathfinderGoalWater p = new PathfinderGoalWater((EntityCreature) target);
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "zombie_attack": {
@@ -1551,12 +1551,12 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 5) {
 									PathfinderGoalZombieAttack p = new PathfinderGoalZombieAttack((EntityZombie) target, Double.parseDouble(args[3]), false);
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalZombieAttack p = new PathfinderGoalZombieAttack((EntityZombie) target, Double.parseDouble(args[3]), Boolean.parseBoolean(args[4]));
 
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								}
 							}
@@ -1568,11 +1568,11 @@ public class Pathfinders implements CommandExecutor {
 								Class<EntityLiving> entityClass = (Class<EntityLiving>)matchClass(EntityType.valueOf(args[3]));
 								if (args.length < 5) {
 									PathfinderGoalNearestAttackableTarget<EntityLiving> p = new PathfinderGoalNearestAttackableTarget<EntityLiving>(target, entityClass, true);
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalNearestAttackableTarget<EntityLiving> p = new PathfinderGoalNearestAttackableTarget<EntityLiving>(target, entityClass, Boolean.parseBoolean(args[4]));
-									target.bP.a(newP, p);
+									target.bR.a(newP, p);
 									break;
 								}
 							}
@@ -1588,31 +1588,31 @@ public class Pathfinders implements CommandExecutor {
 								}
 									
 								PathfinderGoalHurtByTarget p = new PathfinderGoalHurtByTarget((EntityCreature) target, ignoreList.toArray(new Class<?>[0]));
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "attack_defendvillage": {
 								PathfinderGoalDefendVillage p = new PathfinderGoalDefendVillage((EntityIronGolem) target);
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "core_float": {
 								PathfinderGoalFloat p = new PathfinderGoalFloat(target);
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "fish_school": {
 								PathfinderGoalFishSchool p = new PathfinderGoalFishSchool((EntityFishSchool) target);
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "movement_follow_boat": {
 								PathfinderGoalFollowBoat p = new PathfinderGoalFollowBoat((EntityCreature) target);
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "cat_sit_block": {
@@ -1623,7 +1623,7 @@ public class Pathfinders implements CommandExecutor {
 								
 								PathfinderGoalJumpOnBlock p = new PathfinderGoalJumpOnBlock((EntityCat) target, Double.parseDouble(args[3]));
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "llama_follow": {
@@ -1634,13 +1634,13 @@ public class Pathfinders implements CommandExecutor {
 								
 								PathfinderGoalLlamaFollow p = new PathfinderGoalLlamaFollow((EntityLlama) target, Double.parseDouble(args[3]));
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "tameable_sit": {
 								PathfinderGoalSit p = new PathfinderGoalSit((EntityTameableAnimal) target);
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							case "core_tempt": {
@@ -1674,7 +1674,7 @@ public class Pathfinders implements CommandExecutor {
 								
 								PathfinderGoalTempt p = new PathfinderGoalTempt((EntityCreature) target, Double.parseDouble(args[3]), recipe, true);
 								
-								target.bP.a(newP, p);
+								target.bR.a(newP, p);
 								break;
 							}
 							default:
@@ -1698,7 +1698,7 @@ public class Pathfinders implements CommandExecutor {
         	}
           List<Integer> priorities = new ArrayList<>();
           for (PathfinderGoalWrapped p : getPathfinders(bukkittarget)) {
-            priorities.add(p.h());
+            priorities.add(p.i());
           }
 					
 					if (args.length < 3) {
@@ -1743,7 +1743,7 @@ public class Pathfinders implements CommandExecutor {
 
                 PathfinderGoalArrowAttack p = new PathfinderGoalArrowAttack((IRangedEntity) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5]), Float.parseFloat(args[6]));
 
-                target.bQ.a(newP, p);
+                target.bS.a(newP, p);
 
                 break;
               }
@@ -1768,7 +1768,7 @@ public class Pathfinders implements CommandExecutor {
 
 				PathfinderGoalAvoidTarget<?> p = new PathfinderGoalAvoidTarget<>((EntityCreature) target, entityClass, Float.parseFloat(args[4]), Double.parseDouble(args[5]), Double.parseDouble(args[5]) * 1.25);
 				
-				target.bQ.a(newP, p);	
+				target.bS.a(newP, p);	
                 break;
               }
 							case "wolf_beg": {
@@ -1779,7 +1779,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalBeg p = new PathfinderGoalBeg((EntityWolf) target, Float.parseFloat(args[3]));
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 							}
 							case "attack_range_bow": {
 								if (args.length < 4) {
@@ -1799,7 +1799,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalBowShoot p = new PathfinderGoalBowShoot((EntityMonster) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), Float.parseFloat(args[5]));
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 							}
 							case "attack_breakdoor": {
 								if (args.length < 4) {
@@ -1811,7 +1811,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalBreakDoor p = new PathfinderGoalBreakDoor(target, Integer.parseInt(args[3]), diff);
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 							}
 							case "cat_sit_bed": {
 								if (args.length < 4) {
@@ -1826,7 +1826,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalCatSitOnBed p = new PathfinderGoalCatSitOnBed((EntityCat) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]));
 
-								target.bQ.a(p);
+								target.bS.a(p);
 							}
 							case "attack_range_crossbow": {
 								if (args.length < 4) {
@@ -1842,26 +1842,26 @@ public class Pathfinders implements CommandExecutor {
 								
 								PathfinderGoalCrossbowAttack p = new PathfinderGoalCrossbowAttack((EntityMonster) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]));
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 
 							case "ambient_eattile": {
 								PathfinderGoalEatTile p = new PathfinderGoalEatTile(target);
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "core_interact_opendoor": {
 								if (args.length < 4) {
 									PathfinderGoalDoorOpen p = new PathfinderGoalDoorOpen(target, false);
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalDoorOpen p = new PathfinderGoalDoorOpen(target, Boolean.parseBoolean(args[3]));
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								}
 							}
@@ -1873,7 +1873,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalFleeSun p = new PathfinderGoalFleeSun((EntityCreature) target, Double.parseDouble(args[3]));
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "movement_follow_entity": {
@@ -1893,7 +1893,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 
 								PathfinderGoalFollowEntity p = new PathfinderGoalFollowEntity(target, Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]));
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "movement_follow_owner": {
@@ -1915,11 +1915,11 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 7) {
 									PathfinderGoalFollowOwner p = new PathfinderGoalFollowOwner((EntityTameableAnimal) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]), false);
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 								} else {
 									PathfinderGoalFollowOwner p = new PathfinderGoalFollowOwner((EntityTameableAnimal) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]), Float.parseFloat(args[5]), Boolean.parseBoolean(args[6]));
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 								}
 							}
 							case "movement_follow_parent": {
@@ -1930,14 +1930,14 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalFollowParent p = new PathfinderGoalFollowParent((EntityAnimal) target, Double.parseDouble(args[3]));
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "illager_raid": {
 								
 								PathfinderGoalRaid<EntityRaider> p = new PathfinderGoalRaid<EntityRaider>((EntityRaider) target);
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 							}
 							case "attack_melee": {
 								if (args.length < 4) {
@@ -1948,25 +1948,25 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 5) {
 									PathfinderGoalMeleeAttack p = new PathfinderGoalMeleeAttack((EntityCreature) target, Double.parseDouble(args[3]), false);
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalMeleeAttack p = new PathfinderGoalMeleeAttack((EntityCreature) target, Double.parseDouble(args[3]), Boolean.parseBoolean(args[4]));
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								}
 							}
 							case "ocelot_attack": {
 								PathfinderGoalOcelotAttack p = new PathfinderGoalOcelotAttack(target);
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "golem_offer_flower": {
 								PathfinderGoalOfferFlower p = new PathfinderGoalOfferFlower((EntityIronGolem) target);
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 							}
 							case "core_panic": {
 								if (args.length < 4) {
@@ -1976,7 +1976,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalPanic p = new PathfinderGoalPanic((EntityCreature) target, Double.parseDouble(args[3]));
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "core_lookatentity": {
@@ -2003,19 +2003,19 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 7) {
 									PathfinderGoalLookAtPlayer p = new PathfinderGoalLookAtPlayer(target, (Class<? extends EntityLiving>) matchClass(EntityType.valueOf(args[3].replaceAll("minecraft:", "").toUpperCase())), Float.parseFloat(args[4]), Float.parseFloat(args[5]),false);
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalLookAtPlayer p = new PathfinderGoalLookAtPlayer(target, (Class<? extends EntityLiving>) matchClass(EntityType.valueOf(args[3].replaceAll("minecraft:", "").toUpperCase())), Float.parseFloat(args[4]), Float.parseFloat(args[5]),Boolean.parseBoolean(args[6]));
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								}
 							}
 							case "core_waterbreathe": {
 								PathfinderGoalBreath p = new PathfinderGoalBreath((EntityCreature) target);
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "animal_breed": {
@@ -2026,7 +2026,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalBreed p = new PathfinderGoalBreed((EntityAnimal) target, Double.parseDouble(args[3]));
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "movement_throughvillage": {
@@ -2050,12 +2050,12 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 7) {
 									PathfinderGoalMoveThroughVillage p = new PathfinderGoalMoveThroughVillage((EntityCreature) target, Double.parseDouble(args[3]), false, Integer.parseInt(args[4]), sup);
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalMoveThroughVillage p = new PathfinderGoalMoveThroughVillage((EntityCreature) target, Double.parseDouble(args[3]), Boolean.parseBoolean(args[6]), Integer.parseInt(args[4]), sup);
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								}
 							}
@@ -2066,7 +2066,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 
 								PathfinderGoalMoveTowardsRestriction p = new PathfinderGoalMoveTowardsRestriction((EntityCreature) target, Double.parseDouble(args[3]));
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "movement_towards_target": {
@@ -2082,7 +2082,7 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalMoveTowardsTarget p = new PathfinderGoalMoveTowardsTarget((EntityCreature) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]));
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "movement_nearest_village": {
@@ -2093,12 +2093,12 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalNearestVillage p = new PathfinderGoalNearestVillage((EntityCreature) target, Integer.parseInt(args[3]));
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "dragon_perch": {
 								PathfinderGoalPerch p = new PathfinderGoalPerch((EntityPerchable) target);
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "random_fly": {
@@ -2109,13 +2109,13 @@ public class Pathfinders implements CommandExecutor {
 
 								PathfinderGoalRandomFly p = new PathfinderGoalRandomFly((EntityCreature) target, Double.parseDouble(args[3]));
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "random_lookaround": {
 								PathfinderGoalRandomLookaround p = new PathfinderGoalRandomLookaround(target);
 
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "random_move": {
@@ -2132,12 +2132,12 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 6) {
 									PathfinderGoalRandomStroll p = new PathfinderGoalRandomStroll((EntityCreature) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), false);
 									
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalRandomStroll p = new PathfinderGoalRandomStroll((EntityCreature) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]), Boolean.parseBoolean(args[5]));
 									
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								}
 							}
@@ -2153,7 +2153,7 @@ public class Pathfinders implements CommandExecutor {
 								}
 								
 								PathfinderGoalRandomStrollLand p = new PathfinderGoalRandomStrollLand((EntityCreature) target, Double.parseDouble(args[3]), Float.parseFloat(args[4]));
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "random_swim": {
@@ -2168,20 +2168,20 @@ public class Pathfinders implements CommandExecutor {
 								}
 								
 								PathfinderGoalRandomSwim p = new PathfinderGoalRandomSwim((EntityCreature) target, Double.parseDouble(args[3]), Integer.parseInt(args[4]));
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								
 								break;
 							}
 							case "movement_restrictsun": {
 								PathfinderGoalRestrictSun p = new PathfinderGoalRestrictSun((EntityCreature) target);
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "creeper_swell": {
 								PathfinderGoalSwell p = new PathfinderGoalSwell((EntityCreeper) target);
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "dolphin_waterjump": {
@@ -2191,19 +2191,19 @@ public class Pathfinders implements CommandExecutor {
 								}
 								
 								PathfinderGoalWaterJump p = new PathfinderGoalWaterJump((EntityDolphin) target, Integer.parseInt(args[3]));
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "villager_tradeplayer": {
 								PathfinderGoalTradeWithPlayer p = new PathfinderGoalTradeWithPlayer((EntityVillagerAbstract) target);
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "movement_findwater": {
 								PathfinderGoalWater p = new PathfinderGoalWater((EntityCreature) target);
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "zombie_attack": {
@@ -2215,12 +2215,12 @@ public class Pathfinders implements CommandExecutor {
 								if (args.length < 5) {
 									PathfinderGoalZombieAttack p = new PathfinderGoalZombieAttack((EntityZombie) target, Double.parseDouble(args[3]), false);
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalZombieAttack p = new PathfinderGoalZombieAttack((EntityZombie) target, Double.parseDouble(args[3]), Boolean.parseBoolean(args[4]));
 
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								}
 							}
@@ -2232,11 +2232,11 @@ public class Pathfinders implements CommandExecutor {
 								Class<EntityLiving> entityClass = (Class<EntityLiving>)matchClass(EntityType.valueOf(args[3]));
 								if (args.length < 5) {
 									PathfinderGoalNearestAttackableTarget<EntityLiving> p = new PathfinderGoalNearestAttackableTarget<EntityLiving>(target, entityClass, true);
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								} else {
 									PathfinderGoalNearestAttackableTarget<EntityLiving> p = new PathfinderGoalNearestAttackableTarget<EntityLiving>(target, entityClass, Boolean.parseBoolean(args[4]));
-									target.bQ.a(newP, p);
+									target.bS.a(newP, p);
 									break;
 								}
 							}
@@ -2250,31 +2250,31 @@ public class Pathfinders implements CommandExecutor {
 								}
 									
 								PathfinderGoalHurtByTarget p = new PathfinderGoalHurtByTarget((EntityCreature) target, ignoreList.toArray(new Class<?>[0]));
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "attack_defendvillage": {
 								PathfinderGoalDefendVillage p = new PathfinderGoalDefendVillage((EntityIronGolem) target);
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "core_float": {
 								PathfinderGoalFloat p = new PathfinderGoalFloat(target);
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "fish_school": {
 								PathfinderGoalFishSchool p = new PathfinderGoalFishSchool((EntityFishSchool) target);
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "movement_follow_boat": {
 								PathfinderGoalFollowBoat p = new PathfinderGoalFollowBoat((EntityCreature) target);
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "cat_sit_block": {
@@ -2285,7 +2285,7 @@ public class Pathfinders implements CommandExecutor {
 								
 								PathfinderGoalJumpOnBlock p = new PathfinderGoalJumpOnBlock((EntityCat) target, Double.parseDouble(args[3]));
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "llama_follow": {
@@ -2296,13 +2296,13 @@ public class Pathfinders implements CommandExecutor {
 								
 								PathfinderGoalLlamaFollow p = new PathfinderGoalLlamaFollow((EntityLlama) target, Double.parseDouble(args[3]));
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "tameable_sit": {
 								PathfinderGoalSit p = new PathfinderGoalSit((EntityTameableAnimal) target);
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							case "core_tempt": {
@@ -2336,7 +2336,7 @@ public class Pathfinders implements CommandExecutor {
 								
 								PathfinderGoalTempt p = new PathfinderGoalTempt((EntityCreature) target, Double.parseDouble(args[3]), recipe, true);
 								
-								target.bQ.a(newP, p);
+								target.bS.a(newP, p);
 								break;
 							}
 							default:
@@ -2360,8 +2360,8 @@ public class Pathfinders implements CommandExecutor {
         	}
         	try {
                 for (PathfinderGoalWrapped p : getPathfinders(bukkittarget)) {
-                	if (p.h() == Integer.parseInt(args[2])) {
-                		target.bP.a(p.j());
+                	if (p.i() == Integer.parseInt(args[2])) {
+                		target.bR.a(p.k());
                 		sender.sendMessage(ChatColor.GREEN + "Pathfinder successfully removed!");
                 		break;
                 	}
@@ -2381,8 +2381,8 @@ public class Pathfinders implements CommandExecutor {
         	}
         	try {
                 for (PathfinderGoalWrapped p : getPathfindersTarget(bukkittarget)) {
-                	if (p.h() == Integer.parseInt(args[2])) {
-                		target.bQ.a(p.j());
+                	if (p.i() == Integer.parseInt(args[2])) {
+                		target.bS.a(p.k());
                 		sender.sendMessage(ChatColor.GREEN + "Target Pathfinder successfully removed!");
                 		break;
                 	}
@@ -2403,7 +2403,7 @@ public class Pathfinders implements CommandExecutor {
           Map<Integer, String> goals = new HashMap<>();
           
           for (PathfinderGoalWrapped p : getPathfinders(bukkittarget)) {
-        	  goals.put(p.h(), matchGoal(p));
+        	  goals.put(p.i(), matchGoal(p));
           }
           
           List<String> messages = new ArrayList<>();
@@ -2415,7 +2415,7 @@ public class Pathfinders implements CommandExecutor {
           Map<Integer, String> targetgoals = new HashMap<>();
           
           for (PathfinderGoalWrapped p : getPathfindersTarget(bukkittarget)) {
-        	  targetgoals.put(p.h(), matchGoal(p));
+        	  targetgoals.put(p.i(), matchGoal(p));
           }
           
           List<String> messages2 = new ArrayList<>();
@@ -2459,7 +2459,7 @@ public class Pathfinders implements CommandExecutor {
 							return false;
 						}
 						
-						target.getNavigation().a(Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]), Double.parseDouble(args[6]));
+						target.D().a(Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]), Double.parseDouble(args[6]));
 						break;
 					}
 					case "ground_canopendoors": {
@@ -2468,7 +2468,7 @@ public class Pathfinders implements CommandExecutor {
 							return false;
 						}
 						
-						((Navigation) target.getNavigation()).b(Boolean.parseBoolean(args[3]));
+						((Navigation) target.D()).b(Boolean.parseBoolean(args[3]));
 						break;
 					}
 					case "ground_avoidsun": {
@@ -2477,7 +2477,7 @@ public class Pathfinders implements CommandExecutor {
 							return false;
 						}
 						
-						((Navigation) target.getNavigation()).c(Boolean.parseBoolean(args[3]));
+						((Navigation) target.D()).c(Boolean.parseBoolean(args[3]));
 						break;
 					}
 					default: {

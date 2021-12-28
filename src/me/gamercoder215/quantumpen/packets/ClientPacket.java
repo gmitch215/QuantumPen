@@ -11,9 +11,9 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
@@ -352,7 +352,7 @@ public class ClientPacket implements CommandExecutor {
 					}
 					
 					PacketPlayOutSpawnEntity s = new PacketPlayOutSpawnEntity(r.nextInt(), UUID.randomUUID(), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[6].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), 0, 0, matchEntityType(args[3]), 0, Vec3D.a);
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 
 					break;
 				}
@@ -384,7 +384,7 @@ public class ClientPacket implements CommandExecutor {
 					
 					World w = ((CraftWorld) Bukkit.getWorld(args[3])).getHandle();
 					PacketPlayOutSpawnEntityExperienceOrb s = new PacketPlayOutSpawnEntityExperienceOrb(new EntityExperienceOrb(w, Integer.parseInt(args[3].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), Short.parseShort(args[6])));
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					
 					break;
 				}
@@ -412,7 +412,7 @@ public class ClientPacket implements CommandExecutor {
 
 					World w = ((CraftWorld) p.getWorld()).getHandle();
 					PacketPlayOutSpawnEntityPainting s = new PacketPlayOutSpawnEntityPainting(new EntityPainting(w, new BlockPosition(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6])), EnumDirection.a, matchPaintingID(args[3])));
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "settings_changedifficulty": {
@@ -424,19 +424,19 @@ public class ClientPacket implements CommandExecutor {
 					if (args.length < 5) {
 						PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), false);
 	
-						cp.b.sendPacket(s);
+						cp.b.a(s);
 					} else {
 						boolean lockDifficulty = Boolean.parseBoolean(args[4]);
 						PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), lockDifficulty);
 	
-						cp.b.sendPacket(s);
+						cp.b.a(s);
 					}
 	
 					break;
 				}
 				case "gui_close": {
 					PacketPlayOutCloseWindow s = new PacketPlayOutCloseWindow(cp.bV.j);
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					cp.o();
 					break;
 				}
@@ -453,7 +453,7 @@ public class ClientPacket implements CommandExecutor {
 					String reason = ChatColor.translateAlternateColorCodes('&', String.join(" ", reasonArgs));
 					
 					PacketLoginOutDisconnect s = new PacketLoginOutDisconnect(new ChatComponentText(reason));
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "camera_block_break_animation": {
@@ -488,7 +488,7 @@ public class ClientPacket implements CommandExecutor {
 
 					PacketPlayOutBlockBreakAnimation s = new PacketPlayOutBlockBreakAnimation(p.getEntityId(), new BlockPosition(Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])), parsedStage);
 
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 	
 					break;
 				}
@@ -512,7 +512,7 @@ public class ClientPacket implements CommandExecutor {
 						net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(bukkititem);
 						
 						PacketPlayOutSetSlot s = new PacketPlayOutSetSlot(cp.bV.j, 0, matchInventorySlot(args[3]), item);
-						cp.b.sendPacket(s);
+						cp.b.a(s);
 					} else {
 						org.bukkit.inventory.ItemStack bukkititem = new org.bukkit.inventory.ItemStack(m);
 						int maxAmount = bukkititem.getMaxStackSize();
@@ -526,7 +526,7 @@ public class ClientPacket implements CommandExecutor {
 
 						net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(bukkititem);
 						PacketPlayOutSetSlot s = new PacketPlayOutSetSlot(cp.bV.j, 0, matchInventorySlot(args[3]), item);
-						cp.b.sendPacket(s);
+						cp.b.a(s);
 					}
 					break;
 				}
@@ -538,7 +538,7 @@ public class ClientPacket implements CommandExecutor {
 					
 					PacketPlayOutSetCooldown s = new PacketPlayOutSetCooldown(null, Integer.parseInt(args[3]));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "camera_create_explosion": {
@@ -566,19 +566,19 @@ public class ClientPacket implements CommandExecutor {
 					
 					PacketPlayOutExplosion s = new PacketPlayOutExplosion(Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]), Float.parseFloat(args[6]), emptyList, null);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "state_weather_rain_start": {
 					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.b, 0);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "state_weather_rain_end": {
 					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.c, 0);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "state_gamemode_change": {
@@ -600,55 +600,55 @@ public class ClientPacket implements CommandExecutor {
 					
 					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.d, gamemode);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "state_win_noendscreen": {
 					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.e, 0);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "state_win_endscreen": {
 					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.e, 1);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "state_arrowhit": {
 					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.g, 0);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "state_elderguardianscreen": {
 					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.k, 0);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "state_respawnscreen": {
 					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.l, 0);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "state_respawnscreen_immediate": {
 					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.l, 1);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_horse": {
 					PacketPlayOutOpenWindowHorse s = new PacketPlayOutOpenWindowHorse(-1, 9, -1);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_book": {
 					PacketPlayOutOpenBook s = new PacketPlayOutOpenBook(EnumHand.a);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_container": {
@@ -692,84 +692,84 @@ public class ClientPacket implements CommandExecutor {
 					
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, containerType, new ChatComponentText("Chest"));
 				
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 				}
 				case "gui_open_sign": {
 					PacketPlayOutOpenSignEditor s = new PacketPlayOutOpenSignEditor(BlockPosition.b);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_beacon": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.i, new ChatComponentText("Beacon"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_anvil": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.h, new ChatComponentText("Anvil"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_enchantment": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.m, new ChatComponentText("Enchanting Table"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_crafting": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.l, new ChatComponentText("Crafting Table"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_smoker": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.v, new ChatComponentText("Smoker"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_blastfurnace": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.j, new ChatComponentText("Blast Furnace"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_furnace": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.n, new ChatComponentText("Furnace"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_grindstone": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.o, new ChatComponentText("Grindstone"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_cartography": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.w, new ChatComponentText("Cartography Table"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_shulker": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.t, new ChatComponentText("Shulker Box"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_villager": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.s, new ChatComponentText("Merchant"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_open_stonecutter": {
 					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.i, new ChatComponentText("Stonecutter"));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "gui_edit_slotselected": {
@@ -787,13 +787,13 @@ public class ClientPacket implements CommandExecutor {
 					
 					PacketPlayOutHeldItemSlot s = new PacketPlayOutHeldItemSlot(slot - 1);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "combat_enter": {
 					ClientboundPlayerCombatEnterPacket s = new ClientboundPlayerCombatEnterPacket();
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "combat_end": {
@@ -806,43 +806,43 @@ public class ClientPacket implements CommandExecutor {
 					
 					ClientboundPlayerCombatEndPacket s = new ClientboundPlayerCombatEndPacket(combatTime, -1);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "animation_play_leavebed": {
 					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 2);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "animation_play_swing_mainhand": {
 					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 0);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "animation_play_swing_offhand": {
 					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 3);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "animation_play_takedmg": {
 					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 1);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "animation_play_crit": {
 					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 4);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "animation_play_crit_magical": {
 					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 5);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "connection_kick_player": {
@@ -854,7 +854,7 @@ public class ClientPacket implements CommandExecutor {
 					
 					PacketPlayOutKickDisconnect s = new PacketPlayOutKickDisconnect(new ChatComponentText(message));
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					return false;
 				}
 				case "playergui_changexp": {
@@ -885,58 +885,58 @@ public class ClientPacket implements CommandExecutor {
 					
 					PacketPlayOutExperience s = new PacketPlayOutExperience(progress / 100, expAmount, level);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "camera_shader_creeper": {
 					EntityCreeper entity = new EntityCreeper(EntityTypes.o, ((CraftWorld) p.getWorld()).getHandle());
 					
-					entity.setPosition(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
-					entity.setNoAI(true);
-					entity.setSilent(true);
-					entity.setNoGravity(true);
+					entity.b(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
+					entity.s(true);
+					entity.d(true);
+					entity.e(true);
 					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
-					entity.setInvulnerable(true);
+					entity.m(true);
 					
-					((CraftWorld) p.getWorld()).getHandle().addEntity(entity);
+					((CraftWorld) p.getWorld()).getHandle().e(entity);
 					
 					PacketPlayOutCamera s = new PacketPlayOutCamera(entity);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "camera_shader_enderman": {
 					EntityEnderman entity = new EntityEnderman(EntityTypes.w, ((CraftWorld) p.getWorld()).getHandle());
 					
-					entity.setPosition(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
-					entity.setNoAI(true);
-					entity.setSilent(true);
-					entity.setNoGravity(true);
+					entity.b(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
+					entity.s(true);
+					entity.d(true);
+					entity.e(true);
 					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
-					entity.setInvulnerable(true);
+					entity.m(true);
 					
-					((CraftWorld) p.getWorld()).getHandle().addEntity(entity);
+					((CraftWorld) p.getWorld()).getHandle().e(entity);
 					
 					PacketPlayOutCamera s = new PacketPlayOutCamera(entity);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "camera_shader_spider": {
 					EntitySpider entity = new EntitySpider(EntityTypes.aI, ((CraftWorld) p.getWorld()).getHandle());
 					
-					entity.setPosition(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
-					entity.setNoAI(true);
-					entity.setSilent(true);
-					entity.setNoGravity(true);
+					entity.b(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
+					entity.s(true);
+					entity.d(true);
+					entity.e(true);
 					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
-					entity.setInvulnerable(true);
+					entity.m(true);
 					
-					((CraftWorld) p.getWorld()).getHandle().addEntity(entity);
+					((CraftWorld) p.getWorld()).getHandle().e(entity);
 					
 					PacketPlayOutCamera s = new PacketPlayOutCamera(entity);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "playergui_updatehealth": {
@@ -954,7 +954,7 @@ public class ClientPacket implements CommandExecutor {
 					
 					PacketPlayOutUpdateHealth s = new PacketPlayOutUpdateHealth(health, p.getFoodLevel(), p.getSaturation());
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "playergui_updatefood": {
@@ -972,7 +972,7 @@ public class ClientPacket implements CommandExecutor {
 					
 					PacketPlayOutUpdateHealth s = new PacketPlayOutUpdateHealth((float) p.getHealth(), food, p.getSaturation());
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				case "camera_updateviewdistance": {
@@ -990,7 +990,7 @@ public class ClientPacket implements CommandExecutor {
 					
 					PacketPlayOutViewDistance s = new PacketPlayOutViewDistance(distance);
 					
-					cp.b.sendPacket(s);
+					cp.b.a(s);
 					break;
 				}
 				default:

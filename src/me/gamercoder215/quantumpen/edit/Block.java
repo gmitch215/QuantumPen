@@ -10,7 +10,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_17_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -191,7 +191,7 @@ public class Block implements CommandExecutor {
 							String nbtStr = String.join(" ", nbtStrArgs);
 
 							try {
-								NBTTagCompound nbt = MojangsonParser.parse(nbtStr);
+								NBTTagCompound nbt = MojangsonParser.a(nbtStr);
 								org.bukkit.inventory.ItemStack item = CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.a(nbt));
 
 								if (b.breakNaturally(item)) {
