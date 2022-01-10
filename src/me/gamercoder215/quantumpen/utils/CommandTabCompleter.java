@@ -20,7 +20,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import net.minecraft.world.entity.EntityInsentient;
+import net.minecraft.world.entity.Mob;
 
 public class CommandTabCompleter implements TabCompleter {
 	
@@ -818,7 +818,7 @@ public class CommandTabCompleter implements TabCompleter {
 						
 						if (sender instanceof Player) {
 							((Player) sender).getNearbyEntities(5, 5, 5).forEach(entity -> {
-								if (!(((CraftEntity) entity).getHandle() instanceof EntityInsentient)) return;
+								if (!(((CraftEntity) entity).getHandle() instanceof Mob)) return;
 								uuids.add(entity.getUniqueId().toString());
 							});
 							
@@ -835,10 +835,10 @@ public class CommandTabCompleter implements TabCompleter {
 							
 							LivingEntity bukkite = (LivingEntity) Bukkit.getEntity(uid);
 							
-						    EntityInsentient e = (EntityInsentient) ((CraftEntity) bukkite).getHandle();
+						    Mob e = (Mob) ((CraftEntity) bukkite).getHandle();
 						    
-						    e.bR.c().forEach(pathfinder -> {
-						    	goals.add(Integer.toString(pathfinder.i()));
+						    e.goalSelector.getAvailableGoals().forEach(pathfinder -> {
+						    	goals.add(Integer.toString(pathfinder.getPriority()));
 						    });
 						    
 						    return goals;
@@ -867,7 +867,7 @@ public class CommandTabCompleter implements TabCompleter {
 								
 								if (sender instanceof Player) {
 									((Player) sender).getNearbyEntities(5, 5, 5).forEach(entity -> {
-										if (!(((CraftEntity) entity).getHandle() instanceof EntityInsentient)) return;
+										if (!(((CraftEntity) entity).getHandle() instanceof Mob)) return;
 										uuids.add(entity.getUniqueId().toString());
 									});
 									

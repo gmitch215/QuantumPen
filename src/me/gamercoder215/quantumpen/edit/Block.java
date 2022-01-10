@@ -18,8 +18,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import me.gamercoder215.quantumpen.Main;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
-import net.minecraft.nbt.MojangsonParser;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
 
 public class Block implements CommandExecutor {
 	protected Main plugin;
@@ -191,8 +191,8 @@ public class Block implements CommandExecutor {
 							String nbtStr = String.join(" ", nbtStrArgs);
 
 							try {
-								NBTTagCompound nbt = MojangsonParser.a(nbtStr);
-								org.bukkit.inventory.ItemStack item = CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.a(nbt));
+								CompoundTag nbt = TagParser.parseTag(nbtStr);
+								org.bukkit.inventory.ItemStack item = CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.of(nbt));
 
 								if (b.breakNaturally(item)) {
 									sender.sendMessage(ChatColor.GREEN + "Block break successful!");

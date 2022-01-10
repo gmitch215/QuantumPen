@@ -19,46 +19,46 @@ import org.bukkit.entity.Player;
 
 import me.gamercoder215.quantumpen.Main;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
-import net.minecraft.core.BlockPosition;
-import net.minecraft.core.EnumDirection;
-import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundAddExperienceOrbPacket;
+import net.minecraft.network.protocol.game.ClientboundAddPaintingPacket;
+import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
+import net.minecraft.network.protocol.game.ClientboundBlockDestructionPacket;
+import net.minecraft.network.protocol.game.ClientboundChangeDifficultyPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundCooldownPacket;
+import net.minecraft.network.protocol.game.ClientboundDisconnectPacket;
+import net.minecraft.network.protocol.game.ClientboundExplodePacket;
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
+import net.minecraft.network.protocol.game.ClientboundHorseScreenOpenPacket;
+import net.minecraft.network.protocol.game.ClientboundOpenBookPacket;
+import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
+import net.minecraft.network.protocol.game.ClientboundOpenSignEditorPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerCombatEndPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerCombatEnterPacket;
-import net.minecraft.network.protocol.game.PacketPlayOutAnimation;
-import net.minecraft.network.protocol.game.PacketPlayOutBlockBreakAnimation;
-import net.minecraft.network.protocol.game.PacketPlayOutCamera;
-import net.minecraft.network.protocol.game.PacketPlayOutCloseWindow;
-import net.minecraft.network.protocol.game.PacketPlayOutExperience;
-import net.minecraft.network.protocol.game.PacketPlayOutExplosion;
-import net.minecraft.network.protocol.game.PacketPlayOutGameStateChange;
-import net.minecraft.network.protocol.game.PacketPlayOutHeldItemSlot;
-import net.minecraft.network.protocol.game.PacketPlayOutKickDisconnect;
-import net.minecraft.network.protocol.game.PacketPlayOutOpenBook;
-import net.minecraft.network.protocol.game.PacketPlayOutOpenSignEditor;
-import net.minecraft.network.protocol.game.PacketPlayOutOpenWindow;
-import net.minecraft.network.protocol.game.PacketPlayOutOpenWindowHorse;
-import net.minecraft.network.protocol.game.PacketPlayOutServerDifficulty;
-import net.minecraft.network.protocol.game.PacketPlayOutSetCooldown;
-import net.minecraft.network.protocol.game.PacketPlayOutSetSlot;
-import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntity;
-import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityExperienceOrb;
-import net.minecraft.network.protocol.game.PacketPlayOutSpawnEntityPainting;
-import net.minecraft.network.protocol.game.PacketPlayOutUpdateHealth;
-import net.minecraft.network.protocol.game.PacketPlayOutViewDistance;
-import net.minecraft.network.protocol.login.PacketLoginOutDisconnect;
-import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.EnumHand;
-import net.minecraft.world.entity.EntityExperienceOrb;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.decoration.EntityPainting;
-import net.minecraft.world.entity.decoration.Paintings;
-import net.minecraft.world.entity.monster.EntityCreeper;
-import net.minecraft.world.entity.monster.EntityEnderman;
-import net.minecraft.world.entity.monster.EntitySpider;
-import net.minecraft.world.inventory.Containers;
-import net.minecraft.world.level.World;
-import net.minecraft.world.phys.Vec3D;
+import net.minecraft.network.protocol.game.ClientboundSetCameraPacket;
+import net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket;
+import net.minecraft.network.protocol.game.ClientboundSetChunkCacheRadiusPacket;
+import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
+import net.minecraft.network.protocol.game.ClientboundSetHealthPacket;
+import net.minecraft.network.protocol.login.ClientboundLoginDisconnectPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Difficulty;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.decoration.Motive;
+import net.minecraft.world.entity.decoration.Painting;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class ClientPacket implements CommandExecutor {
 	
@@ -138,159 +138,157 @@ public class ClientPacket implements CommandExecutor {
 		else return 9;
 	}
 	
-	public static EntityTypes<?> matchEntityType(String oldname) {
+	public static EntityType<?> matchEntityType(String oldname) {
 		String name = oldname.replaceAll("minecraft:", "");
 		
-		if (name.equalsIgnoreCase("silverfish")) return EntityTypes.aA;
-		else if (name.equalsIgnoreCase("slime")) return EntityTypes.aD;
-		else if (name.equalsIgnoreCase("chest_minecart")) return EntityTypes.aa;
-		else if (name.equalsIgnoreCase("skeleton")) return EntityTypes.aB;
-		else if (name.equalsIgnoreCase("command_block_minecart")) return EntityTypes.ab;
-		else if (name.equalsIgnoreCase("skeleton_horse")) return EntityTypes.aC;
-		else if (name.equalsIgnoreCase("furnace_minecart")) return EntityTypes.ac;
-		else if (name.equalsIgnoreCase("hopper_minecart")) return EntityTypes.ad;
-		else if (name.equalsIgnoreCase("small_fireball")) return EntityTypes.aE;
-		else if (name.equalsIgnoreCase("spawner_minecart")) return EntityTypes.ae;
-		else if (name.equalsIgnoreCase("snow_golem")) return EntityTypes.aF;
-		else if (name.equalsIgnoreCase("tnt_minecart")) return EntityTypes.af;
-		else if (name.equalsIgnoreCase("mule")) return EntityTypes.ag;
-		else if (name.equalsIgnoreCase("snowball")) return EntityTypes.aG;
-		else if (name.equalsIgnoreCase("mooshroom")) return EntityTypes.ah;
-		else if (name.equalsIgnoreCase("spectral_arrow")) return EntityTypes.aH;
-		else if (name.equalsIgnoreCase("ocelot")) return EntityTypes.ai;
-		else if (name.equalsIgnoreCase("spider")) return EntityTypes.aI;
-		else if (name.equalsIgnoreCase("squid")) return EntityTypes.aJ;
-		else if (name.equalsIgnoreCase("panda")) return EntityTypes.ak;
-		else if (name.equalsIgnoreCase("stray")) return EntityTypes.aK;
-		else if (name.equalsIgnoreCase("parrot")) return EntityTypes.al;
-		else if (name.equalsIgnoreCase("strider")) return EntityTypes.aL;
-		else if (name.equalsIgnoreCase("phantom")) return EntityTypes.am;
-		else if (name.equalsIgnoreCase("egg")) return EntityTypes.aM;
-		else if (name.equalsIgnoreCase("pig")) return EntityTypes.an;
-		else if (name.equalsIgnoreCase("ender_pearl")) return EntityTypes.aN;
-		else if (name.equalsIgnoreCase("piglin")) return EntityTypes.ao;
-		else if (name.equalsIgnoreCase("experience_bottle")) return EntityTypes.aO;
-		else if (name.equalsIgnoreCase("piglin_brute")) return EntityTypes.ap;
-		else if (name.equalsIgnoreCase("potion")) return EntityTypes.aP;
-		else if (name.equalsIgnoreCase("pillager")) return EntityTypes.aq;
-		else if (name.equalsIgnoreCase("trident")) return EntityTypes.aQ;
-		else if (name.equalsIgnoreCase("polar_bear")) return EntityTypes.ar;
-		else if (name.equalsIgnoreCase("trader_llama")) return EntityTypes.aR;
-		else if (name.equalsIgnoreCase("tnt")) return EntityTypes.as;
-		else if (name.equalsIgnoreCase("tropical_fish")) return EntityTypes.aS;
-		else if (name.equalsIgnoreCase("pufferfish")) return EntityTypes.at;
-		else if (name.equalsIgnoreCase("turtle")) return EntityTypes.aT;
-		else if (name.equalsIgnoreCase("rabbit")) return EntityTypes.au;
-		else if (name.equalsIgnoreCase("vex")) return EntityTypes.aU;
-		else if (name.equalsIgnoreCase("ravager")) return EntityTypes.av;
-		else if (name.equalsIgnoreCase("villager")) return EntityTypes.aV;
-		else if (name.equalsIgnoreCase("salmon")) return EntityTypes.aw;
-		else if (name.equalsIgnoreCase("vindicator")) return EntityTypes.aW;
-		else if (name.equalsIgnoreCase("sheep")) return EntityTypes.ax;
-		else if (name.equalsIgnoreCase("wandering_trader")) return EntityTypes.aX;
-		else if (name.equalsIgnoreCase("shulker")) return EntityTypes.ay;
-		else if (name.equalsIgnoreCase("witch")) return EntityTypes.aY;
-		else if (name.equalsIgnoreCase("shulker_bullet")) return EntityTypes.az;
-		else if (name.equalsIgnoreCase("wither")) return EntityTypes.aZ;
-		else if (name.equalsIgnoreCase("wither_skeleton")) return EntityTypes.ba;
-		else if (name.equalsIgnoreCase("wither_skull")) return EntityTypes.bb;
-		else if (name.equalsIgnoreCase("wolf")) return EntityTypes.bc;
-		else if (name.equalsIgnoreCase("zoglin")) return EntityTypes.bd;
-		else if (name.equalsIgnoreCase("zombie")) return EntityTypes.be;
-		else if (name.equalsIgnoreCase("zombie_horse")) return EntityTypes.bf;
-		else if (name.equalsIgnoreCase("zombie_villager")) return EntityTypes.bg;
-		else if (name.equalsIgnoreCase("zombie_piglin")) return EntityTypes.bh;
-		else if (name.equalsIgnoreCase("area_affect_cloud")) return EntityTypes.b;
-		else if (name.equalsIgnoreCase("eye_of_ender")) return EntityTypes.B;
-		else if (name.equalsIgnoreCase("armor_stand")) return EntityTypes.c;
-		else if (name.equalsIgnoreCase("falling_block")) return EntityTypes.C;
-		else if (name.equalsIgnoreCase("axolotl")) return EntityTypes.e;
-		else if (name.equalsIgnoreCase("fox")) return EntityTypes.E;
-		else if (name.equalsIgnoreCase("bat")) return EntityTypes.f;
-		else if (name.equalsIgnoreCase("ghast")) return EntityTypes.F;
-		else if (name.equalsIgnoreCase("bee")) return EntityTypes.g;
-		else if (name.equalsIgnoreCase("giant")) return EntityTypes.G;
-		else if (name.equalsIgnoreCase("blaze")) return EntityTypes.h;
-		else if (name.equalsIgnoreCase("glow_item_frame")) return EntityTypes.H;
-		else if (name.equalsIgnoreCase("boat")) return EntityTypes.i;
-		else if (name.equalsIgnoreCase("glow_squid")) return EntityTypes.I;
-		else if (name.equalsIgnoreCase("cat")) return EntityTypes.j;
-		else if (name.equalsIgnoreCase("goat")) return EntityTypes.J;
-		else if (name.equalsIgnoreCase("cave_spider")) return EntityTypes.k;
-		else if (name.equalsIgnoreCase("guardian")) return EntityTypes.K;
-		else if (name.equalsIgnoreCase("chicken")) return EntityTypes.l;
-		else if (name.equalsIgnoreCase("hoglin")) return EntityTypes.L;
-		else if (name.equalsIgnoreCase("cod")) return EntityTypes.m;
-		else if (name.equalsIgnoreCase("horse")) return EntityTypes.M;
-		else if (name.equalsIgnoreCase("cow")) return EntityTypes.n;
-		else if (name.equalsIgnoreCase("husk")) return EntityTypes.N;
-		else if (name.equalsIgnoreCase("creeper")) return EntityTypes.o;
-		else if (name.equalsIgnoreCase("illusioner")) return EntityTypes.O;
-		else if (name.equalsIgnoreCase("dolphin")) return EntityTypes.p;
-		else if (name.equalsIgnoreCase("iron_golem")) return EntityTypes.P;
-		else if (name.equalsIgnoreCase("donkey")) return EntityTypes.q;
-		else if (name.equalsIgnoreCase("item")) return EntityTypes.Q;
-		else if (name.equalsIgnoreCase("dragon_fireball")) return EntityTypes.r;
-		else if (name.equalsIgnoreCase("item_frame")) return EntityTypes.R;
-		else if (name.equalsIgnoreCase("drowned")) return EntityTypes.s;
-		else if (name.equalsIgnoreCase("fireball")) return EntityTypes.S;
-		else if (name.equalsIgnoreCase("elder_guardian")) return EntityTypes.t;
-		else if (name.equalsIgnoreCase("end_crystal")) return EntityTypes.u;
-		else if (name.equalsIgnoreCase("lightning")) return EntityTypes.U;
-		else if (name.equalsIgnoreCase("ender_dragon")) return EntityTypes.v;
-		else if (name.equalsIgnoreCase("llama")) return EntityTypes.V;
-		else if (name.equalsIgnoreCase("enderman")) return EntityTypes.w;
-		else if (name.equalsIgnoreCase("llama_spit")) return EntityTypes.W;
-		else if (name.equalsIgnoreCase("endermite")) return EntityTypes.x;
-		else if (name.equalsIgnoreCase("magma_cube")) return EntityTypes.X;
-		else if (name.equalsIgnoreCase("evoker")) return EntityTypes.y;
-		else if (name.equalsIgnoreCase("evoker_fangs")) return EntityTypes.z;
-		else if (name.equalsIgnoreCase("minecart")) return EntityTypes.Z;
+		if (name.equalsIgnoreCase("silverfish")) return EntityType.SILVERFISH;
+		else if (name.equalsIgnoreCase("slime")) return EntityType.SLIME;
+		else if (name.equalsIgnoreCase("chest_minecart")) return EntityType.CHEST_MINECART;
+		else if (name.equalsIgnoreCase("skeleton")) return EntityType.SKELETON;
+		else if (name.equalsIgnoreCase("command_block_minecart")) return EntityType.COMMAND_BLOCK_MINECART;
+		else if (name.equalsIgnoreCase("skeleton_horse")) return EntityType.SKELETON_HORSE;
+		else if (name.equalsIgnoreCase("furnace_minecart")) return EntityType.FURNACE_MINECART;
+		else if (name.equalsIgnoreCase("hopper_minecart")) return EntityType.HOPPER_MINECART;
+		else if (name.equalsIgnoreCase("small_fireball")) return EntityType.SMALL_FIREBALL;
+		else if (name.equalsIgnoreCase("spawner_minecart")) return EntityType.SPAWNER_MINECART;
+		else if (name.equalsIgnoreCase("snow_golem")) return EntityType.GLOW_ITEM_FRAME;
+		else if (name.equalsIgnoreCase("tnt_minecart")) return EntityType.TNT_MINECART;
+		else if (name.equalsIgnoreCase("mule")) return EntityType.MULE;
+		else if (name.equalsIgnoreCase("snowball")) return EntityType.SNOWBALL;
+		else if (name.equalsIgnoreCase("mooshroom")) return EntityType.MOOSHROOM;
+		else if (name.equalsIgnoreCase("spectral_arrow")) return EntityType.SPECTRAL_ARROW;
+		else if (name.equalsIgnoreCase("ocelot")) return EntityType.OCELOT;
+		else if (name.equalsIgnoreCase("spider")) return EntityType.SPIDER;
+		else if (name.equalsIgnoreCase("squid")) return EntityType.SQUID;
+		else if (name.equalsIgnoreCase("panda")) return EntityType.PANDA;
+		else if (name.equalsIgnoreCase("stray")) return EntityType.STRAY;
+		else if (name.equalsIgnoreCase("parrot")) return EntityType.PARROT;
+		else if (name.equalsIgnoreCase("strider")) return EntityType.STRIDER;
+		else if (name.equalsIgnoreCase("phantom")) return EntityType.PHANTOM;
+		else if (name.equalsIgnoreCase("egg")) return EntityType.EGG;
+		else if (name.equalsIgnoreCase("pig")) return EntityType.PIG;
+		else if (name.equalsIgnoreCase("ender_pearl")) return EntityType.ENDER_PEARL;
+		else if (name.equalsIgnoreCase("piglin")) return EntityType.PIGLIN;
+		else if (name.equalsIgnoreCase("experience_bottle")) return EntityType.EXPERIENCE_BOTTLE;
+		else if (name.equalsIgnoreCase("piglin_brute")) return EntityType.PIGLIN_BRUTE;
+		else if (name.equalsIgnoreCase("potion")) return EntityType.POTION;
+		else if (name.equalsIgnoreCase("pillager")) return EntityType.PILLAGER;
+		else if (name.equalsIgnoreCase("trident")) return EntityType.TRIDENT;
+		else if (name.equalsIgnoreCase("polar_bear")) return EntityType.POLAR_BEAR;
+		else if (name.equalsIgnoreCase("trader_llama")) return EntityType.TRADER_LLAMA;
+		else if (name.equalsIgnoreCase("tnt")) return EntityType.TNT;
+		else if (name.equalsIgnoreCase("tropical_fish")) return EntityType.TROPICAL_FISH;
+		else if (name.equalsIgnoreCase("pufferfish")) return EntityType.PUFFERFISH;
+		else if (name.equalsIgnoreCase("turtle")) return EntityType.TURTLE;
+		else if (name.equalsIgnoreCase("rabbit")) return EntityType.RABBIT;
+		else if (name.equalsIgnoreCase("vex")) return EntityType.VEX;
+		else if (name.equalsIgnoreCase("ravager")) return EntityType.RAVAGER;
+		else if (name.equalsIgnoreCase("villager")) return EntityType.VILLAGER;
+		else if (name.equalsIgnoreCase("salmon")) return EntityType.SALMON;
+		else if (name.equalsIgnoreCase("vindicator")) return EntityType.VINDICATOR;
+		else if (name.equalsIgnoreCase("sheep")) return EntityType.SHEEP;
+		else if (name.equalsIgnoreCase("wandering_trader")) return EntityType.WANDERING_TRADER;
+		else if (name.equalsIgnoreCase("shulker")) return EntityType.SHULKER;
+		else if (name.equalsIgnoreCase("witch")) return EntityType.WITCH;
+		else if (name.equalsIgnoreCase("shulker_bullet")) return EntityType.SHULKER_BULLET;
+		else if (name.equalsIgnoreCase("wither")) return EntityType.WITHER;
+		else if (name.equalsIgnoreCase("wither_skeleton")) return EntityType.WITHER_SKELETON;
+		else if (name.equalsIgnoreCase("wither_skull")) return EntityType.WITHER_SKULL;
+		else if (name.equalsIgnoreCase("wolf")) return EntityType.WOLF;
+		else if (name.equalsIgnoreCase("zoglin")) return EntityType.ZOGLIN;
+		else if (name.equalsIgnoreCase("zombie")) return EntityType.ZOMBIE;
+		else if (name.equalsIgnoreCase("zombie_horse")) return EntityType.ZOMBIE_HORSE;
+		else if (name.equalsIgnoreCase("zombie_villager")) return EntityType.ZOMBIE_VILLAGER;
+		else if (name.equalsIgnoreCase("zombie_piglin")) return EntityType.ZOMBIFIED_PIGLIN;
+		else if (name.equalsIgnoreCase("area_affect_cloud")) return EntityType.AREA_EFFECT_CLOUD;
+		else if (name.equalsIgnoreCase("eye_of_ender")) return EntityType.EYE_OF_ENDER;
+		else if (name.equalsIgnoreCase("armor_stand")) return EntityType.ARMOR_STAND;
+		else if (name.equalsIgnoreCase("falling_block")) return EntityType.FALLING_BLOCK;
+		else if (name.equalsIgnoreCase("axolotl")) return EntityType.AXOLOTL;
+		else if (name.equalsIgnoreCase("fox")) return EntityType.FOX;
+		else if (name.equalsIgnoreCase("bat")) return EntityType.BAT;
+		else if (name.equalsIgnoreCase("ghast")) return EntityType.GHAST;
+		else if (name.equalsIgnoreCase("bee")) return EntityType.BEE;
+		else if (name.equalsIgnoreCase("giant")) return EntityType.GIANT;
+		else if (name.equalsIgnoreCase("blaze")) return EntityType.BLAZE;
+		else if (name.equalsIgnoreCase("glow_item_frame")) return EntityType.GLOW_ITEM_FRAME;
+		else if (name.equalsIgnoreCase("boat")) return EntityType.BOAT;
+		else if (name.equalsIgnoreCase("glow_squid")) return EntityType.GLOW_SQUID;
+		else if (name.equalsIgnoreCase("cat")) return EntityType.CAT;
+		else if (name.equalsIgnoreCase("goat")) return EntityType.GOAT;
+		else if (name.equalsIgnoreCase("cave_spider")) return EntityType.CAVE_SPIDER;
+		else if (name.equalsIgnoreCase("guardian")) return EntityType.GUARDIAN;
+		else if (name.equalsIgnoreCase("chicken")) return EntityType.CHICKEN;
+		else if (name.equalsIgnoreCase("hoglin")) return EntityType.HOGLIN;
+		else if (name.equalsIgnoreCase("cod")) return EntityType.COD;
+		else if (name.equalsIgnoreCase("horse")) return EntityType.HORSE;
+		else if (name.equalsIgnoreCase("cow")) return EntityType.COW;
+		else if (name.equalsIgnoreCase("husk")) return EntityType.HUSK;
+		else if (name.equalsIgnoreCase("creeper")) return EntityType.CREEPER;
+		else if (name.equalsIgnoreCase("illusioner")) return EntityType.ILLUSIONER;
+		else if (name.equalsIgnoreCase("dolphin")) return EntityType.DOLPHIN;
+		else if (name.equalsIgnoreCase("iron_golem")) return EntityType.IRON_GOLEM;
+		else if (name.equalsIgnoreCase("donkey")) return EntityType.DONKEY;
+		else if (name.equalsIgnoreCase("item")) return EntityType.ITEM;
+		else if (name.equalsIgnoreCase("dragon_fireball")) return EntityType.DRAGON_FIREBALL;
+		else if (name.equalsIgnoreCase("item_frame")) return EntityType.ITEM_FRAME;
+		else if (name.equalsIgnoreCase("drowned")) return EntityType.DROWNED;
+		else if (name.equalsIgnoreCase("fireball")) return EntityType.FIREBALL;
+		else if (name.equalsIgnoreCase("elder_guardian")) return EntityType.ELDER_GUARDIAN;
+		else if (name.equalsIgnoreCase("end_crystal")) return EntityType.END_CRYSTAL;
+		else if (name.equalsIgnoreCase("lightning")) return EntityType.LIGHTNING_BOLT;
+		else if (name.equalsIgnoreCase("ender_dragon")) return EntityType.ENDER_DRAGON;
+		else if (name.equalsIgnoreCase("llama")) return EntityType.LLAMA;
+		else if (name.equalsIgnoreCase("enderman")) return EntityType.ENDERMAN;
+		else if (name.equalsIgnoreCase("llama_spit")) return EntityType.LLAMA_SPIT;
+		else if (name.equalsIgnoreCase("endermite")) return EntityType.ENDERMITE;
+		else if (name.equalsIgnoreCase("magma_cube")) return EntityType.MAGMA_CUBE;
+		else if (name.equalsIgnoreCase("evoker")) return EntityType.EVOKER;
+		else if (name.equalsIgnoreCase("evoker_fangs")) return EntityType.EVOKER_FANGS;
+		else if (name.equalsIgnoreCase("minecart")) return EntityType.MINECART;
 		else return null;
 	}
 	
-	public static Paintings matchPaintingID(String name) {
+	public static Motive matchPaintingID(String name) {
 		String newName = name.replaceAll("minecraft:", "");
-		if (newName.equalsIgnoreCase("kebab")) return Paintings.a;
-		else if (newName.equalsIgnoreCase("aztec")) return Paintings.b;
-		else if (newName.equalsIgnoreCase("alban")) return Paintings.c;
-		else if (newName.equalsIgnoreCase("aztec2")) return Paintings.d;
-		else if (newName.equalsIgnoreCase("bomb")) return Paintings.e;
-		else if (newName.equalsIgnoreCase("plant")) return Paintings.f;
-		else if (newName.equalsIgnoreCase("wasteland")) return Paintings.g;
-		else if (newName.equalsIgnoreCase("pool")) return Paintings.h;
-		else if (newName.equalsIgnoreCase("courbet")) return Paintings.i;
-		else if (newName.equalsIgnoreCase("sea")) return Paintings.j;
-		else if (newName.equalsIgnoreCase("sunset")) return Paintings.k;
-		else if (newName.equalsIgnoreCase("crebet")) return Paintings.l;
-		else if (newName.equalsIgnoreCase("wanderer")) return Paintings.m;
-		else if (newName.equalsIgnoreCase("graham")) return Paintings.n;
-		else if (newName.equalsIgnoreCase("match")) return Paintings.o;
-		else if (newName.equalsIgnoreCase("bust")) return Paintings.p;
-		else if (newName.equalsIgnoreCase("stage")) return Paintings.q;
-		else if (newName.equalsIgnoreCase("void")) return Paintings.r;
-		else if (name.equalsIgnoreCase("skull_and_roses")) return Paintings.s;
-		else if (newName.equalsIgnoreCase("wither")) return Paintings.t;
-		else if (newName.equalsIgnoreCase("fighters")) return Paintings.u;
-		else if (newName.equalsIgnoreCase("pointer")) return Paintings.v;
-		else if (newName.equalsIgnoreCase("pigscene")) return Paintings.w;
-		else if (newName.equalsIgnoreCase("burning_skull")) return Paintings.x;
-		else if (newName.equalsIgnoreCase("skeleton")) return Paintings.y;
-		else if (newName.equalsIgnoreCase("donkey_kong")) return Paintings.z;
-		else return Paintings.a;
+		if (newName.equalsIgnoreCase("kebab")) return Motive.KEBAB;
+		else if (newName.equalsIgnoreCase("aztec")) return Motive.AZTEC;
+		else if (newName.equalsIgnoreCase("alban")) return Motive.ALBAN;
+		else if (newName.equalsIgnoreCase("aztec2")) return Motive.AZTEC2;
+		else if (newName.equalsIgnoreCase("bomb")) return Motive.BOMB;
+		else if (newName.equalsIgnoreCase("plant")) return Motive.PLANT;
+		else if (newName.equalsIgnoreCase("wasteland")) return Motive.WASTELAND;
+		else if (newName.equalsIgnoreCase("pool")) return Motive.POOL;
+		else if (newName.equalsIgnoreCase("courbet")) return Motive.COURBET;
+		else if (newName.equalsIgnoreCase("sea")) return Motive.SEA;
+		else if (newName.equalsIgnoreCase("sunset")) return Motive.SUNSET;
+		else if (newName.equalsIgnoreCase("crebet")) return Motive.CREEBET;
+		else if (newName.equalsIgnoreCase("wanderer")) return Motive.WANDERER;
+		else if (newName.equalsIgnoreCase("graham")) return Motive.GRAHAM;
+		else if (newName.equalsIgnoreCase("match")) return Motive.MATCH;
+		else if (newName.equalsIgnoreCase("bust")) return Motive.BUST;
+		else if (newName.equalsIgnoreCase("stage")) return Motive.STAGE;
+		else if (newName.equalsIgnoreCase("void")) return Motive.VOID;
+		else if (newName.equalsIgnoreCase("skull_and_roses")) return Motive.SKULL_AND_ROSES;
+		else if (newName.equalsIgnoreCase("wither")) return Motive.WITHER;
+		else if (newName.equalsIgnoreCase("fighters")) return Motive.FIGHTERS;
+		else if (newName.equalsIgnoreCase("pointer")) return Motive.POINTER;
+		else if (newName.equalsIgnoreCase("pigscene")) return Motive.PIGSCENE;
+		else if (newName.equalsIgnoreCase("burning_skull")) return Motive.BURNING_SKULL;
+		else if (newName.equalsIgnoreCase("skeleton")) return Motive.SKELETON;
+		else if (newName.equalsIgnoreCase("donkey_kong")) return Motive.DONKEY_KONG;
+		else return Motive.KEBAB;
 	}
 	
-	public static EnumDifficulty matchDifficulty(String name) {
-		if (name.equalsIgnoreCase("easy")) return EnumDifficulty.b;
-		else if (name.equalsIgnoreCase("normal")) return EnumDifficulty.c;
-		else if (name.equalsIgnoreCase("peaceful")) return EnumDifficulty.a;
-		else if (name.equalsIgnoreCase("hard")) return EnumDifficulty.d;
-		else return EnumDifficulty.c;
+	public static Difficulty matchDifficulty(String name) {
+		try {
+			return Difficulty.valueOf(name.toUpperCase());
+		} catch (Exception e) {
+			return Difficulty.NORMAL;
+		}
 	}
 	
 	static Random r = new Random();
-	
-	
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -311,7 +309,7 @@ public class ClientPacket implements CommandExecutor {
 		}
 		
 		Player p = Bukkit.getPlayer(args[1]);
-		EntityPlayer cp = ((CraftPlayer) p).getHandle();
+		ServerPlayer cp = ((CraftPlayer) p).getHandle();
 		
 		if (args.length < 3) {
 			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a packet to send to the player.");
@@ -351,8 +349,8 @@ public class ClientPacket implements CommandExecutor {
 						return false;	
 					}
 					
-					PacketPlayOutSpawnEntity s = new PacketPlayOutSpawnEntity(r.nextInt(), UUID.randomUUID(), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[6].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), 0, 0, matchEntityType(args[3]), 0, Vec3D.a);
-					cp.b.a(s);
+					ClientboundAddEntityPacket s = new ClientboundAddEntityPacket(r.nextInt(), UUID.randomUUID(), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[6].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), 0, 0, matchEntityType(args[3]), 0, Vec3.ZERO);
+					cp.connection.send(s);
 
 					break;
 				}
@@ -382,9 +380,9 @@ public class ClientPacket implements CommandExecutor {
 						return false;
 					}
 					
-					World w = ((CraftWorld) Bukkit.getWorld(args[3])).getHandle();
-					PacketPlayOutSpawnEntityExperienceOrb s = new PacketPlayOutSpawnEntityExperienceOrb(new EntityExperienceOrb(w, Integer.parseInt(args[3].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), Short.parseShort(args[6])));
-					cp.b.a(s);
+					Level w = ((CraftWorld) Bukkit.getWorld(args[3])).getHandle();
+					ClientboundAddExperienceOrbPacket s = new ClientboundAddExperienceOrbPacket(new ExperienceOrb(w, Integer.parseInt(args[3].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), Short.parseShort(args[6])));
+					cp.connection.send(s);
 					
 					break;
 				}
@@ -410,9 +408,9 @@ public class ClientPacket implements CommandExecutor {
 					}
 					
 
-					World w = ((CraftWorld) p.getWorld()).getHandle();
-					PacketPlayOutSpawnEntityPainting s = new PacketPlayOutSpawnEntityPainting(new EntityPainting(w, new BlockPosition(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6])), EnumDirection.a, matchPaintingID(args[3])));
-					cp.b.a(s);
+					Level w = ((CraftWorld) p.getWorld()).getHandle();
+					ClientboundAddPaintingPacket s = new ClientboundAddPaintingPacket(new Painting(w, new BlockPos(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6])), Direction.DOWN, matchPaintingID(args[3])));
+					cp.connection.send(s);
 					break;
 				}
 				case "settings_changedifficulty": {
@@ -422,22 +420,22 @@ public class ClientPacket implements CommandExecutor {
 					}
 					
 					if (args.length < 5) {
-						PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), false);
+						ClientboundChangeDifficultyPacket s = new ClientboundChangeDifficultyPacket(matchDifficulty(args[3]), false);
 	
-						cp.b.a(s);
+						cp.connection.send(s);
 					} else {
 						boolean lockDifficulty = Boolean.parseBoolean(args[4]);
-						PacketPlayOutServerDifficulty s = new PacketPlayOutServerDifficulty(matchDifficulty(args[3]), lockDifficulty);
+						ClientboundChangeDifficultyPacket s = new ClientboundChangeDifficultyPacket(matchDifficulty(args[3]), lockDifficulty);
 	
-						cp.b.a(s);
+						cp.connection.send(s);
 					}
 	
 					break;
 				}
 				case "gui_close": {
-					PacketPlayOutCloseWindow s = new PacketPlayOutCloseWindow(cp.bV.j);
-					cp.b.a(s);
-					cp.o();
+					ClientboundContainerClosePacket s = new ClientboundContainerClosePacket(cp.inventoryMenu.containerId);
+					cp.connection.send(s);
+					cp.closeContainer();
 					break;
 				}
 				case "kick_player": {
@@ -452,8 +450,8 @@ public class ClientPacket implements CommandExecutor {
 					}
 					String reason = ChatColor.translateAlternateColorCodes('&', String.join(" ", reasonArgs));
 					
-					PacketLoginOutDisconnect s = new PacketLoginOutDisconnect(new ChatComponentText(reason));
-					cp.b.a(s);
+					ClientboundLoginDisconnectPacket s = new ClientboundLoginDisconnectPacket(new TextComponent(reason));
+					cp.connection.send(s);
 					break;
 				}
 				case "camera_block_break_animation": {
@@ -486,9 +484,9 @@ public class ClientPacket implements CommandExecutor {
 	
 					int parsedStage = Integer.parseInt(removedStage);
 
-					PacketPlayOutBlockBreakAnimation s = new PacketPlayOutBlockBreakAnimation(p.getEntityId(), new BlockPosition(Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])), parsedStage);
+					ClientboundBlockDestructionPacket s = new ClientboundBlockDestructionPacket(p.getEntityId(), new BlockPos(Integer.parseInt(args[3]), Integer.parseInt(args[4]), Integer.parseInt(args[5])), parsedStage);
 
-					cp.b.a(s);
+					cp.connection.send(s);
 	
 					break;
 				}
@@ -511,8 +509,8 @@ public class ClientPacket implements CommandExecutor {
 						org.bukkit.inventory.ItemStack bukkititem = new org.bukkit.inventory.ItemStack(m);
 						net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(bukkititem);
 						
-						PacketPlayOutSetSlot s = new PacketPlayOutSetSlot(cp.bV.j, 0, matchInventorySlot(args[3]), item);
-						cp.b.a(s);
+						ClientboundContainerSetSlotPacket s = new ClientboundContainerSetSlotPacket(cp.inventoryMenu.containerId, 0, matchInventorySlot(args[3]), item);
+						cp.connection.send(s);
 					} else {
 						org.bukkit.inventory.ItemStack bukkititem = new org.bukkit.inventory.ItemStack(m);
 						int maxAmount = bukkititem.getMaxStackSize();
@@ -525,8 +523,8 @@ public class ClientPacket implements CommandExecutor {
 						bukkititem.setAmount(amount);
 
 						net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(bukkititem);
-						PacketPlayOutSetSlot s = new PacketPlayOutSetSlot(cp.bV.j, 0, matchInventorySlot(args[3]), item);
-						cp.b.a(s);
+						ClientboundContainerSetSlotPacket s = new ClientboundContainerSetSlotPacket(cp.inventoryMenu.containerId, 0, matchInventorySlot(args[3]), item);
+						cp.connection.send(s);
 					}
 					break;
 				}
@@ -536,13 +534,13 @@ public class ClientPacket implements CommandExecutor {
 						return false;
 					}
 					
-					PacketPlayOutSetCooldown s = new PacketPlayOutSetCooldown(null, Integer.parseInt(args[3]));
+					ClientboundCooldownPacket s = new ClientboundCooldownPacket(null, Integer.parseInt(args[3]));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "camera_create_explosion": {
-					List<BlockPosition> emptyList = new ArrayList<>();
+					List<BlockPos> emptyList = new ArrayList<>();
 					
 					if (args.length < 4) {
 						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
@@ -564,21 +562,21 @@ public class ClientPacket implements CommandExecutor {
 						return false;
 					}
 					
-					PacketPlayOutExplosion s = new PacketPlayOutExplosion(Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]), Float.parseFloat(args[6]), emptyList, null);
+					ClientboundExplodePacket s = new ClientboundExplodePacket(Double.parseDouble(args[3]), Double.parseDouble(args[4]), Double.parseDouble(args[5]), Float.parseFloat(args[6]), emptyList, null);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "state_weather_rain_start": {
-					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.b, 0);
+					ClientboundGameEventPacket s = new ClientboundGameEventPacket(ClientboundGameEventPacket.START_RAINING, 0);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "state_weather_rain_end": {
-					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.c, 0);
+					ClientboundGameEventPacket s = new ClientboundGameEventPacket(ClientboundGameEventPacket.STOP_RAINING, 0);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "state_gamemode_change": {
@@ -598,63 +596,63 @@ public class ClientPacket implements CommandExecutor {
 					else if (args[3].equalsIgnoreCase("spectator"))
 						gamemode = 3;
 					
-					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.d, gamemode);
+					ClientboundGameEventPacket s = new ClientboundGameEventPacket(ClientboundGameEventPacket.CHANGE_GAME_MODE, gamemode);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "state_win_noendscreen": {
-					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.e, 0);
+					ClientboundGameEventPacket s = new ClientboundGameEventPacket(ClientboundGameEventPacket.WIN_GAME, 0);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "state_win_endscreen": {
-					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.e, 1);
+					ClientboundGameEventPacket s = new ClientboundGameEventPacket(ClientboundGameEventPacket.WIN_GAME, 1);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "state_arrowhit": {
-					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.g, 0);
+					ClientboundGameEventPacket s = new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "state_elderguardianscreen": {
-					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.k, 0);
+					ClientboundGameEventPacket s = new ClientboundGameEventPacket(ClientboundGameEventPacket.GUARDIAN_ELDER_EFFECT, 0);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "state_respawnscreen": {
-					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.l, 0);
+					ClientboundGameEventPacket s = new ClientboundGameEventPacket(ClientboundGameEventPacket.IMMEDIATE_RESPAWN, 0);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "state_respawnscreen_immediate": {
-					PacketPlayOutGameStateChange s = new PacketPlayOutGameStateChange(PacketPlayOutGameStateChange.l, 1);
+					ClientboundGameEventPacket s = new ClientboundGameEventPacket(ClientboundGameEventPacket.IMMEDIATE_RESPAWN, 1);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_horse": {
-					PacketPlayOutOpenWindowHorse s = new PacketPlayOutOpenWindowHorse(-1, 9, -1);
+					ClientboundHorseScreenOpenPacket s = new ClientboundHorseScreenOpenPacket(-1, 9, -1);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_book": {
-					PacketPlayOutOpenBook s = new PacketPlayOutOpenBook(EnumHand.a);
+					ClientboundOpenBookPacket s = new ClientboundOpenBookPacket(InteractionHand.MAIN_HAND);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_container": {
-					Containers<?> containerType = Containers.c;
+					MenuType<?> containerType = MenuType.GENERIC_9x3;
 					if (args.length < 4)
-						containerType = Containers.c;
+						containerType = MenuType.GENERIC_9x3;
 					else {
 						int size = Integer.parseInt(args[3]);
 						
@@ -670,106 +668,106 @@ public class ClientPacket implements CommandExecutor {
 						
 						switch (size) {
 							case 9:
-								containerType = Containers.a;
+								containerType = MenuType.GENERIC_9x1;
 								break;
 							case 18:
-								containerType = Containers.b;
+								containerType = MenuType.GENERIC_9x2;
 								break;
 							case 27:
-								containerType = Containers.c;
+								containerType = MenuType.GENERIC_9x3;
 								break;
 							case 36:
-								containerType = Containers.d;
+								containerType = MenuType.GENERIC_9x4;
 								break;
 							case 45:
-								containerType = Containers.e;
+								containerType = MenuType.GENERIC_9x5;
 								break;
 							case 54:
-								containerType = Containers.f;
+								containerType = MenuType.GENERIC_9x6;
 								break;
 						}
 					}
 					
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, containerType, new ChatComponentText("Chest"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, containerType, new TextComponent("Chest"));
 				
-					cp.b.a(s);
+					cp.connection.send(s);
 				}
 				case "gui_open_sign": {
-					PacketPlayOutOpenSignEditor s = new PacketPlayOutOpenSignEditor(BlockPosition.b);
+					ClientboundOpenSignEditorPacket s = new ClientboundOpenSignEditorPacket(BlockPos.ZERO);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_beacon": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.i, new ChatComponentText("Beacon"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.BEACON, new TextComponent("Beacon"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_anvil": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.h, new ChatComponentText("Anvil"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.ANVIL, new TextComponent("Anvil"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_enchantment": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.m, new ChatComponentText("Enchanting Table"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.ENCHANTMENT, new TextComponent("Enchanting Table"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_crafting": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.l, new ChatComponentText("Crafting Table"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.CRAFTING, new TextComponent("Crafting Table"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_smoker": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.v, new ChatComponentText("Smoker"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.SMOKER, new TextComponent("Smoker"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_blastfurnace": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.j, new ChatComponentText("Blast Furnace"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.BLAST_FURNACE, new TextComponent("Blast Furnace"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_furnace": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.n, new ChatComponentText("Furnace"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.FURNACE, new TextComponent("Furnace"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_grindstone": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.o, new ChatComponentText("Grindstone"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.GRINDSTONE, new TextComponent("Grindstone"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_cartography": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.w, new ChatComponentText("Cartography Table"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.CARTOGRAPHY_TABLE, new TextComponent("Cartography Table"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_shulker": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.t, new ChatComponentText("Shulker Box"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.SHULKER_BOX, new TextComponent("Shulker Box"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_villager": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.s, new ChatComponentText("Merchant"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.MERCHANT, new TextComponent("Merchant"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_open_stonecutter": {
-					PacketPlayOutOpenWindow s = new PacketPlayOutOpenWindow(0, Containers.i, new ChatComponentText("Stonecutter"));
+					ClientboundOpenScreenPacket s = new ClientboundOpenScreenPacket(0, MenuType.BEACON, new TextComponent("Stonecutter"));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "gui_edit_slotselected": {
@@ -785,15 +783,15 @@ public class ClientPacket implements CommandExecutor {
 						return false;
 					}
 					
-					PacketPlayOutHeldItemSlot s = new PacketPlayOutHeldItemSlot(slot - 1);
+					ClientboundSetCarriedItemPacket s = new ClientboundSetCarriedItemPacket(slot - 1);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "combat_enter": {
 					ClientboundPlayerCombatEnterPacket s = new ClientboundPlayerCombatEnterPacket();
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "combat_end": {
@@ -806,43 +804,43 @@ public class ClientPacket implements CommandExecutor {
 					
 					ClientboundPlayerCombatEndPacket s = new ClientboundPlayerCombatEndPacket(combatTime, -1);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "animation_play_leavebed": {
-					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 2);
+					ClientboundAnimatePacket s = new ClientboundAnimatePacket(cp, 2);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "animation_play_swing_mainhand": {
-					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 0);
+					ClientboundAnimatePacket s = new ClientboundAnimatePacket(cp, 0);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "animation_play_swing_offhand": {
-					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 3);
+					ClientboundAnimatePacket s = new ClientboundAnimatePacket(cp, 3);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "animation_play_takedmg": {
-					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 1);
+					ClientboundAnimatePacket s = new ClientboundAnimatePacket(cp, 1);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "animation_play_crit": {
-					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 4);
+					ClientboundAnimatePacket s = new ClientboundAnimatePacket(cp, 4);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "animation_play_crit_magical": {
-					PacketPlayOutAnimation s = new PacketPlayOutAnimation(cp, 5);
+					ClientboundAnimatePacket s = new ClientboundAnimatePacket(cp, 5);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "connection_kick_player": {
@@ -852,9 +850,9 @@ public class ClientPacket implements CommandExecutor {
 						message += " " + args[i];
 					}
 					
-					PacketPlayOutKickDisconnect s = new PacketPlayOutKickDisconnect(new ChatComponentText(message));
+					ClientboundDisconnectPacket s = new ClientboundDisconnectPacket(new TextComponent(message));
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					return false;
 				}
 				case "playergui_changexp": {
@@ -883,60 +881,59 @@ public class ClientPacket implements CommandExecutor {
 					
 					int expAmount = getTotalExperience(level);
 					
-					PacketPlayOutExperience s = new PacketPlayOutExperience(progress / 100, expAmount, level);
+					ClientboundSetExperiencePacket s = new ClientboundSetExperiencePacket(progress / 100, expAmount, level);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "camera_shader_creeper": {
-					EntityCreeper entity = new EntityCreeper(EntityTypes.o, ((CraftWorld) p.getWorld()).getHandle());
+					Creeper entity = new Creeper(EntityType.CREEPER, ((CraftWorld) p.getWorld()).getHandle());
 					
-					entity.b(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
-					entity.s(true);
-					entity.d(true);
-					entity.e(true);
+					entity.setPos(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
+					entity.setNoAi(true);
+					entity.setNoGravity(true);
+					entity.setInvulnerable(true);
 					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
-					entity.m(true);
 					
-					((CraftWorld) p.getWorld()).getHandle().e(entity);
+					((CraftWorld) p.getWorld()).getHandle().addFreshEntity(entity);
 					
-					PacketPlayOutCamera s = new PacketPlayOutCamera(entity);
+					ClientboundSetCameraPacket s = new ClientboundSetCameraPacket(entity);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "camera_shader_enderman": {
-					EntityEnderman entity = new EntityEnderman(EntityTypes.w, ((CraftWorld) p.getWorld()).getHandle());
+					EnderMan entity = new EnderMan(EntityType.ENDERMAN, ((CraftWorld) p.getWorld()).getHandle());
 					
-					entity.b(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
-					entity.s(true);
-					entity.d(true);
-					entity.e(true);
+					entity.setPos(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
+					entity.setNoAi(true);
+					entity.setNoGravity(true);
+					entity.setInvulnerable(true);
+					entity.setSilent(true);
 					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
-					entity.m(true);
 					
-					((CraftWorld) p.getWorld()).getHandle().e(entity);
+					((CraftWorld) p.getWorld()).getHandle().addFreshEntity(entity);
 					
-					PacketPlayOutCamera s = new PacketPlayOutCamera(entity);
+					ClientboundSetCameraPacket s = new ClientboundSetCameraPacket(entity);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "camera_shader_spider": {
-					EntitySpider entity = new EntitySpider(EntityTypes.aI, ((CraftWorld) p.getWorld()).getHandle());
+					Spider entity = new Spider(EntityType.SPIDER, ((CraftWorld) p.getWorld()).getHandle());
 					
-					entity.b(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
-					entity.s(true);
-					entity.d(true);
-					entity.e(true);
+					entity.setPos(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
+					entity.setNoAi(true);
+					entity.setNoGravity(true);
+					entity.setInvulnerable(true);
+					entity.setSilent(true);
 					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
-					entity.m(true);
 					
-					((CraftWorld) p.getWorld()).getHandle().e(entity);
+					((CraftWorld) p.getWorld()).getHandle().addFreshEntity(entity);
 					
-					PacketPlayOutCamera s = new PacketPlayOutCamera(entity);
+					ClientboundSetCameraPacket s = new ClientboundSetCameraPacket(entity);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "playergui_updatehealth": {
@@ -952,9 +949,9 @@ public class ClientPacket implements CommandExecutor {
 						return false;
 					}
 					
-					PacketPlayOutUpdateHealth s = new PacketPlayOutUpdateHealth(health, p.getFoodLevel(), p.getSaturation());
+					ClientboundSetHealthPacket s = new ClientboundSetHealthPacket(health, p.getFoodLevel(), p.getSaturation());
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "playergui_updatefood": {
@@ -970,9 +967,9 @@ public class ClientPacket implements CommandExecutor {
 						return false;
 					}
 					
-					PacketPlayOutUpdateHealth s = new PacketPlayOutUpdateHealth((float) p.getHealth(), food, p.getSaturation());
+					ClientboundSetHealthPacket s = new ClientboundSetHealthPacket((float) p.getHealth(), food, p.getSaturation());
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				case "camera_updateviewdistance": {
@@ -988,9 +985,9 @@ public class ClientPacket implements CommandExecutor {
 						return false;
 					}
 					
-					PacketPlayOutViewDistance s = new PacketPlayOutViewDistance(distance);
+					ClientboundSetChunkCacheRadiusPacket s = new ClientboundSetChunkCacheRadiusPacket(distance);
 					
-					cp.b.a(s);
+					cp.connection.send(s);
 					break;
 				}
 				default:
