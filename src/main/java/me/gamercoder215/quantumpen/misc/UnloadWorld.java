@@ -9,14 +9,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 
 public class UnloadWorld implements CommandExecutor {
 	
-	protected Main plugin;
+	protected QuantumPen plugin;
 	
-	public UnloadWorld(Main plugin) {
+	public UnloadWorld(QuantumPen plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("unloadworld").setExecutor(this);
 		plugin.getCommand("unloadworld").setTabCompleter(new CommandTabCompleter());
@@ -25,12 +25,12 @@ public class UnloadWorld implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world name.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world name.");
 			return false;
 		}
 		
 		if (Bukkit.getWorld(args[0]) == null) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
 			return false;
 		}
 		World w = Bukkit.getWorld(args[0]);

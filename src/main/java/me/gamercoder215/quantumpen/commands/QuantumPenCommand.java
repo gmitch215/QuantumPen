@@ -15,14 +15,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 
-public class QuantumPen implements CommandExecutor {
+public class QuantumPenCommand implements CommandExecutor {
 	
-	protected Main plugin;
+	protected QuantumPen plugin;
 	
-	public QuantumPen(Main plugin) {
+	public QuantumPenCommand(QuantumPen plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("quantumpen").setExecutor(this);
 		plugin.getCommand("quantumpen").setTabCompleter(new CommandTabCompleter());
@@ -30,7 +30,7 @@ public class QuantumPen implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
-			Main.sendInvalidArgs(sender);
+			QuantumPen.sendInvalidArgs(sender);
 			return false;
 		}
 		switch (args[0].toLowerCase()) {

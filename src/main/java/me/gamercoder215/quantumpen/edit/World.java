@@ -7,16 +7,17 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.SpawnCategory;
 
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter.ArgumentType;
 
 public class World implements CommandExecutor {
 	
-	protected Main plugin;
+	protected QuantumPen plugin;
 	
-	public World(Main plugin) {
+	public World(QuantumPen plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("world").setExecutor(this);
 		plugin.getCommand("world").setTabCompleter(new CommandTabCompleter());
@@ -29,19 +30,19 @@ public class World implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
 			return false;
 		}
 
 		if (Bukkit.getWorld(args[0]) == null) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
 			return false;
 		}
 
 		org.bukkit.World w = Bukkit.getWorld(args[0]);
 
 		if (args.length < 2) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid action.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid action.");
 			return false;
 		}
 		try {
@@ -54,27 +55,27 @@ public class World implements CommandExecutor {
 				}
 				case "spawns_ambientlimit": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setAmbientSpawnLimit(Integer.parseInt(args[2]));
+					w.setSpawnLimit(SpawnCategory.AMBIENT, Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_animallimit": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setAnimalSpawnLimit(Integer.parseInt(args[2]));
+					w.setSpawnLimit(SpawnCategory.ANIMAL, Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "server_autosave": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.BOOLEAN);
+						QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 						return false;
 					}
 
@@ -84,7 +85,7 @@ public class World implements CommandExecutor {
 				}
 				case "game_clearweathertime": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
@@ -94,7 +95,7 @@ public class World implements CommandExecutor {
 				}
 				case "settings_difficulty": {
 					if (args.length < 3) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid difficulty.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid difficulty.");
 						return false;
 					}
 
@@ -106,7 +107,7 @@ public class World implements CommandExecutor {
 				}
 				case "settings_hardcore": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.BOOLEAN);
+						QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 						return false;
 					}
 
@@ -116,7 +117,7 @@ public class World implements CommandExecutor {
 				}
 				case "settings_keepspawnloaded": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.BOOLEAN);
+						QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 						return false;
 					}
 
@@ -126,7 +127,7 @@ public class World implements CommandExecutor {
 				}
 				case "settings_pvp": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.BOOLEAN);
+						QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 						return false;
 					}
 
@@ -136,82 +137,82 @@ public class World implements CommandExecutor {
 				}
 				case "spawns_monsterlimit": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setMonsterSpawnLimit(Integer.parseInt(args[2]));
+					w.setSpawnLimit(SpawnCategory.MONSTER, Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_ticksper_ambient": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setTicksPerAmbientSpawns(Integer.parseInt(args[2]));
+					w.setTicksPerSpawns(SpawnCategory.AMBIENT, Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_ticksper_animal": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setTicksPerAnimalSpawns(Integer.parseInt(args[2]));
+					w.setTicksPerSpawns(SpawnCategory.ANIMAL, Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_ticksper_monster": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setTicksPerMonsterSpawns(Integer.parseInt(args[2]));
+					w.setTicksPerSpawns(SpawnCategory.MONSTER, Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_ticksper_ambient_water": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setTicksPerWaterAmbientSpawns(Integer.parseInt(args[2]));
+					w.setTicksPerSpawns(SpawnCategory.WATER_ANIMAL, Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_ambientlimit_water": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setWaterAmbientSpawnLimit(Integer.parseInt(args[2]));
+					w.setSpawnLimit(SpawnCategory.WATER_AMBIENT, Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "spawns_animallimit_water": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
-					w.setWaterAnimalSpawnLimit(Integer.parseInt(args[2]));
+					w.setTicksPerSpawns(SpawnCategory.WATER_ANIMAL, Integer.parseInt(args[2]));
 					success(sender);
 					break;
 				}
 				case "game_thunderduration": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
 					if (!(w.isThundering())) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "The world is not thundering.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "The world is not thundering.");
 						return false;
 					}
 					
@@ -221,7 +222,7 @@ public class World implements CommandExecutor {
 				}
 				case "game_thundering": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.BOOLEAN);
+						QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 						return false;
 					}
 
@@ -231,17 +232,17 @@ public class World implements CommandExecutor {
 				}
 				case "game_strikelightning": {
 					if (args.length < 3) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
 						return false;
 					}
 
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
 						return false;
 					}
 
 					if (args.length < 5) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
 						return false;
 					}
 
@@ -253,17 +254,17 @@ public class World implements CommandExecutor {
 				}
 				case "game_strikelightning_effect": {
 					if (args.length < 3) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
 						return false;
 					}
 
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
 						return false;
 					}
 
 					if (args.length < 5) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
 						return false;
 					}
 
@@ -275,7 +276,7 @@ public class World implements CommandExecutor {
 				}
 				case "game_time": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
@@ -285,7 +286,7 @@ public class World implements CommandExecutor {
 				}
 				case "game_fulltime": {
 					if (args.length < 3) {
-						Main.sendValidType(sender, ArgumentType.INTEGER);
+						QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 						return false;
 					}
 
@@ -295,11 +296,11 @@ public class World implements CommandExecutor {
 				}
 				case "game_spawnflags": {
 					if (args.length < 3) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the boolean for \"allowMonsters\".");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide the boolean for \"allowMonsters\".");
 						return false;
 					}
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the boolean for \"allowAnimals\".");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide the boolean for \"allowAnimals\".");
 						return false;
 					}
 
@@ -309,10 +310,10 @@ public class World implements CommandExecutor {
 				}
 			}
 		} catch (IllegalArgumentException e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
 			return false;
 		} catch (Exception e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
 		}
 
 		

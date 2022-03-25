@@ -7,15 +7,15 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter.ArgumentType;
 
 public class PlayerData implements CommandExecutor {
 	
-	protected Main plugin;
+	protected QuantumPen plugin;
 	
-	public PlayerData(Main plugin) {
+	public PlayerData(QuantumPen plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("playerdata").setExecutor(this);
 		plugin.getCommand("playerdata").setTabCompleter(new CommandTabCompleter());
@@ -32,24 +32,24 @@ public class PlayerData implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
 			return false;
 		}
 		
 		if (Bukkit.getPlayer(args[0]) == null) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
 			return false;
 		}
 		
 		Player p = Bukkit.getPlayer(args[0]);
 		
 		if (args.length < 2) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid type.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid type.");
 			return false;
 		}
 		
 		if (args.length < 3) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid " + args[2] + ".");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid " + args[2] + ".");
 			return false;
 		}
 		try {
@@ -58,12 +58,12 @@ public class PlayerData implements CommandExecutor {
 					switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
 						case "property_canseeplayer": {
 							if (args.length < 4) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
 								return false;
 							}
 							
 							if (Bukkit.getPlayer(args[3]) == null) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
 								return false;
 							}
 							
@@ -163,7 +163,7 @@ public class PlayerData implements CommandExecutor {
 							break;
 						}
 						default: {
-							Main.sendPluginMessage(sender, ChatColor.RED + "This property does not exist.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This property does not exist.");
 							return false;
 						}
 					}
@@ -192,12 +192,12 @@ public class PlayerData implements CommandExecutor {
 						}
 						case "camera_hideplayer": {
 							if (args.length < 4) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
 								return false;
 							}
 							
 							if (Bukkit.getPlayer(args[3]) == null) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
 								return false;
 							}
 							
@@ -221,7 +221,7 @@ public class PlayerData implements CommandExecutor {
 						}
 						case "playergui_healthscale": {
 							if (args.length < 4) {
-								Main.sendValidType(sender, ArgumentType.DECIMAL);
+								QuantumPen.sendValidType(sender, ArgumentType.DECIMAL);
 								return false;
 							}
 							
@@ -231,7 +231,7 @@ public class PlayerData implements CommandExecutor {
 						}
 						case "playergui_healthscale_isscaled": {
 							if (args.length < 4) {
-								Main.sendValidType(sender, ArgumentType.BOOLEAN);
+								QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 								return false;
 							}
 							
@@ -241,7 +241,7 @@ public class PlayerData implements CommandExecutor {
 						}
 						case "settings_walkspeed": {
 							if (args.length < 4) {
-								Main.sendValidType(sender, ArgumentType.DECIMAL);
+								QuantumPen.sendValidType(sender, ArgumentType.DECIMAL);
 								return false;
 							}
 							
@@ -251,12 +251,12 @@ public class PlayerData implements CommandExecutor {
 						}
 						case "camera_showplayer": {
 							if (args.length < 4) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
 								return false;
 							}
 							
 							if (Bukkit.getPlayer(args[3]) == null) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player.");
 								return false;
 							}
 							
@@ -307,21 +307,21 @@ public class PlayerData implements CommandExecutor {
 							break;
 						}
 						default: {
-							Main.sendPluginMessage(sender, ChatColor.RED + "This action does not exist.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This action does not exist.");
 							return false;
 						}
 					}
 					return true;
 				}
 				default: {
-					Main.sendPluginMessage(sender, ChatColor.RED + "This type does not exist.");
+					QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This type does not exist.");
 				}
 			}
 		} catch (IllegalArgumentException e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
 			return false;
 		} catch (Exception e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
 			return false;
 		}
 		return true;

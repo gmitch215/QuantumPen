@@ -11,14 +11,12 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
+import me.gamercoder215.quantumpen.utils.QuantumUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
@@ -62,9 +60,9 @@ import net.minecraft.world.phys.Vec3;
 
 public class ClientPacket implements CommandExecutor {
 	
-	protected Main plugin;
+	protected QuantumPen plugin;
 	
-	public ClientPacket(Main plugin) {
+	public ClientPacket(QuantumPen plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("clientpacket").setExecutor(this);
 		plugin.getCommand("clientpacket").setTabCompleter(new CommandTabCompleter());
@@ -141,143 +139,23 @@ public class ClientPacket implements CommandExecutor {
 	public static EntityType<?> matchEntityType(String oldname) {
 		String name = oldname.replaceAll("minecraft:", "");
 		
-		if (name.equalsIgnoreCase("silverfish")) return EntityType.SILVERFISH;
-		else if (name.equalsIgnoreCase("slime")) return EntityType.SLIME;
-		else if (name.equalsIgnoreCase("chest_minecart")) return EntityType.CHEST_MINECART;
-		else if (name.equalsIgnoreCase("skeleton")) return EntityType.SKELETON;
-		else if (name.equalsIgnoreCase("command_block_minecart")) return EntityType.COMMAND_BLOCK_MINECART;
-		else if (name.equalsIgnoreCase("skeleton_horse")) return EntityType.SKELETON_HORSE;
-		else if (name.equalsIgnoreCase("furnace_minecart")) return EntityType.FURNACE_MINECART;
-		else if (name.equalsIgnoreCase("hopper_minecart")) return EntityType.HOPPER_MINECART;
-		else if (name.equalsIgnoreCase("small_fireball")) return EntityType.SMALL_FIREBALL;
-		else if (name.equalsIgnoreCase("spawner_minecart")) return EntityType.SPAWNER_MINECART;
-		else if (name.equalsIgnoreCase("snow_golem")) return EntityType.GLOW_ITEM_FRAME;
-		else if (name.equalsIgnoreCase("tnt_minecart")) return EntityType.TNT_MINECART;
-		else if (name.equalsIgnoreCase("mule")) return EntityType.MULE;
-		else if (name.equalsIgnoreCase("snowball")) return EntityType.SNOWBALL;
-		else if (name.equalsIgnoreCase("mooshroom")) return EntityType.MOOSHROOM;
-		else if (name.equalsIgnoreCase("spectral_arrow")) return EntityType.SPECTRAL_ARROW;
-		else if (name.equalsIgnoreCase("ocelot")) return EntityType.OCELOT;
-		else if (name.equalsIgnoreCase("spider")) return EntityType.SPIDER;
-		else if (name.equalsIgnoreCase("squid")) return EntityType.SQUID;
-		else if (name.equalsIgnoreCase("panda")) return EntityType.PANDA;
-		else if (name.equalsIgnoreCase("stray")) return EntityType.STRAY;
-		else if (name.equalsIgnoreCase("parrot")) return EntityType.PARROT;
-		else if (name.equalsIgnoreCase("strider")) return EntityType.STRIDER;
-		else if (name.equalsIgnoreCase("phantom")) return EntityType.PHANTOM;
-		else if (name.equalsIgnoreCase("egg")) return EntityType.EGG;
-		else if (name.equalsIgnoreCase("pig")) return EntityType.PIG;
-		else if (name.equalsIgnoreCase("ender_pearl")) return EntityType.ENDER_PEARL;
-		else if (name.equalsIgnoreCase("piglin")) return EntityType.PIGLIN;
-		else if (name.equalsIgnoreCase("experience_bottle")) return EntityType.EXPERIENCE_BOTTLE;
-		else if (name.equalsIgnoreCase("piglin_brute")) return EntityType.PIGLIN_BRUTE;
-		else if (name.equalsIgnoreCase("potion")) return EntityType.POTION;
-		else if (name.equalsIgnoreCase("pillager")) return EntityType.PILLAGER;
-		else if (name.equalsIgnoreCase("trident")) return EntityType.TRIDENT;
-		else if (name.equalsIgnoreCase("polar_bear")) return EntityType.POLAR_BEAR;
-		else if (name.equalsIgnoreCase("trader_llama")) return EntityType.TRADER_LLAMA;
-		else if (name.equalsIgnoreCase("tnt")) return EntityType.TNT;
-		else if (name.equalsIgnoreCase("tropical_fish")) return EntityType.TROPICAL_FISH;
-		else if (name.equalsIgnoreCase("pufferfish")) return EntityType.PUFFERFISH;
-		else if (name.equalsIgnoreCase("turtle")) return EntityType.TURTLE;
-		else if (name.equalsIgnoreCase("rabbit")) return EntityType.RABBIT;
-		else if (name.equalsIgnoreCase("vex")) return EntityType.VEX;
-		else if (name.equalsIgnoreCase("ravager")) return EntityType.RAVAGER;
-		else if (name.equalsIgnoreCase("villager")) return EntityType.VILLAGER;
-		else if (name.equalsIgnoreCase("salmon")) return EntityType.SALMON;
-		else if (name.equalsIgnoreCase("vindicator")) return EntityType.VINDICATOR;
-		else if (name.equalsIgnoreCase("sheep")) return EntityType.SHEEP;
-		else if (name.equalsIgnoreCase("wandering_trader")) return EntityType.WANDERING_TRADER;
-		else if (name.equalsIgnoreCase("shulker")) return EntityType.SHULKER;
-		else if (name.equalsIgnoreCase("witch")) return EntityType.WITCH;
-		else if (name.equalsIgnoreCase("shulker_bullet")) return EntityType.SHULKER_BULLET;
-		else if (name.equalsIgnoreCase("wither")) return EntityType.WITHER;
-		else if (name.equalsIgnoreCase("wither_skeleton")) return EntityType.WITHER_SKELETON;
-		else if (name.equalsIgnoreCase("wither_skull")) return EntityType.WITHER_SKULL;
-		else if (name.equalsIgnoreCase("wolf")) return EntityType.WOLF;
-		else if (name.equalsIgnoreCase("zoglin")) return EntityType.ZOGLIN;
-		else if (name.equalsIgnoreCase("zombie")) return EntityType.ZOMBIE;
-		else if (name.equalsIgnoreCase("zombie_horse")) return EntityType.ZOMBIE_HORSE;
-		else if (name.equalsIgnoreCase("zombie_villager")) return EntityType.ZOMBIE_VILLAGER;
-		else if (name.equalsIgnoreCase("zombie_piglin")) return EntityType.ZOMBIFIED_PIGLIN;
-		else if (name.equalsIgnoreCase("area_affect_cloud")) return EntityType.AREA_EFFECT_CLOUD;
-		else if (name.equalsIgnoreCase("eye_of_ender")) return EntityType.EYE_OF_ENDER;
-		else if (name.equalsIgnoreCase("armor_stand")) return EntityType.ARMOR_STAND;
-		else if (name.equalsIgnoreCase("falling_block")) return EntityType.FALLING_BLOCK;
-		else if (name.equalsIgnoreCase("axolotl")) return EntityType.AXOLOTL;
-		else if (name.equalsIgnoreCase("fox")) return EntityType.FOX;
-		else if (name.equalsIgnoreCase("bat")) return EntityType.BAT;
-		else if (name.equalsIgnoreCase("ghast")) return EntityType.GHAST;
-		else if (name.equalsIgnoreCase("bee")) return EntityType.BEE;
-		else if (name.equalsIgnoreCase("giant")) return EntityType.GIANT;
-		else if (name.equalsIgnoreCase("blaze")) return EntityType.BLAZE;
-		else if (name.equalsIgnoreCase("glow_item_frame")) return EntityType.GLOW_ITEM_FRAME;
-		else if (name.equalsIgnoreCase("boat")) return EntityType.BOAT;
-		else if (name.equalsIgnoreCase("glow_squid")) return EntityType.GLOW_SQUID;
-		else if (name.equalsIgnoreCase("cat")) return EntityType.CAT;
-		else if (name.equalsIgnoreCase("goat")) return EntityType.GOAT;
-		else if (name.equalsIgnoreCase("cave_spider")) return EntityType.CAVE_SPIDER;
-		else if (name.equalsIgnoreCase("guardian")) return EntityType.GUARDIAN;
-		else if (name.equalsIgnoreCase("chicken")) return EntityType.CHICKEN;
-		else if (name.equalsIgnoreCase("hoglin")) return EntityType.HOGLIN;
-		else if (name.equalsIgnoreCase("cod")) return EntityType.COD;
-		else if (name.equalsIgnoreCase("horse")) return EntityType.HORSE;
-		else if (name.equalsIgnoreCase("cow")) return EntityType.COW;
-		else if (name.equalsIgnoreCase("husk")) return EntityType.HUSK;
-		else if (name.equalsIgnoreCase("creeper")) return EntityType.CREEPER;
-		else if (name.equalsIgnoreCase("illusioner")) return EntityType.ILLUSIONER;
-		else if (name.equalsIgnoreCase("dolphin")) return EntityType.DOLPHIN;
-		else if (name.equalsIgnoreCase("iron_golem")) return EntityType.IRON_GOLEM;
-		else if (name.equalsIgnoreCase("donkey")) return EntityType.DONKEY;
-		else if (name.equalsIgnoreCase("item")) return EntityType.ITEM;
-		else if (name.equalsIgnoreCase("dragon_fireball")) return EntityType.DRAGON_FIREBALL;
-		else if (name.equalsIgnoreCase("item_frame")) return EntityType.ITEM_FRAME;
-		else if (name.equalsIgnoreCase("drowned")) return EntityType.DROWNED;
-		else if (name.equalsIgnoreCase("fireball")) return EntityType.FIREBALL;
-		else if (name.equalsIgnoreCase("elder_guardian")) return EntityType.ELDER_GUARDIAN;
-		else if (name.equalsIgnoreCase("end_crystal")) return EntityType.END_CRYSTAL;
-		else if (name.equalsIgnoreCase("lightning")) return EntityType.LIGHTNING_BOLT;
-		else if (name.equalsIgnoreCase("ender_dragon")) return EntityType.ENDER_DRAGON;
-		else if (name.equalsIgnoreCase("llama")) return EntityType.LLAMA;
-		else if (name.equalsIgnoreCase("enderman")) return EntityType.ENDERMAN;
-		else if (name.equalsIgnoreCase("llama_spit")) return EntityType.LLAMA_SPIT;
-		else if (name.equalsIgnoreCase("endermite")) return EntityType.ENDERMITE;
-		else if (name.equalsIgnoreCase("magma_cube")) return EntityType.MAGMA_CUBE;
-		else if (name.equalsIgnoreCase("evoker")) return EntityType.EVOKER;
-		else if (name.equalsIgnoreCase("evoker_fangs")) return EntityType.EVOKER_FANGS;
-		else if (name.equalsIgnoreCase("minecart")) return EntityType.MINECART;
-		else return null;
+		try {
+			return (EntityType<?>) EntityType.class.getField(name.toUpperCase()).get(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	public static Motive matchPaintingID(String name) {
 		String newName = name.replaceAll("minecraft:", "");
-		if (newName.equalsIgnoreCase("kebab")) return Motive.KEBAB;
-		else if (newName.equalsIgnoreCase("aztec")) return Motive.AZTEC;
-		else if (newName.equalsIgnoreCase("alban")) return Motive.ALBAN;
-		else if (newName.equalsIgnoreCase("aztec2")) return Motive.AZTEC2;
-		else if (newName.equalsIgnoreCase("bomb")) return Motive.BOMB;
-		else if (newName.equalsIgnoreCase("plant")) return Motive.PLANT;
-		else if (newName.equalsIgnoreCase("wasteland")) return Motive.WASTELAND;
-		else if (newName.equalsIgnoreCase("pool")) return Motive.POOL;
-		else if (newName.equalsIgnoreCase("courbet")) return Motive.COURBET;
-		else if (newName.equalsIgnoreCase("sea")) return Motive.SEA;
-		else if (newName.equalsIgnoreCase("sunset")) return Motive.SUNSET;
-		else if (newName.equalsIgnoreCase("crebet")) return Motive.CREEBET;
-		else if (newName.equalsIgnoreCase("wanderer")) return Motive.WANDERER;
-		else if (newName.equalsIgnoreCase("graham")) return Motive.GRAHAM;
-		else if (newName.equalsIgnoreCase("match")) return Motive.MATCH;
-		else if (newName.equalsIgnoreCase("bust")) return Motive.BUST;
-		else if (newName.equalsIgnoreCase("stage")) return Motive.STAGE;
-		else if (newName.equalsIgnoreCase("void")) return Motive.VOID;
-		else if (newName.equalsIgnoreCase("skull_and_roses")) return Motive.SKULL_AND_ROSES;
-		else if (newName.equalsIgnoreCase("wither")) return Motive.WITHER;
-		else if (newName.equalsIgnoreCase("fighters")) return Motive.FIGHTERS;
-		else if (newName.equalsIgnoreCase("pointer")) return Motive.POINTER;
-		else if (newName.equalsIgnoreCase("pigscene")) return Motive.PIGSCENE;
-		else if (newName.equalsIgnoreCase("burning_skull")) return Motive.BURNING_SKULL;
-		else if (newName.equalsIgnoreCase("skeleton")) return Motive.SKELETON;
-		else if (newName.equalsIgnoreCase("donkey_kong")) return Motive.DONKEY_KONG;
-		else return Motive.KEBAB;
+		
+		try {
+			return (Motive) Motive.class.getField(newName.toUpperCase()).get(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Motive.KEBAB;
+		}
 	}
 	
 	public static Difficulty matchDifficulty(String name) {
@@ -294,25 +172,25 @@ public class ClientPacket implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
 		if (args.length < 1) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid packet type.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid packet type.");
 			return false;
 		}
 		
 		if (args.length < 2) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player to send the packet to.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player to send the packet to.");
 			return false;
 		}
 		
 		if (Bukkit.getPlayer(args[1]) == null) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "This player does not exist.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This player does not exist.");
 			return false;
 		}
 		
 		Player p = Bukkit.getPlayer(args[1]);
-		ServerPlayer cp = ((CraftPlayer) p).getHandle();
+		ServerPlayer cp = QuantumUtils.toNMSPlayer(p);
 		
 		if (args.length < 3) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a packet to send to the player.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a packet to send to the player.");
 			return false;
 		}
 		
@@ -320,32 +198,32 @@ public class ClientPacket implements CommandExecutor {
 			switch (args[2].replaceAll("minecraft:", "")) {
 				case "spawn_entity": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type. Paintings and Experience Orbs use the spawn_paining and spawn_experience_orb packet, and markers are server-side only.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type. Paintings and Experience Orbs use the spawn_paining and spawn_experience_orb packet, and markers are server-side only.");
 						return false;
 					}
 					
 					if (args[3].equalsIgnoreCase("minecraft:painting") || args[3].equalsIgnoreCase("minecraft:experience_orb")) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Paintings and Experience Orbs use the spawn_paining and spawn_experience_orb packet.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Paintings and Experience Orbs use the spawn_paining and spawn_experience_orb packet.");
 						return false;
 					}
 					
 					if (matchEntityType(args[3]) == null) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type. Paintings and Experience Orbs are used in the spawn_painting and spawn_experience_orb packet, and marks are server-side only.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type. Paintings and Experience Orbs are used in the spawn_painting and spawn_experience_orb packet, and marks are server-side only.");
 						return false;
 					}
 					
 					if (args.length < 5) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
 						return false;	
 					}
 					
 					if (args.length < 6) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
 						return false;	
 					}
 					
 					if (args.length < 7) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
 						return false;	
 					}
 					
@@ -356,31 +234,31 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "spawn_experience_orb": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the world to spawn it into.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide the world to spawn it into.");
 						return false;
 					}
 					
 					if (args.length < 5) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
 						return false;	
 					}
 					
 					if (args.length < 6) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
 						return false;	
 					}
 					
 					if (args.length < 7) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
 						return false;	
 					}
 					
 					if (args.length < 8) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the experience amount.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide the experience amount.");
 						return false;
 					}
 					
-					Level w = ((CraftWorld) Bukkit.getWorld(args[3])).getHandle();
+					Level w = QuantumUtils.toNMSWorld(Bukkit.getWorld(args[3]));
 					ClientboundAddExperienceOrbPacket s = new ClientboundAddExperienceOrbPacket(new ExperienceOrb(w, Integer.parseInt(args[3].replaceAll("~", Integer.toString(p.getLocation().getBlockX()))), Integer.parseInt(args[4].replaceAll("~", Integer.toString(p.getLocation().getBlockY()))), Integer.parseInt(args[5].replaceAll("~", Integer.toString(p.getLocation().getBlockZ()))), Short.parseShort(args[6])));
 					cp.connection.send(s);
 					
@@ -388,34 +266,34 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "spawn_painting": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a painting ID.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a painting ID.");
 						return false;
 					}
 					
 					if (args.length < 5) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a position X.");
 						return false;
 					}
 					
 					if (args.length < 6) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Y.");
 						return false;	
 					}
 					
 					if (args.length < 7) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a position Z.");
 						return false;	
 					}
 					
 
-					Level w = ((CraftWorld) p.getWorld()).getHandle();
+					Level w = QuantumUtils.toNMSWorld(p.getWorld());
 					ClientboundAddPaintingPacket s = new ClientboundAddPaintingPacket(new Painting(w, new BlockPos(Integer.parseInt(args[4]), Integer.parseInt(args[5]), Integer.parseInt(args[6])), Direction.DOWN, matchPaintingID(args[3])));
 					cp.connection.send(s);
 					break;
 				}
 				case "settings_changedifficulty": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid difficulty.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid difficulty.");
 						return false;
 					}
 					
@@ -440,7 +318,7 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "kick_player": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a reason to kick the player.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a reason to kick the player.");
 						return false;
 					}
 	
@@ -456,27 +334,27 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "camera_block_break_animation": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
 						return false;
 					}
 	
 					if (args.length < 5) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
 						return false;
 					}
 	
 					if (args.length < 6) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
 						return false;
 					}
 	
 					if (args.length < 7) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage.");
 						return false;
 					}
 	
 					if (!(args[6].startsWith("stage_"))) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stage.");
 						return false;
 					}
 	
@@ -492,12 +370,12 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "playergui_set_item_inventory": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a slot to replace.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a slot to replace.");
 						return false;
 					}
 	
 					if (args.length < 5) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
 						return false;
 					}
 	
@@ -507,7 +385,7 @@ public class ClientPacket implements CommandExecutor {
 	
 					if (args.length < 6) {
 						org.bukkit.inventory.ItemStack bukkititem = new org.bukkit.inventory.ItemStack(m);
-						net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(bukkititem);
+						net.minecraft.world.item.ItemStack item = QuantumUtils.toNMSItem(bukkititem);
 						
 						ClientboundContainerSetSlotPacket s = new ClientboundContainerSetSlotPacket(cp.inventoryMenu.containerId, 0, matchInventorySlot(args[3]), item);
 						cp.connection.send(s);
@@ -517,12 +395,12 @@ public class ClientPacket implements CommandExecutor {
 						int amount = Integer.parseInt(args[5]);
 
 						if (amount < 1 || amount > maxAmount) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a number between 1 and " + Integer.toString(maxAmount));
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a number between 1 and " + Integer.toString(maxAmount));
 						}
 
 						bukkititem.setAmount(amount);
 
-						net.minecraft.world.item.ItemStack item = CraftItemStack.asNMSCopy(bukkititem);
+						net.minecraft.world.item.ItemStack item = QuantumUtils.toNMSItem(bukkititem);
 						ClientboundContainerSetSlotPacket s = new ClientboundContainerSetSlotPacket(cp.inventoryMenu.containerId, 0, matchInventorySlot(args[3]), item);
 						cp.connection.send(s);
 					}
@@ -530,7 +408,7 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "playergui_set_item_cooldown": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid duration.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid duration.");
 						return false;
 					}
 					
@@ -543,22 +421,22 @@ public class ClientPacket implements CommandExecutor {
 					List<BlockPos> emptyList = new ArrayList<>();
 					
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
 						return false;
 					}
 					
 					if (args.length < 5) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
 						return false;
 					}
 					
 					if (args.length < 6) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
 						return false;
 					}
 					
 					if (args.length < 7) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid explosion power.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid explosion power.");
 						return false;
 					}
 					
@@ -581,7 +459,7 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "state_gamemode_change": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid gamemode.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid gamemode.");
 						return false;
 					}
 					
@@ -657,12 +535,12 @@ public class ClientPacket implements CommandExecutor {
 						int size = Integer.parseInt(args[3]);
 						
 						if (size < 9 || size > 54) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a size between 9 and 54.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a size between 9 and 54.");
 							return false;
 						}
 						
 						if (size % 9 != 0) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid size divisible by 9.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid size divisible by 9.");
 							return false;
 						}
 						
@@ -772,14 +650,14 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "gui_edit_slotselected": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid slot number.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid slot number.");
 						return false;
 					}
 					
 					int slot = Integer.parseInt(args[3]);
 					
 					if (slot < 1 || slot > 9) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid slot number between 1 and 9.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid slot number between 1 and 9.");
 						return false;
 					}
 					
@@ -813,7 +691,7 @@ public class ClientPacket implements CommandExecutor {
 					cp.connection.send(s);
 					break;
 				}
-				case "animation_play_swing_mainhand": {
+				case "animation_play_swing_QuantumPenhand": {
 					ClientboundAnimatePacket s = new ClientboundAnimatePacket(cp, 0);
 					
 					cp.connection.send(s);
@@ -857,25 +735,25 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "playergui_changexp": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid experience level.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid experience level.");
 						return false;
 					}
 					
 					if (args.length < 5) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an experience progress between 1 and 100.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an experience progress between 1 and 100.");
 						return false;
 					}
 					
 					float progress = Float.parseFloat(args[3]);
 					
 					if (progress < 0 || progress > 100) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an experience progress between 1 and 100.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an experience progress between 1 and 100.");
 						return false;
 					}
 					int level = Integer.parseInt(args[3]);
 					
 					if (level < 0) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid experience level.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid experience level.");
 						return false;
 					}
 					
@@ -887,7 +765,7 @@ public class ClientPacket implements CommandExecutor {
 					break;
 				}
 				case "camera_shader_creeper": {
-					Creeper entity = new Creeper(EntityType.CREEPER, ((CraftWorld) p.getWorld()).getHandle());
+					Creeper entity = new Creeper(EntityType.CREEPER, QuantumUtils.toNMSWorld(p.getWorld()));
 					
 					entity.setPos(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
 					entity.setNoAi(true);
@@ -895,7 +773,7 @@ public class ClientPacket implements CommandExecutor {
 					entity.setInvulnerable(true);
 					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
 					
-					((CraftWorld) p.getWorld()).getHandle().addFreshEntity(entity);
+					QuantumUtils.toNMSWorld(p.getWorld()).addFreshEntity(entity);
 					
 					ClientboundSetCameraPacket s = new ClientboundSetCameraPacket(entity);
 					
@@ -903,7 +781,7 @@ public class ClientPacket implements CommandExecutor {
 					break;
 				}
 				case "camera_shader_enderman": {
-					EnderMan entity = new EnderMan(EntityType.ENDERMAN, ((CraftWorld) p.getWorld()).getHandle());
+					EnderMan entity = new EnderMan(EntityType.ENDERMAN, QuantumUtils.toNMSWorld(p.getWorld()));
 					
 					entity.setPos(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
 					entity.setNoAi(true);
@@ -912,7 +790,7 @@ public class ClientPacket implements CommandExecutor {
 					entity.setSilent(true);
 					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
 					
-					((CraftWorld) p.getWorld()).getHandle().addFreshEntity(entity);
+					QuantumUtils.toNMSWorld(p.getWorld()).addFreshEntity(entity);
 					
 					ClientboundSetCameraPacket s = new ClientboundSetCameraPacket(entity);
 					
@@ -920,7 +798,7 @@ public class ClientPacket implements CommandExecutor {
 					break;
 				}
 				case "camera_shader_spider": {
-					Spider entity = new Spider(EntityType.SPIDER, ((CraftWorld) p.getWorld()).getHandle());
+					Spider entity = new Spider(EntityType.SPIDER, QuantumUtils.toNMSWorld(p.getWorld()));
 					
 					entity.setPos(p.getLocation().getX(), p.getLocation().getY(), p.getLocation().getZ());
 					entity.setNoAi(true);
@@ -929,7 +807,7 @@ public class ClientPacket implements CommandExecutor {
 					entity.setSilent(true);
 					((LivingEntity) entity.getBukkitEntity()).setInvisible(true);
 					
-					((CraftWorld) p.getWorld()).getHandle().addFreshEntity(entity);
+					QuantumUtils.toNMSWorld(p.getWorld()).addFreshEntity(entity);
 					
 					ClientboundSetCameraPacket s = new ClientboundSetCameraPacket(entity);
 					
@@ -938,14 +816,14 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "playergui_updatehealth": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid health amount.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid health amount.");
 						return false;
 					}
 					
 					float health = Float.parseFloat(args[3]);
 					
 					if (health < 0 || health > 10000) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid health amount between 0 and 10,000.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid health amount between 0 and 10,000.");
 						return false;
 					}
 					
@@ -956,14 +834,14 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "playergui_updatefood": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid food amount.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid food amount.");
 						return false;
 					}
 					
 					int food = Integer.parseInt(args[3]);
 					
 					if (food < 0 || food > 20) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid food amount between 0 and 20.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid food amount between 0 and 20.");
 						return false;
 					}
 					
@@ -974,14 +852,14 @@ public class ClientPacket implements CommandExecutor {
 				}
 				case "camera_updateviewdistance": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid render distance.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid render distance.");
 						return false;
 					}
 					
 					int distance = Integer.parseInt(args[3]);
 					
 					if (distance < 2 || distance > 32) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid render distance between 2 and 32.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid render distance between 2 and 32.");
 						return false;
 					}
 					
@@ -991,14 +869,14 @@ public class ClientPacket implements CommandExecutor {
 					break;
 				}
 				default:
-					Main.sendPluginMessage(sender, ChatColor.RED + "The packet you have provided is invalid.");
+					QuantumPen.sendPluginMessage(sender, ChatColor.RED + "The packet you have provided is invalid.");
 					return false;
 			}
 		} catch (IllegalArgumentException e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
 			return false;
 		} catch (Exception e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Error:\n" + e.getLocalizedMessage());
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Error:\n" + e.getLocalizedMessage());
 			return false;
 		}
 		

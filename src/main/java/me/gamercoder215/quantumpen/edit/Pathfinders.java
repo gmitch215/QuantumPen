@@ -15,17 +15,18 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.inventory.ItemStack;
 
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 import me.gamercoder215.quantumpen.packets.ClientPacket;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter.ArgumentType;
+import me.gamercoder215.quantumpen.utils.QuantumUtils;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -116,6 +117,7 @@ import net.minecraft.world.entity.ai.goal.SwellGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.TradeWithPlayerGoal;
 import net.minecraft.world.entity.ai.goal.TryFindWaterGoal;
+import net.minecraft.world.entity.ai.goal.UseItemGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
@@ -142,22 +144,22 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class Pathfinders implements CommandExecutor {
-	protected Main plugin;
+	protected QuantumPen plugin;
 
-	public Pathfinders(Main plugin) {
+	public Pathfinders(QuantumPen plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("pathfinders").setExecutor(this);
 		plugin.getCommand("pathfinders").setTabCompleter(new CommandTabCompleter());
 	}
 
   public static Set<WrappedGoal> getPathfinders(LivingEntity en) {
-    Mob e = (Mob) ((CraftEntity) en).getHandle();
+    Mob e = (Mob) QuantumUtils.toNMSEntity(en);
     
     return e.goalSelector.getAvailableGoals();
   }
   
   public static Set<WrappedGoal> getPathfindersTarget(LivingEntity en) {
-	    Mob e = (Mob) ((CraftEntity) en).getHandle();
+	    Mob e = (Mob) QuantumUtils.toNMSEntity(en);
 	    
 	    return e.targetSelector.getAvailableGoals();
   }
@@ -215,54 +217,57 @@ public class Pathfinders implements CommandExecutor {
 		}
 
   	public static String matchGoal(WrappedGoal p) {
-	    if (p.getGoal() instanceof RangedAttackGoal) return "attack_arrow";
-	    else if (p.getGoal() instanceof AvoidEntityGoal) return "target_avoid";
-	    else if (p.getGoal() instanceof BegGoal) return "wolf_beg";
-	    else if (p.getGoal() instanceof RangedBowAttackGoal) return "attack_range_bow";
-	    else if (p.getGoal() instanceof BreakDoorGoal) return "attack_breakdoor";
-	    else if (p.getGoal() instanceof CatLieOnBedGoal) return "cat_sit_bed";
-	    else if (p.getGoal() instanceof RangedCrossbowAttackGoal) return "attack_range_crossbow";
-	    else if (p.getGoal() instanceof EatBlockGoal) return "ambient_eattile";
-	    else if (p.getGoal() instanceof OpenDoorGoal) return "core_interact_opendoor";
-	    else if (p.getGoal() instanceof FleeSunGoal) return "movement_fleesun";
-	    else if (p.getGoal() instanceof FollowMobGoal) return "movement_follow_entity";
-	    else if (p.getGoal() instanceof FollowOwnerGoal) return "movement_follow_owner";
-	    else if (p.getGoal() instanceof FollowParentGoal) return "movement_follow_parent";
-	    else if (p.getGoal() instanceof PathfindToRaidGoal) return "illager_raid";
-	    else if (p.getGoal() instanceof MeleeAttackGoal) return "attack_melee";
-	    else if (p.getGoal() instanceof OcelotAttackGoal) return "ocelot_attack";
-	    else if (p.getGoal() instanceof OfferFlowerGoal) return "golem_offer_flower";
-	    else if (p.getGoal() instanceof PanicGoal) return "core_panic";
-	    else if (p.getGoal() instanceof LookAtPlayerGoal) return "core_lookatentity";
-	    else if (p.getGoal() instanceof BreathAirGoal) return "core_waterbreathe";
-	    else if (p.getGoal() instanceof BreedGoal) return "animal_breed";
-	    else if (p.getGoal() instanceof MoveThroughVillageGoal) return "movement_throughvillage";
-	    else if (p.getGoal() instanceof MoveTowardsRestrictionGoal) return "movement_towards_restriction";
-	    else if (p.getGoal() instanceof MoveTowardsTargetGoal) return "movement_towards_target";
-	    else if (p.getGoal() instanceof StrollThroughVillageGoal) return "movement_nearest_village";
-	    else if (p.getGoal() instanceof LandOnOwnersShoulderGoal) return "dragon_perch";
-	    else if (p.getGoal() instanceof WaterAvoidingRandomFlyingGoal) return "random_fly";
-	    else if (p.getGoal() instanceof RandomLookAroundGoal) return "random_lookaround";
-	    else if (p.getGoal() instanceof RandomStrollGoal) return "random_move";
-	    else if (p.getGoal() instanceof WaterAvoidingRandomStrollGoal) return "random_move_land";
-	    else if (p.getGoal() instanceof RandomSwimmingGoal) return "random_swim";
-	    else if (p.getGoal() instanceof RestrictSunGoal) return "movement_restrictsun";
-	    else if (p.getGoal() instanceof SwellGoal) return "creeper_swell";
-	    else if (p.getGoal() instanceof DolphinJumpGoal) return "dolphin_waterjump";
-	    else if (p.getGoal() instanceof TradeWithPlayerGoal) return "villager_tradeplayer";
-	    else if (p.getGoal() instanceof TryFindWaterGoal) return "movement_findwater";
-	    else if (p.getGoal() instanceof ZombieAttackGoal) return "zombie_attack";
-	    else if (p.getGoal() instanceof NearestAttackableTargetGoal) return "attack_nearest_target";
-	    else if (p.getGoal() instanceof HurtByTargetGoal) return "attack_defensive";
-	    else if (p.getGoal() instanceof DefendVillageTargetGoal) return "attack_defendvillage";
-	    else if (p.getGoal() instanceof FloatGoal) return "core_float";
-	    else if (p.getGoal() instanceof FollowFlockLeaderGoal) return "fish_school";
-	    else if (p.getGoal() instanceof FollowBoatGoal) return "movement_follow_boat";
-	    else if (p.getGoal() instanceof CatSitOnBlockGoal) return "cat_sit_block";
-	    else if (p.getGoal() instanceof LlamaFollowCaravanGoal) return "llama_follow";
-	    else if (p.getGoal() instanceof SitWhenOrderedToGoal) return "tameable_sit";
-	    else if (p.getGoal() instanceof TemptGoal) return "core_tempt";
-	    else return (ChatColor.RED + p.getGoal().getClass().getSimpleName());
+		Goal g = p.getGoal();
+
+	    if (g instanceof RangedAttackGoal) return "attack_arrow";
+	    else if (g instanceof AvoidEntityGoal) return "target_avoid";
+	    else if (g instanceof BegGoal) return "wolf_beg";
+	    else if (g instanceof RangedBowAttackGoal) return "attack_range_bow";
+	    else if (g instanceof BreakDoorGoal) return "attack_breakdoor";
+	    else if (g instanceof CatLieOnBedGoal) return "cat_sit_bed";
+	    else if (g instanceof RangedCrossbowAttackGoal) return "attack_range_crossbow";
+	    else if (g instanceof EatBlockGoal) return "ambient_eattile";
+	    else if (g instanceof OpenDoorGoal) return "core_interact_opendoor";
+	    else if (g instanceof FleeSunGoal) return "movement_fleesun";
+	    else if (g instanceof FollowMobGoal) return "movement_follow_entity";
+	    else if (g instanceof FollowOwnerGoal) return "movement_follow_owner";
+	    else if (g instanceof FollowParentGoal) return "movement_follow_parent";
+	    else if (g instanceof PathfindToRaidGoal) return "illager_raid";
+	    else if (g instanceof MeleeAttackGoal) return "attack_melee";
+	    else if (g instanceof OcelotAttackGoal) return "ocelot_attack";
+	    else if (g instanceof OfferFlowerGoal) return "golem_offer_flower";
+	    else if (g instanceof PanicGoal) return "core_panic";
+	    else if (g instanceof LookAtPlayerGoal) return "core_lookatentity";
+	    else if (g instanceof BreathAirGoal) return "core_waterbreathe";
+	    else if (g instanceof BreedGoal) return "animal_breed";
+	    else if (g instanceof MoveThroughVillageGoal) return "movement_throughvillage";
+	    else if (g instanceof MoveTowardsRestrictionGoal) return "movement_towards_restriction";
+	    else if (g instanceof MoveTowardsTargetGoal) return "movement_towards_target";
+	    else if (g instanceof StrollThroughVillageGoal) return "movement_nearest_village";
+	    else if (g instanceof LandOnOwnersShoulderGoal) return "dragon_perch";
+	    else if (g instanceof WaterAvoidingRandomFlyingGoal) return "random_fly";
+	    else if (g instanceof RandomLookAroundGoal) return "random_lookaround";
+	    else if (g instanceof RandomStrollGoal) return "random_move";
+	    else if (g instanceof WaterAvoidingRandomStrollGoal) return "random_move_land";
+	    else if (g instanceof RandomSwimmingGoal) return "random_swim";
+	    else if (g instanceof RestrictSunGoal) return "movement_restrictsun";
+	    else if (g instanceof SwellGoal) return "creeper_swell";
+	    else if (g instanceof DolphinJumpGoal) return "dolphin_waterjump";
+	    else if (g instanceof TradeWithPlayerGoal) return "villager_tradeplayer";
+	    else if (g instanceof TryFindWaterGoal) return "movement_findwater";
+	    else if (g instanceof ZombieAttackGoal) return "zombie_attack";
+	    else if (g instanceof NearestAttackableTargetGoal) return "attack_nearest_target";
+	    else if (g instanceof HurtByTargetGoal) return "attack_defensive";
+	    else if (g instanceof DefendVillageTargetGoal) return "attack_defendvillage";
+	    else if (g instanceof FloatGoal) return "core_float";
+	    else if (g instanceof FollowFlockLeaderGoal) return "fish_school";
+	    else if (g instanceof FollowBoatGoal) return "movement_follow_boat";
+	    else if (g instanceof CatSitOnBlockGoal) return "cat_sit_block";
+	    else if (g instanceof LlamaFollowCaravanGoal) return "llama_follow";
+	    else if (g instanceof SitWhenOrderedToGoal) return "tameable_sit";
+	    else if (g instanceof TemptGoal) return "core_tempt";
+		else if (g instanceof UseItemGoal) return "core_use_item";
+	    else return (ChatColor.RED + g.getClass().getSimpleName());
   }
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -270,11 +275,11 @@ public class Pathfinders implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
 	if (args.length < 1) {
-		Main.sendInvalidArgs(sender);
+		QuantumPen.sendInvalidArgs(sender);
 		return false;
 	}
     if (args.length < 2) {
-      Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid UUID.");
+      QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid UUID.");
       return false;
     }
     try {
@@ -282,40 +287,36 @@ public class Pathfinders implements CommandExecutor {
       UUID uid = UUID.fromString(args[1]);
 
       if (Bukkit.getEntity(uid) == null) {
-        Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an alive entity's UUID.");
+        QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an alive entity's UUID.");
         return false;
       }
 
-      if (!(Bukkit.getEntity(uid) instanceof LivingEntity)) {
-        Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an alive entity's UUID.");
+      if (!(Bukkit.getEntity(uid) instanceof LivingEntity bukkittarget)) {
+        QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an alive entity's UUID.");
         return false;
       }
       
-      
-
-      LivingEntity bukkittarget = (LivingEntity) Bukkit.getEntity(uid);
-      
-      if (!(((CraftEntity) bukkittarget).getHandle() instanceof Mob)) {
-    	  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an entity that supports pathfinders.");
+      if (!(QuantumUtils.toNMSEntity(bukkittarget) instanceof Mob)) {
+    	  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an entity that supports pathfinders.");
     	  return false;
       }
 
-      Mob target = ((Mob) ((CraftEntity) bukkittarget).getHandle());
+      Mob target = (Mob) QuantumUtils.toNMSEntity(bukkittarget);
 
       switch (args[0].toLowerCase()) {
   
 		case "behavior": {
 			if (args.length < 3) {
-				Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid behavior type.");
+				QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid behavior type.");
 				return false;
 			}
 
-			ServerLevel ws = ((CraftWorld) bukkittarget.getWorld()).getHandle();
+			ServerLevel ws = QuantumUtils.toNMSWorld(bukkittarget.getWorld());
 			try {
 				switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
 					case "behavior_attack": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid cooldown between attacks.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid cooldown between attacks.");
 							return false;
 						}
 
@@ -331,7 +332,7 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_bedjump": {
 						if (args.length < 4) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -413,12 +414,12 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_villager_celebrate": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a minimum duration.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a minimum duration.");
 							return false;
 						}
 						
 						if (args.length < 5) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a maximum duration.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a maximum duration.");
 							return false;
 						}
 						
@@ -434,12 +435,12 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_celebrate_tolocation": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
 							return false;
 						}
 						
 						if (args.length < 5) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -466,12 +467,12 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_finditem": {
 						if (args.length < 2) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
 							return false;
 						}
 						
 						if (args.length < 4) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -498,12 +499,12 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_hide": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
 							return false;
 						}
 						
 						if (args.length < 5) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hiding duration, in SECONDS.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hiding duration, in SECONDS.");
 							return false;
 						}
 						
@@ -519,17 +520,17 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_findhidingplace": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
 							return false;
 						}
 						
 						if (args.length < 5) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hook range (distance to hide).");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hook range (distance to hide).");
 							return false;
 						}
 						
 						if (args.length < 6) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -545,12 +546,12 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_findhidingplace_raid": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid hide range.");
 							return false;
 						}
 						
 						if (args.length < 5) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -577,7 +578,7 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_interact_player": {
 						if (args.length < 4) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -594,7 +595,7 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_villager_leavejob": {
 						if (args.length < 4) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -621,7 +622,7 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_breed_animal": {
 						if (args.length < 4) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -637,12 +638,12 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_villager_nearestvillage": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
 							return false;
 						}
 						
 						if (args.length < 5) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -680,7 +681,7 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_villager_potentialjobsite": {
 						if (args.length < 4) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -729,12 +730,12 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_retreat": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid distance.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid distance.");
 							return false;
 						}
 						
 						if (args.length < 5) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -761,14 +762,14 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_swim": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid chance.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid chance.");
 							return false;
 						}
 						
 						float chance = Float.parseFloat(args[2]);
 						
 						if (chance < 0 || chance > 100) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid chance between 0 and 100.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid chance between 0 and 100.");
 							return false;
 						}
 						
@@ -784,7 +785,7 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_villager_herogift": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid gift interval.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid gift interval.");
 							return false;
 						}
 						
@@ -811,7 +812,7 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_walkhome": {
 						if (args.length < 4) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -860,7 +861,7 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_swim_random": {
 						if (args.length < 4) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -876,12 +877,12 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_findwater": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid range.");
 							return false;
 						}
 						
 						if (args.length < 5) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -897,7 +898,7 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "behavior_panic_animal": {
 						if (args.length < 4) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -912,19 +913,19 @@ public class Pathfinders implements CommandExecutor {
 						}
 					}
 					default: {
-						Main.sendPluginMessage(sender, ChatColor.RED + "This behavior does not exist.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This behavior does not exist.");
 						return false;
 					}
 				}
 
 			} catch (IllegalArgumentException e) {
-				Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+				QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
 				return false;
 			} catch (ClassCastException e) {
-				Main.sendPluginMessage(sender, ChatColor.RED + "This behavior is not supported for this entity.");
+				QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This behavior is not supported for this entity.");
 				return false;
 			} catch (Exception e) {
-				Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+				QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
 				return false;
 			}
 			sender.sendMessage(ChatColor.GREEN + "Behavior successfully activated!");
@@ -932,48 +933,48 @@ public class Pathfinders implements CommandExecutor {
 				}
 				case "controller": {
 		        	if (!(sender.hasPermission("quantumpen.pathfinder.controller"))) {
-		        		Main.sendNoPermission(sender);
+		        		QuantumPen.sendNoPermission(sender);
 		        		return false;
 		        	}
 
 					if (args.length < 3) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a controller type.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a controller type.");
 						return false;
 					}
 
 					switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
 						case "looking_lookatentity": {
 							if (args.length < 4) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity UUID.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity UUID.");
 								return false;
 							}
 
 							UUID uuid = UUID.fromString(args[3]);
 
 							if (Bukkit.getEntity(uuid) == null) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity UUID.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity UUID.");
 								return false;
 							}
 
 							org.bukkit.entity.Entity bukkitLookTarget = Bukkit.getEntity(uuid);
-							net.minecraft.world.entity.Entity lookTarget = ((CraftEntity) bukkitLookTarget).getHandle();
+							net.minecraft.world.entity.Entity lookTarget = QuantumUtils.toNMSEntity(bukkitLookTarget);
 
 							target.getLookControl().setLookAt(lookTarget);
 							break;
 						}
 						case "looking_lookatcoordinates": {
 							if (args.length < 4) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
 								return false;
 							}
 
 							if (args.length < 5) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
 								return false;
 							}
 
 							if (args.length < 6) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
 								return false;
 							}
 
@@ -993,7 +994,7 @@ public class Pathfinders implements CommandExecutor {
 							break;
 						}
 						default: {
-							Main.sendPluginMessage(sender, ChatColor.RED + "This controller type does not exist.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This controller type does not exist.");
 							return false;
 						}
 					}
@@ -1002,7 +1003,7 @@ public class Pathfinders implements CommandExecutor {
 				}
         case "clear":
         	if (!(sender.hasPermission("quantumpen.pathfinder.clear"))) {
-        		Main.sendNoPermission(sender);
+        		QuantumPen.sendNoPermission(sender);
         		return false;
         	}
         	sender.sendMessage(ChatColor.GREEN + "Clearing...");
@@ -1023,7 +1024,7 @@ public class Pathfinders implements CommandExecutor {
           break;
         case "add": {
         	if (!(sender.hasPermission("quantumpen.pathfinder.add"))) {
-        		Main.sendNoPermission(sender);
+        		QuantumPen.sendNoPermission(sender);
         		return false;
         	}
           List<Integer> priorities = new ArrayList<>();
@@ -1032,7 +1033,7 @@ public class Pathfinders implements CommandExecutor {
           }
 					
 					if (args.length < 3) {
-						Main.sendInvalidArgs(sender);
+						QuantumPen.sendInvalidArgs(sender);
 						return false;
 					}
 
@@ -1052,22 +1053,22 @@ public class Pathfinders implements CommandExecutor {
             switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
               case "attack_arrow": {
                 if (args.length < 4) {
-                	Main.sendValidSpeedModifier(sender);
+                	QuantumPen.sendValidSpeedModifier(sender);
                   return false;
                 }
 
                 if (args.length < 5) {
-                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an attacking interval minimum.");
+                  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an attacking interval minimum.");
                   return false;
                 }
 
                 if (args.length < 6) {
-                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an attacking interval maximum.");
+                  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an attacking interval maximum.");
                   return false;
                 }
 
                 if (args.length < 7) {
-                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an attack radius.");
+                  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an attack radius.");
                   return false;
                 }
 
@@ -1079,17 +1080,17 @@ public class Pathfinders implements CommandExecutor {
               }
               case "target_avoid": {
                 if (args.length < 4) {
-                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the entity type to avoid.");
+                  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide the entity type to avoid.");
                   return false;
                 }
                 
                 if (args.length < 5) {
-                	Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a sensitivity distance (how far away the target must be to avoid)");
+                	QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a sensitivity distance (how far away the target must be to avoid)");
                 	return false;
                 }
                 
                 if (args.length < 6) {
-                	Main.sendValidSpeedModifier(sender);
+                	QuantumPen.sendValidSpeedModifier(sender);
                 	return false;
                 }
                 
@@ -1103,7 +1104,7 @@ public class Pathfinders implements CommandExecutor {
               }
 							case "wolf_beg": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a looking distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a looking distance.");
 									return false;
 								}
 
@@ -1113,17 +1114,17 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "attack_range_bow": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a minimum attack interval.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a minimum attack interval.");
 									return false;
 								}
 
 								if (args.length < 6) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attack radius.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attack radius.");
 									return false;
 								}
 
@@ -1133,7 +1134,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "attack_breakdoor": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide how long it will take to break the door.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide how long it will take to break the door.");
 									return false;
 								}
 
@@ -1145,12 +1146,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "cat_sit_bed": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid search range.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid search range.");
 									return false;
 								}
 
@@ -1160,12 +1161,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "attack_range_crossbow": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attack radius.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attack radius.");
 									return false;
 								}
 								
@@ -1197,7 +1198,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_fleesun": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1208,17 +1209,17 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_follow_entity": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a distance to how far away the entity is to stop this mob (stop distance).");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a distance to how far away the entity is to stop this mob (stop distance).");
 									return false;
 								}
 
 								if (args.length < 6) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an area size.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an area size.");
 									return false;
 								}
 
@@ -1228,17 +1229,17 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_follow_owner": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid start distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid start distance.");
 									return false;
 								}
 
 								if (args.length < 6) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stop distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stop distance.");
 									return false;
 								}
 
@@ -1254,7 +1255,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_follow_parent": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1271,7 +1272,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "attack_melee": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1300,7 +1301,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "core_panic": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1311,22 +1312,22 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "core_lookatentity": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type.");
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a look distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a look distance.");
 									return false;
 								}
 
 								if (args.length < 6) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid probability.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid probability.");
 									return false;
 								}
 
 								if (Float.parseFloat(args[5]) > 100f) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid probability.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid probability.");
 									return false;
 								}
 
@@ -1350,7 +1351,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "animal_breed": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1361,17 +1362,17 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_throughvillage": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid reach distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid reach distance.");
 									return false;
 								}
 
 								if (args.length < 6) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please prrovide whether or not the entity can deal with doors.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please prrovide whether or not the entity can deal with doors.");
 									return false;
 								}
 
@@ -1391,7 +1392,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_towards_restriction": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1401,12 +1402,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_towards_target": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid reach distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid reach distance.");
 									return false;
 								}
 
@@ -1417,7 +1418,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_nearest_village": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid search interval.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid search interval.");
 									return false;
 								}
 
@@ -1433,7 +1434,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "random_fly": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1450,12 +1451,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "random_move": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a walking interval.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a walking interval.");
 									return false;
 								}
 								
@@ -1473,12 +1474,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "random_move_land": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a probability.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a probability.");
 									return false;
 								}
 								
@@ -1488,12 +1489,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "random_swim": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a walking interval.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a walking interval.");
 									return false;
 								}
 								
@@ -1516,7 +1517,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "dolphin_waterjump": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid jumping interval.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid jumping interval.");
 									return false;
 								}
 								
@@ -1538,7 +1539,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "zombie_attack": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1556,7 +1557,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "attack_nearest_target": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type.");
 									return false;
 								}
 								Class<net.minecraft.world.entity.LivingEntity> entityClass = (Class<net.minecraft.world.entity.LivingEntity>)matchClass(EntityType.valueOf(args[3]));
@@ -1611,7 +1612,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "cat_sit_block": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
@@ -1622,7 +1623,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "llama_follow": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
@@ -1639,12 +1640,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "core_tempt": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide valid items.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide valid items.");
 									return false;
 								}
 								
@@ -1659,7 +1660,7 @@ public class Pathfinders implements CommandExecutor {
 								for (Material m : items) {
 									org.bukkit.inventory.ItemStack bukkitstack = new org.bukkit.inventory.ItemStack(m);
 									
-									net.minecraft.world.item.ItemStack nmsstack = CraftItemStack.asNMSCopy(bukkitstack);
+									net.minecraft.world.item.ItemStack nmsstack = QuantumUtils.toNMSItem(bukkitstack);
 									
 									nmsItemStacks.add(nmsstack);
 								}
@@ -1671,23 +1672,49 @@ public class Pathfinders implements CommandExecutor {
 								target.goalSelector.addGoal(newP, p);
 								break;
 							}
+							case "core_use_item": {
+								if (args.length < 4) {
+									QuantumPen.sendError(sender, ChatColor.RED + "Please provide a valid item.");
+									return false;
+								}
+
+								ItemStack item = new ItemStack(Material.matchMaterial(args[3].toLowerCase().replace("minecraft:", "").toUpperCase()));
+								net.minecraft.world.item.ItemStack nmsstack = QuantumUtils.toNMSItem(item);
+
+								if (args.length < 5) {
+									QuantumPen.sendError(sender, ChatColor.RED + "Please provide a sound effect.");
+									return false;
+								}
+
+								try {
+									SoundEvent sound = (SoundEvent) SoundEvents.class.getField(args[4].toLowerCase().replace("minecraft:", "").toUpperCase()).get(null);
+									
+									UseItemGoal goal = new UseItemGoal<Mob>(target, nmsstack, sound, p -> true);
+									target.goalSelector.addGoal(newP, goal);	
+								} catch (NoSuchFieldException e) {
+									QuantumPen.sendError(sender, ChatColor.RED + "This sound does not exist.");
+									return false;
+								}
+								
+								break;
+							}
 							default:
-								Main.sendPluginMessage(sender, ChatColor.RED + "This pathfinder does not exist or is not supported yet.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This pathfinder does not exist or is not supported yet.");
 								return false;
             }
             sender.sendMessage(ChatColor.GREEN + "Pathfinder Successfully added!");
             return true;
           } catch (ClassCastException e) {
-        	  Main.sendPluginMessage(sender, ChatColor.RED + "This pathfinder is not supported for this entity.");
+        	  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This pathfinder is not supported for this entity.");
         	  return false;
           } catch (NumberFormatException | NullPointerException e) {
-        	  Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments:\n" + e.getLocalizedMessage());
+        	  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments:\n" + e.getLocalizedMessage());
         	  return false;
           }
       }
         case "add_target": {
         	if (!(sender.hasPermission("quantumpen.pathfinder.add"))) {
-        		Main.sendNoPermission(sender);
+        		QuantumPen.sendNoPermission(sender);
         		return false;
         	}
           List<Integer> priorities = new ArrayList<>();
@@ -1696,7 +1723,7 @@ public class Pathfinders implements CommandExecutor {
           }
 					
 					if (args.length < 3) {
-						Main.sendInvalidArgs(sender);
+						QuantumPen.sendInvalidArgs(sender);
 						return false;
 					}
 
@@ -1716,22 +1743,22 @@ public class Pathfinders implements CommandExecutor {
             switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
               case "attack_arrow": {
                 if (args.length < 4) {
-                	Main.sendValidSpeedModifier(sender);
+                	QuantumPen.sendValidSpeedModifier(sender);
                   return false;
                 }
 
                 if (args.length < 5) {
-                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an attacking interval minimum.");
+                  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an attacking interval minimum.");
                   return false;
                 }
 
                 if (args.length < 6) {
-                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an attacking interval maximum.");
+                  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an attacking interval maximum.");
                   return false;
                 }
 
                 if (args.length < 7) {
-                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an attack radius.");
+                  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an attack radius.");
                   return false;
                 }
 
@@ -1743,17 +1770,17 @@ public class Pathfinders implements CommandExecutor {
               }
               case "target_avoid": {
                 if (args.length < 4) {
-                  Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the entity type to avoid.");
+                  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide the entity type to avoid.");
                   return false;
                 }
                 
                 if (args.length < 5) {
-                	Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a sensitivity distance (how far away the target must be to avoid)");
+                	QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a sensitivity distance (how far away the target must be to avoid)");
                 	return false;
                 }
                 
                 if (args.length < 6) {
-                	Main.sendValidSpeedModifier(sender);
+                	QuantumPen.sendValidSpeedModifier(sender);
                 	return false;
                 }
                 
@@ -1767,7 +1794,7 @@ public class Pathfinders implements CommandExecutor {
               }
 							case "wolf_beg": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a looking distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a looking distance.");
 									return false;
 								}
 
@@ -1777,17 +1804,17 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "attack_range_bow": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a minimum attack interval.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a minimum attack interval.");
 									return false;
 								}
 
 								if (args.length < 6) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attack radius.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attack radius.");
 									return false;
 								}
 
@@ -1797,7 +1824,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "attack_breakdoor": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide how long it will take to break the door.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide how long it will take to break the door.");
 									return false;
 								}
 
@@ -1809,12 +1836,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "cat_sit_bed": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid search range.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid search range.");
 									return false;
 								}
 
@@ -1824,12 +1851,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "attack_range_crossbow": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attack radius.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid attack radius.");
 									return false;
 								}
 								
@@ -1861,7 +1888,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_fleesun": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1872,17 +1899,17 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_follow_entity": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a distance to how far away the entity is to stop this mob (stop distance).");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a distance to how far away the entity is to stop this mob (stop distance).");
 									return false;
 								}
 
 								if (args.length < 6) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an area size.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an area size.");
 									return false;
 								}
 
@@ -1892,17 +1919,17 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_follow_owner": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid start distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid start distance.");
 									return false;
 								}
 
 								if (args.length < 6) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stop distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid stop distance.");
 									return false;
 								}
 
@@ -1918,7 +1945,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_follow_parent": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1935,7 +1962,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "attack_melee": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1964,7 +1991,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "core_panic": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -1975,22 +2002,22 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "core_lookatentity": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type.");
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a look distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a look distance.");
 									return false;
 								}
 
 								if (args.length < 6) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid probability.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid probability.");
 									return false;
 								}
 
 								if (Float.parseFloat(args[5]) > 100f) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid probability.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid probability.");
 									return false;
 								}
 
@@ -2014,7 +2041,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "animal_breed": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -2025,17 +2052,17 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_throughvillage": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid reach distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid reach distance.");
 									return false;
 								}
 
 								if (args.length < 6) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please prrovide whether or not the entity can deal with doors.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please prrovide whether or not the entity can deal with doors.");
 									return false;
 								}
 
@@ -2055,7 +2082,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_towards_restriction": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -2065,12 +2092,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_towards_target": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid reach distance.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid reach distance.");
 									return false;
 								}
 
@@ -2081,7 +2108,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "movement_nearest_village": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid search interval.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid search interval.");
 									return false;
 								}
 
@@ -2097,7 +2124,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "random_fly": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -2114,12 +2141,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "random_move": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a walking interval.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a walking interval.");
 									return false;
 								}
 								
@@ -2137,12 +2164,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "random_move_land": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a probability.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a probability.");
 									return false;
 								}
 								
@@ -2152,12 +2179,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "random_swim": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a walking interval.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a walking interval.");
 									return false;
 								}
 								
@@ -2180,7 +2207,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "dolphin_waterjump": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid jumping interval.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid jumping interval.");
 									return false;
 								}
 								
@@ -2202,7 +2229,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "zombie_attack": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 
@@ -2220,7 +2247,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "attack_nearest_target": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid entity type.");
 									return false;
 								}
 								Class<net.minecraft.world.entity.LivingEntity> entityClass = (Class<net.minecraft.world.entity.LivingEntity>)matchClass(EntityType.valueOf(args[3]));
@@ -2273,7 +2300,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "cat_sit_block": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
@@ -2284,7 +2311,7 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "llama_follow": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
@@ -2301,12 +2328,12 @@ public class Pathfinders implements CommandExecutor {
 							}
 							case "core_tempt": {
 								if (args.length < 4) {
-									Main.sendValidSpeedModifier(sender);
+									QuantumPen.sendValidSpeedModifier(sender);
 									return false;
 								}
 								
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide valid items.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide valid items.");
 									return false;
 								}
 								
@@ -2321,7 +2348,7 @@ public class Pathfinders implements CommandExecutor {
 								for (Material m : items) {
 									org.bukkit.inventory.ItemStack bukkitstack = new org.bukkit.inventory.ItemStack(m);
 									
-									net.minecraft.world.item.ItemStack nmsstack = CraftItemStack.asNMSCopy(bukkitstack);
+									net.minecraft.world.item.ItemStack nmsstack = QuantumUtils.toNMSItem(bukkitstack);
 									
 									nmsItemStacks.add(nmsstack);
 								}
@@ -2333,23 +2360,49 @@ public class Pathfinders implements CommandExecutor {
 								target.targetSelector.addGoal(newP, p);
 								break;
 							}
+							case "core_use_item": {
+								if (args.length < 4) {
+									QuantumPen.sendError(sender, ChatColor.RED + "Please provide a valid item.");
+									return false;
+								}
+
+								ItemStack item = new ItemStack(Material.matchMaterial(args[3].toLowerCase().replace("minecraft:", "").toUpperCase()));
+								net.minecraft.world.item.ItemStack nmsstack = QuantumUtils.toNMSItem(item);
+
+								if (args.length < 5) {
+									QuantumPen.sendError(sender, ChatColor.RED + "Please provide a sound effect.");
+									return false;
+								}
+
+								try {
+									SoundEvent sound = (SoundEvent) SoundEvents.class.getField(args[4].toLowerCase().replace("minecraft:", "").toUpperCase()).get(null);
+									
+									UseItemGoal goal = new UseItemGoal<Mob>(target, nmsstack, sound, p -> true);
+									target.goalSelector.addGoal(newP, goal);	
+								} catch (NoSuchFieldException e) {
+									QuantumPen.sendError(sender, ChatColor.RED + "This sound does not exist.");
+									return false;
+								}
+								
+								break;
+							}
 							default:
-								Main.sendPluginMessage(sender, ChatColor.RED + "This pathfinder does not exist or is not supported yet.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This pathfinder does not exist or is not supported yet.");
 								return false;
             }
             sender.sendMessage(ChatColor.GREEN + "Target Pathfinder Successfully added!");
             return true;
           } catch (ClassCastException e) {
-        	  Main.sendPluginMessage(sender, ChatColor.RED + "This target pathfinder is not supported for this entity.");
+        	  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This target pathfinder is not supported for this entity.");
         	  return false;
           } catch (NumberFormatException | NullPointerException e) {
-        	  Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments:\n" + e.getLocalizedMessage());
+        	  QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments:\n" + e.getLocalizedMessage());
         	  return false;
           }
         }
         case "remove": {
         	if (!(sender.hasPermission("quantumpen.pathfinder.remove"))) {
-        		Main.sendNoPermission(sender);
+        		QuantumPen.sendNoPermission(sender);
         		return false;
         	}
         	try {
@@ -2362,7 +2415,7 @@ public class Pathfinders implements CommandExecutor {
                 }
                 
         	} catch (NumberFormatException e) {
-        		Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the pathfinder priority ID. If you do not know it, use the list function.");
+        		QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide the pathfinder priority ID. If you do not know it, use the list function.");
         		return false;
         	}
         	
@@ -2370,7 +2423,7 @@ public class Pathfinders implements CommandExecutor {
         }
         case "remove_target": {
         	if (!(sender.hasPermission("quantumpen.pathfinder.remove"))) {
-        		Main.sendNoPermission(sender);
+        		QuantumPen.sendNoPermission(sender);
         		return false;
         	}
         	try {
@@ -2383,7 +2436,7 @@ public class Pathfinders implements CommandExecutor {
                 }
                 
         	} catch (NumberFormatException e) {
-        		Main.sendPluginMessage(sender, ChatColor.RED + "Please provide the pathfinder priority ID. If you do not know it, use the list function.");
+        		QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide the pathfinder priority ID. If you do not know it, use the list function.");
         		return false;
         	}
         	
@@ -2391,7 +2444,7 @@ public class Pathfinders implements CommandExecutor {
         }
         case "list": {
         	if (!(sender.hasPermission("quantumpen.pathfinder.list"))) {
-        		Main.sendNoPermission(sender);
+        		QuantumPen.sendNoPermission(sender);
         		return false;
         	}
           Map<Integer, String> goals = new HashMap<>();
@@ -2426,7 +2479,7 @@ public class Pathfinders implements CommandExecutor {
 			}
 		case "navigation": {
 			if (args.length < 3) {
-				Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a navigation action.");
+				QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a navigation action.");
 				return false;
 			}
 			
@@ -2434,22 +2487,22 @@ public class Pathfinders implements CommandExecutor {
 				switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
 					case "movement_goto": {
 						if (args.length < 4) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
 							return false;
 						}
 						
 						if (args.length < 5) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y.");
 							return false;
 						}
 						
 						if (args.length < 6) {
-							Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
 							return false;
 						}
 						
 						if (args.length < 7) {
-							Main.sendValidSpeedModifier(sender);
+							QuantumPen.sendValidSpeedModifier(sender);
 							return false;
 						}
 						
@@ -2458,7 +2511,7 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "ground_canopendoors": {
 						if (args.length < 4) {
-							Main.sendValidType(sender, ArgumentType.BOOLEAN);
+							QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 							return false;
 						}
 						
@@ -2467,7 +2520,7 @@ public class Pathfinders implements CommandExecutor {
 					}
 					case "ground_avoidsun": {
 						if (args.length < 4) {
-							Main.sendValidType(sender, ArgumentType.BOOLEAN);
+							QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 							return false;
 						}
 						
@@ -2475,27 +2528,27 @@ public class Pathfinders implements CommandExecutor {
 						break;
 					}
 					default: {
-						Main.sendPluginMessage(sender, ChatColor.RED + "This navigation type does not exist.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This navigation type does not exist.");
 						return false;
 					}
 				}
 			} catch (ClassCastException e) {
-				Main.sendPluginMessage(sender, ChatColor.RED + "This navigation type is not supported for this entity.");
+				QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This navigation type is not supported for this entity.");
 				return false;
 			}
 			sender.sendMessage(ChatColor.GREEN + "Navigation successful!");
 			return true;
 		}
         default: {
-          Main.sendInvalidArgs(sender);
+          QuantumPen.sendInvalidArgs(sender);
           return false;
         }
       }
     } catch (IllegalArgumentException e) {
-      Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments:\n" + e.getLocalizedMessage());
+      QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments:\n" + e.getLocalizedMessage());
       return false;
     } catch (Exception e) {
-		Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+		QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
 		return false;
 	}
 	return true;

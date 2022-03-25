@@ -11,15 +11,15 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.util.Vector;
 
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter.ArgumentType;
 
 public class EditEntity implements CommandExecutor {
 	
-	protected Main plugin;
+	protected QuantumPen plugin;
 	
-	public EditEntity(Main plugin) {
+	public EditEntity(QuantumPen plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("editentity").setExecutor(this);
 		plugin.getCommand("editentity").setTabCompleter(new CommandTabCompleter());
@@ -28,7 +28,7 @@ public class EditEntity implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an entities's UUID. If you do not know what that is, do some research.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an entities's UUID. If you do not know what that is, do some research.");
 			return false;
 		}
 
@@ -36,45 +36,45 @@ public class EditEntity implements CommandExecutor {
 			UUID entityUUID = UUID.fromString(args[0]);
 
 			if (Bukkit.getEntity(entityUUID) == null) {
-				Main.sendPluginMessage(sender, "Please provide a living entity's UUID.");
+				QuantumPen.sendPluginMessage(sender, "Please provide a living entity's UUID.");
 				return false;
 			}
 
 			Entity entity = Bukkit.getEntity(entityUUID);
 
 			if (!(entity instanceof LivingEntity)) {
-				Main.sendPluginMessage(sender, "Please provide a living entity's UUID.");
+				QuantumPen.sendPluginMessage(sender, "Please provide a living entity's UUID.");
 				return false;
 			}
 
 			LivingEntity len = (LivingEntity) entity;
 
 			if (args.length < 2) {
-				Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid type of editing.");
+				QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid type of editing.");
 				return false;
 			}
 
 			switch (args[1].toLowerCase()) {
 				case "edit":
 					if (args.length < 3) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid value to edit.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid value to edit.");
 						return false;
 					}
 					try {
 						switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
 							case "set_velocity": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide an X velocity.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide an X velocity.");
 									return false;
 								}
 
 								if (args.length < 5) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a Y velocity.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a Y velocity.");
 									return false;
 								}
 
 								if (args.length < 6) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a Z velocity.");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a Z velocity.");
 									return false;
 								}
 
@@ -83,7 +83,7 @@ public class EditEntity implements CommandExecutor {
 							}
 							case "set_ai": {
 								if (args.length < 4) {
-									Main.sendValidType(sender, ArgumentType.BOOLEAN);
+									QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 									return false;
 								}
 
@@ -92,7 +92,7 @@ public class EditEntity implements CommandExecutor {
 							}
 							case "set_collidable": {
 								if (args.length < 4) {
-									Main.sendValidType(sender, ArgumentType.BOOLEAN);
+									QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 									return false;
 								}
 
@@ -101,7 +101,7 @@ public class EditEntity implements CommandExecutor {
 							}
 							case "set_lastdamage": {
 								if (args.length < 4) {
-									Main.sendValidType(sender, ArgumentType.DECIMAL);
+									QuantumPen.sendValidType(sender, ArgumentType.DECIMAL);
 									return false;
 								}
 
@@ -110,7 +110,7 @@ public class EditEntity implements CommandExecutor {
 							}
 							case "set_arrowsinbody": {
 								if (args.length < 4) {
-									Main.sendValidType(sender, ArgumentType.INTEGER);
+									QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 									return false;
 								}
 
@@ -119,7 +119,7 @@ public class EditEntity implements CommandExecutor {
 							}
 							case "set_max_air": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid maximum integer, in ticks (seconds x 20)");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid maximum integer, in ticks (seconds x 20)");
 									return false;
 								}
 
@@ -128,7 +128,7 @@ public class EditEntity implements CommandExecutor {
 							}
 							case "set_max_nodamageticks": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid maximum integer, in ticks (seconds x 20)");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid maximum integer, in ticks (seconds x 20)");
 									return false;
 								}
 
@@ -137,7 +137,7 @@ public class EditEntity implements CommandExecutor {
 							}
 							case "set_nodamageticks": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid maximum integer, in ticks (seconds x 20)");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid maximum integer, in ticks (seconds x 20)");
 									return false;
 								}
 
@@ -146,7 +146,7 @@ public class EditEntity implements CommandExecutor {
 							}
 							case "set_arrowcooldown": {
 								if (args.length < 4) {
-									Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid maximum integer, in ticks (seconds x 20)");
+									QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid maximum integer, in ticks (seconds x 20)");
 									return false;
 								}
 
@@ -154,22 +154,22 @@ public class EditEntity implements CommandExecutor {
 								break;
 							}
 							default: {
-								Main.sendPluginMessage(sender, ChatColor.RED + "This action does not exist.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This action does not exist.");
 								return false;
 							}
 						}
 					} catch (IllegalArgumentException e) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
 						return false;
 					} catch (Exception e) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
 						return false;
 					}
 
 					break;
 				case "do":
 					if (args.length < 3) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid action.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid action.");
 						return false;
 					}
 					switch (args[2].toLowerCase().replaceAll("minecraft:", "")) {
@@ -204,28 +204,28 @@ public class EditEntity implements CommandExecutor {
 							break;
 						}
 						default: {
-							Main.sendPluginMessage(sender, ChatColor.RED + "This is not a valid entity action.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This is not a valid entity action.");
 							return false;
 						}
 					}
 					break;
 				default:
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid type of editing.");
+					QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid type of editing.");
 					return false;
 			}
 			if (args[1].equalsIgnoreCase("edit")) {
-				Main.sendPluginMessage(sender, ChatColor.GREEN + "Successfully edited entity " + (len.getCustomName() == null ? len.getName() : len.getCustomName()));
+				QuantumPen.sendPluginMessage(sender, ChatColor.GREEN + "Successfully edited entity " + (len.getCustomName() == null ? len.getName() : len.getCustomName()));
 				return false;
 			} else if (args[1].equalsIgnoreCase("fetch")) {
-				Main.sendPluginMessage(sender, ChatColor.GREEN + "Successfully fetched data of entity " + (len.getCustomName() == null ? len.getName() : len.getCustomName()));
+				QuantumPen.sendPluginMessage(sender, ChatColor.GREEN + "Successfully fetched data of entity " + (len.getCustomName() == null ? len.getName() : len.getCustomName()));
 				return false;
 			} else if (args[1].equalsIgnoreCase("do")) {
-				Main.sendPluginMessage(sender, ChatColor.GREEN + "Successfully did action of entity " + (len.getCustomName() == null ? len.getName() : len.getCustomName()));
+				QuantumPen.sendPluginMessage(sender, ChatColor.GREEN + "Successfully did action of entity " + (len.getCustomName() == null ? len.getName() : len.getCustomName()));
 				return false;
 			}
 
 		} catch (IllegalArgumentException e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid UUID.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid UUID.");
 			return false;
 		}
 

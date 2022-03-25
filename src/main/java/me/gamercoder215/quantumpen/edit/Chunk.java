@@ -11,14 +11,14 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 
 public class Chunk implements CommandExecutor {
 	
-	protected Main plugin;
+	protected QuantumPen plugin;
 	
-	public Chunk(Main plugin) {
+	public Chunk(QuantumPen plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("chunk").setExecutor(this);
 		plugin.getCommand("chunk").setTabCompleter(new CommandTabCompleter());
@@ -27,29 +27,29 @@ public class Chunk implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
 			return false;
 		}
 		
 		if (Bukkit.getWorld(args[0]) == null) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
 			return false;
 		}
 		
 		org.bukkit.World w = Bukkit.getWorld(args[0]);
 		
 		if (args.length < 2) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X.");
 			return false;
 		}
 		
 		if (args.length < 3) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z.");
 			return false;
 		}
 		
 		if (args.length < 4) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid action.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid action.");
 			return false;
 		}
 		
@@ -126,7 +126,7 @@ public class Chunk implements CommandExecutor {
 				}
 				case "setage": {
 					if (args.length < 4) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid age, in ticks.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid age, in ticks.");
 						return false;
 					}
 					
@@ -147,15 +147,15 @@ public class Chunk implements CommandExecutor {
 					break;
 				}
 				default: {
-					Main.sendPluginMessage(sender, ChatColor.RED + "This action does not exist.");
+					QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This action does not exist.");
 					return false;
 				}
 			}
 		} catch (IllegalArgumentException e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
 			return false;
 		} catch (Exception e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
 			return false;
 		}
 		return true;

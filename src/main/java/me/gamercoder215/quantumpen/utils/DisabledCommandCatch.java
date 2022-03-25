@@ -6,31 +6,31 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 
 public class DisabledCommandCatch implements Listener {
 	
-	protected Main plugin;
+	protected QuantumPen plugin;
 	
-	public DisabledCommandCatch(Main plugin) {
+	public DisabledCommandCatch(QuantumPen plugin) {
 		this.plugin = plugin;
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	
 	@EventHandler
 	public void playerCommand(PlayerCommandPreprocessEvent e) {
-		if (Main.isCommandDisabled(plugin, e.getMessage().replaceAll("/", ""))) {
+		if (QuantumPen.isCommandDisabled(e.getMessage().replaceAll("/", ""))) {
 			e.setCancelled(true);
-			Main.sendCommandDisabled(e.getPlayer());
+			QuantumPen.sendCommandDisabled(e.getPlayer());
 			return;
 		}
 	}
 	
 	@EventHandler
 	public void serverCommand(ServerCommandEvent e) {
-		if (Main.isCommandDisabled(plugin, e.getCommand().replaceAll("/", ""))) {
+		if (QuantumPen.isCommandDisabled(e.getCommand().replaceAll("/", ""))) {
 			e.setCancelled(true);
-			Main.sendCommandDisabled(e.getSender());
+			QuantumPen.sendCommandDisabled(e.getSender());
 			return;
 		}
 	}

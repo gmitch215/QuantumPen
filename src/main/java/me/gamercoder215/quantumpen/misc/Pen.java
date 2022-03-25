@@ -9,14 +9,14 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 import me.gamercoder215.quantumpen.utils.QuantumUtils;
 
 public class Pen implements CommandExecutor {
-	protected Main plugin;
+	protected QuantumPen plugin;
 
-	public Pen(Main plugin) {
+	public Pen(QuantumPen plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("pen").setExecutor(this);
 		plugin.getCommand("pen").setTabCompleter(new CommandTabCompleter());
@@ -25,14 +25,14 @@ public class Pen implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid misc action.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid misc action.");
 			return false;
 		}
 
 		switch (args[0].toLowerCase()) {
 			case "calculate": {
 				if (args.length < 2) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid equation to evaluate.");
+					QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid equation to evaluate.");
 					return false;
 				}
 
@@ -56,15 +56,15 @@ public class Pen implements CommandExecutor {
 					
 					if ((answer == Math.floor(answer)) && !Double.isInfinite(answer) && answer < Long.MAX_VALUE) {
 					    long answerInt = (long) answer;
-					    Main.sendPluginMessage(sender, "= " + Long.toString(answerInt));
+					    QuantumPen.sendPluginMessage(sender, "= " + Long.toString(answerInt));
 					} else if (answer > 1000000000) {
-						Main.sendPluginMessage(sender, "= " + nf.format(answer));
-					} else Main.sendPluginMessage(sender, "= " + df.format(answer));
+						QuantumPen.sendPluginMessage(sender, "= " + nf.format(answer));
+					} else QuantumPen.sendPluginMessage(sender, "= " + df.format(answer));
 				} catch (RuntimeException e) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "There was an error executing the equation:\n" + e.getLocalizedMessage());
+					QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error executing the equation:\n" + e.getLocalizedMessage());
 					return false;
 				} catch (Exception e) {
-					Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+					QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
 					return false;
 				}
 				break;

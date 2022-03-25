@@ -15,15 +15,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter.ArgumentType;
 
 public class CreateWorld implements CommandExecutor {
 	
-	protected Main plugin;
+	protected QuantumPen plugin;
 	
-	public CreateWorld(Main plugin) {
+	public CreateWorld(QuantumPen plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("createworld").setExecutor(this);
 		plugin.getCommand("createworld").setTabCompleter(new CommandTabCompleter());
@@ -39,7 +39,7 @@ public class CreateWorld implements CommandExecutor {
 		msgs.add(ChatColor.GREEN + "Javaing...");
 		msgs.add(ChatColor.GREEN + "Planning to take over the world...");
 		msgs.add(ChatColor.GREEN + "Speedrunning...");
-		msgs.add(ChatColor.GREEN + "Subscribing to Lunatocity	...");
+		msgs.add(ChatColor.GREEN + "Subscribing to Team Inceptus...");
 		msgs.add(ChatColor.GREEN + "Playing Tetris...");
 		
 		new BukkitRunnable() {
@@ -74,12 +74,12 @@ public class CreateWorld implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world name.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world name.");
 			return false;
 		}
 		
 		if (args.length < 2 && Bukkit.getWorld(args[0]) == null) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world type.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world type.");
 			return false;
 		}
 		
@@ -102,7 +102,7 @@ public class CreateWorld implements CommandExecutor {
 						w = w.generateStructures(Boolean.parseBoolean(arguments.get(arguments.indexOf("-s") + 1)));
 					}
 				} catch (IndexOutOfBoundsException e) {
-					Main.sendValidType(sender, ArgumentType.BOOLEAN);
+					QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 					return false;
 				}
 				
@@ -111,7 +111,7 @@ public class CreateWorld implements CommandExecutor {
 						w = w.hardcore(Boolean.parseBoolean(arguments.get(arguments.indexOf("-h") + 1)));
 					}
 				} catch (IndexOutOfBoundsException e) {
-					Main.sendValidType(sender, ArgumentType.BOOLEAN);
+					QuantumPen.sendValidType(sender, ArgumentType.BOOLEAN);
 					return false;
 				}
 				
@@ -120,7 +120,7 @@ public class CreateWorld implements CommandExecutor {
 						w = w.seed(Long.parseLong(arguments.get(arguments.indexOf("-s") + 1)));
 					}
 				} catch (IndexOutOfBoundsException e) {
-					Main.sendValidType(sender, ArgumentType.INTEGER);
+					QuantumPen.sendValidType(sender, ArgumentType.INTEGER);
 					return false;
 				}
 				
@@ -142,10 +142,10 @@ public class CreateWorld implements CommandExecutor {
 			}
 			
 		} catch (IllegalArgumentException e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
 			return false;
 		} catch (Exception e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
 			return false;
 		}
 	}

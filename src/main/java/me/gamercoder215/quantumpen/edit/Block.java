@@ -3,6 +3,8 @@ package me.gamercoder215.quantumpen.edit;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -10,21 +12,19 @@ import org.bukkit.block.Biome;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_18_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-
-import me.gamercoder215.quantumpen.Main;
+import me.gamercoder215.quantumpen.QuantumPen;
 import me.gamercoder215.quantumpen.utils.CommandTabCompleter;
+import me.gamercoder215.quantumpen.utils.QuantumUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 
 public class Block implements CommandExecutor {
-	protected Main plugin;
+	protected QuantumPen plugin;
 
-	public Block(Main plugin) {
+	public Block(QuantumPen plugin) {
 		this.plugin = plugin;
 		plugin.getCommand("block").setExecutor(this);
 		plugin.getCommand("block").setTabCompleter(new CommandTabCompleter());
@@ -39,29 +39,29 @@ public class Block implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length < 1) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
 			return false;
 		}
 
 		if (Bukkit.getWorld(args[0]) == null) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid world.");
 			return false;
 		}
 
 		org.bukkit.World w = Bukkit.getWorld(args[0]);
 
 		if (args.length < 2) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X coordinate.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid X coordinate.");
 			return false;
 		}
 
 		if (args.length < 3) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y coordinate.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Y coordinate.");
 			return false;
 		}
 
 		if (args.length < 4) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z coordinate.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid Z coordinate.");
 			return false;
 		}
 
@@ -69,14 +69,14 @@ public class Block implements CommandExecutor {
 			org.bukkit.block.Block b = w.getBlockAt(Integer.parseInt(args[1]), Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 
 			if (args.length < 5) {
-				Main.sendInvalidArgs(sender);
+				QuantumPen.sendInvalidArgs(sender);
 				return false;
 			}
 
 			switch (args[4].toLowerCase()) {
 				case "get": {
 					if (args.length < 6) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid property.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid property.");
 						return false;
 					}
 
@@ -91,11 +91,11 @@ public class Block implements CommandExecutor {
 						}
 						case "game_breakspeed": {
 							if (args.length < 7) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player to test break speed.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player to test break speed.");
 							}
 
 							if (Bukkit.getPlayer(args[6]) == null) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player to test break speed.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid player to test break speed.");
 							}
 
 							Player p = Bukkit.getPlayer(args[6]);
@@ -145,12 +145,12 @@ public class Block implements CommandExecutor {
 						}
 						case "game_ispreferredmaterial": {
 							if (args.length < 7) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
 								return false;
 							}
 
 							if (Material.matchMaterial(args[6]) == null) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
 								return false;
 							}
 
@@ -160,14 +160,14 @@ public class Block implements CommandExecutor {
 							break;
 						}
 						default: {
-							Main.sendPluginMessage(sender, ChatColor.RED + "This property does not exist.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This property does not exist.");
 							return false;
 						}
 					}
 				}
 				case "modify": {
 					if (args.length < 6) {
-						Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid property to modify.");
+						QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid property to modify.");
 						return false;
 					}
 
@@ -192,7 +192,7 @@ public class Block implements CommandExecutor {
 
 							try {
 								CompoundTag nbt = TagParser.parseTag(nbtStr);
-								org.bukkit.inventory.ItemStack item = CraftItemStack.asBukkitCopy(net.minecraft.world.item.ItemStack.of(nbt));
+								org.bukkit.inventory.ItemStack item = QuantumUtils.toBukkitStack(net.minecraft.world.item.ItemStack.of(nbt));
 
 								if (b.breakNaturally(item)) {
 									sender.sendMessage(ChatColor.GREEN + "Block break successful!");
@@ -202,18 +202,18 @@ public class Block implements CommandExecutor {
 									break;
 								}
 							} catch (CommandSyntaxException e) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing item NBT. Go here for an example -> https://pastebin.com/raw/gmbWqtJ2");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing item NBT. Go here for an example -> https://pastebin.com/raw/gmbWqtJ2");
 								return false;
 							}
 						}
 						case "game_setbiome": {
 							if (args.length < 7) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid biome.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid biome.");
 								return false;
 							}
 
 							if (Biome.valueOf(args[6].toLowerCase().replaceAll("minecraft:", "").toUpperCase()) == null) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid biome.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid biome.");
 								return false;
 							}
 
@@ -225,19 +225,19 @@ public class Block implements CommandExecutor {
 						}
 						case "game_settype": {
 							if (args.length < 7) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
 								return false;
 							}
 
 							if (Material.matchMaterial(args[6].toLowerCase().replaceAll("minecraft:", "").toUpperCase()) == null) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
 								return false;
 							}
 
 							Material m = Material.matchMaterial(args[6].toLowerCase().replaceAll("minecraft:", "").toUpperCase());
 
 							if (!(m.isBlock())) {
-								Main.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
+								QuantumPen.sendPluginMessage(sender, ChatColor.RED + "Please provide a valid material.");
 								return false;
 							}
 
@@ -265,7 +265,7 @@ public class Block implements CommandExecutor {
 							}
 						}
 						default: {
-							Main.sendPluginMessage(sender, ChatColor.RED + "This property does not exist.");
+							QuantumPen.sendPluginMessage(sender, ChatColor.RED + "This property does not exist.");
 							return false;
 						}
 					}
@@ -273,10 +273,10 @@ public class Block implements CommandExecutor {
 			}
 
 		} catch (IllegalArgumentException e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error parsing arguments.");
 			return false;
 		} catch (Exception e) {
-			Main.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
+			QuantumPen.sendPluginMessage(sender, ChatColor.RED + "There was an error:\n" + e.getLocalizedMessage());
 			return false;
 		}
 		return true;

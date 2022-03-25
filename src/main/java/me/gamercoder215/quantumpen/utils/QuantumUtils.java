@@ -1,7 +1,99 @@
 package me.gamercoder215.quantumpen.utils;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+
 public class QuantumUtils {
-	
+
+	public static String version(String oldpack) {
+		String pack = "org.bukkit.craftbukkit.${V}." + oldpack;
+
+		return pack.replace("${V}", Bukkit.getBukkitVersion());
+	}
+
+	public static ServerLevel toNMSWorld(World w) {
+		try {
+			Class<?> craftClass = Class.forName(version("CraftWorld"));
+
+			return (ServerLevel) craftClass.getMethod("getHandle").invoke(craftClass.cast(w));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static Entity toNMSEntity(org.bukkit.entity.Entity en) {
+		try {
+			Class<?> craftClass = Class.forName(version("entity.CraftEntity"));
+
+			return (Entity) craftClass.getMethod("getHandle").invoke(craftClass.cast(en));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static LivingEntity toNMSEntity(org.bukkit.entity.LivingEntity en) {
+		try {
+			Class<?> craftClass = Class.forName(version("entity.CraftEntity"));
+
+			return (LivingEntity) craftClass.getMethod("getHandle").invoke(craftClass.cast(en));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static DedicatedServer getNMSServer() {
+		try {
+			Class<?> craftClass = Class.forName(version("CraftServer"));
+
+			return (DedicatedServer) craftClass.getMethod("getServer").invoke(craftClass.cast(Bukkit.getServer()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static ServerPlayer toNMSPlayer(Player p) {
+		try {
+			Class<?> craftClass = Class.forName(version("entity.CraftPlayer"));
+
+			return (ServerPlayer) p.getClass().getMethod("getHandle").invoke(craftClass.cast(p));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static net.minecraft.world.item.ItemStack toNMSItem(ItemStack stack) {
+		try {
+			Class<?> craftClass = Class.forName(version("inventory.CraftItemStack"));
+			return (net.minecraft.world.item.ItemStack) craftClass.getMethod("asNMSCopy", ItemStack.class).invoke(null, stack);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static ItemStack toBukkitStack(net.minecraft.world.item.ItemStack stack) {
+		try {
+			Class<?> craftClass = Class.forName(version("inventory.CraftItemStack"));
+			return (ItemStack) craftClass.getMethod("asBukkitCopy", net.minecraft.world.item.ItemStack.class).invoke(null, stack);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	public static double solveEquation(final String str) {
 	    return new Object() {
 	        int pos = -1, ch;

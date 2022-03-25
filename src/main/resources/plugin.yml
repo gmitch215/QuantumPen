@@ -1,0 +1,4 @@
+name: QuantumPen
+version: 1.1.0
+main: me.gamercoder215.quantumpen.QuantumPen
+api-version: 1.17
