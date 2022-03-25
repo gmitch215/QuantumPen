@@ -5,4 +5,6 @@ bin/
 .settings/
 .replit
 .breakpoints
-/target/
+target/
+src/main/java/me/gamercoder215/quantumpen/premium/PremiumLicense.java
+build.sh

@@ -1,74 +1,85 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>QuantumPen</groupId>
-  <artifactId>QuantumPen</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+
+  <groupId>me.gamercoder215</groupId>
+  <artifactId>quantumpen</artifactId>
+  <version>1.1.0-SNAPSHOT</version>
+
+  <name>QuantumPen</name>
+  <description>Edit your MC World in previous ways unknown!</description>
+
+  <properties>
+    <spigot.version>1.18.2-R0.1-SNAPSHOT</spigot.version>
+  </properties>
+
   <build>
-    <sourceDirectory>src</sourceDirectory>
+    <sourceDirectory>src/main/java</sourceDirectory>
     <resources>
       <resource>
-        <directory>src</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
+        <directory>src/main/resources/</directory>
+        <includes>
+          <include>plugin.yml</include>
+        </includes>
       </resource>
     </resources>
     <plugins>
-		<plugin>
-		  <artifactId>maven-compiler-plugin</artifactId>
-		  <version>3.8.1</version>
-		  <configuration>
-		    <release>16</release>
-		  </configuration>
-		</plugin>
-		<plugin>
-		    <groupId>net.md-5</groupId>
-		    <artifactId>specialsource-maven-plugin</artifactId>
-		    <version>1.2.3</version>
-		    <executions>
-		        <execution>
-		            <phase>package</phase>
-		            <goals>
-		                <goal>remap</goal>
-		            </goals>
-		            <id>remap-obf</id>
-		            <configuration>
-		                <srgIn>org.spigotmc:minecraft-server:1.18.1-R0.1-SNAPSHOT:txt:maps-mojang</srgIn>
-		                <reverse>true</reverse>
-		                <remappedDependencies>org.spigotmc:spigot:1.18.1-R0.1-SNAPSHOT:jar:remapped-mojang</remappedDependencies>
-		                <remappedArtifactAttached>true</remappedArtifactAttached>
-		                <remappedClassifierName>remapped-obf</remappedClassifierName>
-		            </configuration>
-		        </execution>
-		        <execution>
-		            <phase>package</phase>
-		            <goals>
-		                <goal>remap</goal>
-		            </goals>
-		            <id>remap-spigot</id>
-		            <configuration>
-		                <inputFile>${project.build.directory}/${project.artifactId}-${project.version}-remapped-obf.jar</inputFile>
-		                <srgIn>org.spigotmc:minecraft-server:1.18.1-R0.1-SNAPSHOT:csrg:maps-spigot</srgIn>
-		                <remappedDependencies>org.spigotmc:spigot:1.18.1-R0.1-SNAPSHOT:jar:remapped-obf</remappedDependencies>
-		            </configuration>
-		        </execution>
-		    </executions>
-		</plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <release>16</release>
+        </configuration>
+      </plugin>
+        <plugin>
+            <groupId>net.md-5</groupId>
+            <artifactId>specialsource-maven-plugin</artifactId>
+            <version>1.2.3</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>remap</goal>
+                    </goals>
+                    <id>remap-obf</id>
+                    <configuration>
+                        <srgIn>org.spigotmc:minecraft-server:${spigot.version}:txt:maps-mojang</srgIn>
+                        <reverse>true</reverse>
+                        <remappedDependencies>org.spigotmc:spigot:${spigot.version}:jar:remapped-mojang</remappedDependencies>
+                        <remappedArtifactAttached>true</remappedArtifactAttached>
+                        <remappedClassifierName>remapped-obf</remappedClassifierName>
+                    </configuration>
+                </execution>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>remap</goal>
+                    </goals>
+                    <id>remap-spigot</id>
+                    <configuration>
+                        <inputFile>${project.build.directory}/${project.artifactId}-${project.version}-remapped-obf.jar</inputFile>
+                        <srgIn>org.spigotmc:minecraft-server:${spigot.version}:csrg:maps-spigot</srgIn>
+                        <remappedDependencies>org.spigotmc:spigot:${spigot.version}:jar:remapped-obf</remappedDependencies>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>  
     </plugins>
   </build>
- 	<repositories>
-  	    <repository>
-	        <id>spigot-repo</id>
-	        <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-	    </repository>
-	</repositories>
-	<dependencies>
-		<dependency>
-		    <groupId>org.spigotmc</groupId>
-		    <artifactId>spigot</artifactId>
-		    <version>1.18.1-R0.1-SNAPSHOT</version>
-		    <scope>provided</scope>
-		    <classifier>remapped-mojang</classifier>
-		</dependency>
-	</dependencies>
+
+  <repositories>
+		<repository>
+			<id>spigot-repo</id>	        					
+			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot</artifactId>
+      <version>${spigot.version}</version>
+      <classifier>remapped-mojang</classifier>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
 </project>
