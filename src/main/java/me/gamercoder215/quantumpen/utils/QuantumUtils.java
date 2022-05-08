@@ -99,7 +99,8 @@ public class QuantumUtils {
 	        int pos = -1, ch;
 
 	        void nextChar() {
-	            ch = (++pos < str.length()) ? str.charAt(pos) : -1;
+				++pos;
+				ch = (pos < str.length()) ? str.charAt(pos) : -1;
 	        }
 
 	        boolean eat(int charToEat) {
